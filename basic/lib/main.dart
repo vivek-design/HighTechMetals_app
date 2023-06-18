@@ -1,6 +1,7 @@
 import 'package:basic/DeliveryManagr/delivery_front.dart';
 import 'package:basic/DeliveryManagr/update_order.dart';
 import 'package:basic/InvoiceManager/invoicemanager.dart';
+import 'package:basic/Uitilities/dispatchsuccess.dart';
 import 'package:basic/Uitilities/ordersuccess.dart';
 
 import 'package:basic/Uitilities/router.dart';
@@ -21,6 +22,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:velocity_x/velocity_x.dart';
 import '../Uitilities/col.dart';
 import 'Uitilities/auth.dart';
 import 'Uitilities/circularpro.dart';
@@ -60,6 +62,7 @@ class MyApp extends StatelessWidget {
         router.delivfront: (context) => deliv_front(),
         router.show_detail:(context)=>Show_detail(),
         router.successordrer:(context)=>order_success(),
+        router.dispatchsuccess:(context)=>MyDialogBox(),
         
       },
       debugShowCheckedModeBanner: false,

@@ -16,4 +16,5 @@ class router {
   static String show_detail = '/dfjddfffdfd';
   static String successordrer = '/hahasuccess';
   static String updateorder = '/updateorder';
+  static String dispatchsuccess = '/dfjfjsfjshfsjf';
 }
