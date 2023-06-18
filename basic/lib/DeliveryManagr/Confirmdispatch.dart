@@ -164,10 +164,17 @@ class _Confirm_order_updateState extends State<Confirm_order_update> {
                     DatabaseEvent event = await ordersRef.once();
                     DataSnapshot dataSnapshot = event.snapshot;
                     dynamic orders = dataSnapshot.value;
-           
+
                     orders.forEach((orderId, orderData) async {
-                      if (  orderData['timestamp'] ==
-                              timestamp.toString() &&
+                      // DatabaseEvent event2 = await orders[orderId].once();
+                      // DataSnapshot dataSnapshot = event.snapshot;
+                      // dynamic useful = dataSnapshot.value;
+
+                      dynamic useful= orders[orderId];
+                      // print(useful[]);
+
+                      // print(useful['items']);
+                      if (//useful['timestamp'] == timestamp.toString() &&
                           orderId == order_id) {
                         print("Yes");
                         print(order_id);
