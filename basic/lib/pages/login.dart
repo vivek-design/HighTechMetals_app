@@ -202,18 +202,34 @@ class _login_pageState extends State<login_page> {
                               .instance
                               .ref("Inventory_manager");
                           var dataSnapshot;
-                        await  databaseRefu.child(user!.uid).once().then((Event) {
+                          await databaseRefu
+                              .child(user!.uid)
+                              .once()
+                              .then((Event) {
                             dataSnapshot = Event.snapshot.exists;
                           });
 
                           DatabaseReference databaseRefu2 =
                               FirebaseDatabase.instance.ref("deliveymanager");
-                             
 
-                              var datasnapshot2;
-                      await    databaseRefu2.child(user!.uid).once().then((Event) {
-                           datasnapshot2   = Event.snapshot.exists;
+                          var datasnapshot2;
+                          await databaseRefu2
+                              .child(user!.uid)
+                              .once()
+                              .then((Event) {
+                            datasnapshot2 = Event.snapshot.exists;
                           });
+
+                          DatabaseReference databaseRefu3 =
+                              FirebaseDatabase.instance.ref("Owner");
+                          var dataSnapshot3;
+                          await databaseRefu3
+                              .child(user!.uid)
+                              .once()
+                              .then((Event) {
+                            dataSnapshot3 = Event.snapshot.exists;
+                          });
+
                           if (dataSnapshot) {
                             displaytoast("loggin in ", context);
                             Navigator.of(context).pushNamedAndRemoveUntil(
@@ -222,8 +238,12 @@ class _login_pageState extends State<login_page> {
                             displaytoast("loggin in ", context);
                             Navigator.of(context).pushNamedAndRemoveUntil(
                                 router.delivfront, (route) => false);
-                          } else {
-                               displaytoast("loggin in ", context);
+                          } else if(dataSnapshot3){
+                            displaytoast("loggin in ", context);
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                                router.ownerfront, (route) => false);
+                          }else{
+                                   displaytoast("loggin in ", context);
                             Navigator.of(context).pushNamedAndRemoveUntil(
                                 router.customerfront, (route) => false);
                           }

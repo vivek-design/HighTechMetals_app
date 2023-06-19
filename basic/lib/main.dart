@@ -63,6 +63,7 @@ class MyApp extends StatelessWidget {
         router.show_detail:(context)=>Show_detail(),
         router.successordrer:(context)=>order_success(),
         router.dispatchsuccess:(context)=>MyDialogBox(),
+        router.ownerfront:(context)=>Owner_front(),
         
       },
       debugShowCheckedModeBanner: false,

@@ -9,6 +9,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:basic/Uitilities/router.dart';
+
+import '../DeliveryManagr/delivery_front.dart';
 class Owner_front extends StatefulWidget {
   const Owner_front({super.key});
 
@@ -17,69 +19,96 @@ class Owner_front extends StatefulWidget {
 }
 
 class _Owner_frontState extends State<Owner_front> {
+   late DatabaseReference _orderRef;
+  List<Order> orders = [];
+
   @override
-   DatabaseReference df = FirebaseDatabase.instance.ref().child('User');
+  void initState() {
+    super.initState();
+    _orderRef = FirebaseDatabase.instance.ref().child('Dispatched');
+    _orderRef.onValue.listen((event) {
+      orders.clear();
+      if (event.snapshot.value != null) {
+        Map<dynamic, dynamic>? data =
+            event.snapshot.value as Map<dynamic, dynamic>?;
+        data?.forEach((orderKey, orderData) {
+          orderData.forEach((key, value) {
+            List<dynamic> itemsData = value['items'];
+            List<Item> items = itemsData
+                .map((itemData) => Item(itemData['name'], itemData['quantity']))
+                .toList();
+            Order order =
+                Order(orderKey, items, DateTime.parse(value['timestamp']));
+            orders.add(order);
+          });
+        });
+      }
+      setState(() {});
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child: "in ".text.make(),
-        ),
-        toolbarHeight: 90,
+        title: Text('All dispatched Orders'),
         backgroundColor: rang.always,
       ),
-      body: SafeArea(
-        child:
+      body: ListView.builder(
+        itemCount: orders.length,
+        itemBuilder: (BuildContext context, int index) {
+          Order order = orders[index];
+          // return ListTile(
+          //   title: Text('Order ID: ${order.orderId}'),
+          //   subtitle: Column(
+          //     crossAxisAlignment: CrossAxisAlignment.start,
+          //     children: [
+          //       Text('Timestamp: ${order.timestamp.toString()}'),
+          //       SizedBox(height: 4),
+          //       Text('Items:'),
+          //       Column(
+          //         crossAxisAlignment: CrossAxisAlignment.start,
+          //         children: order.items
+          //             .map((item) => Text('- ${item.name}: ${item.quantity}'))
+          //             .toList(),
+          //       ),
+          //     ],
+          //   ),
+          // );
 
-            // Container(
-            //   padding: EdgeInsets.all(20),
-            //   child: Center(
-            //       child: "List of all the registered user is "
-            //           .text
-            //           .bold
-            //           .black
-            //           .make()),
-            // ),
-
-            Container(
-          height: double.infinity,
-          padding: EdgeInsets.all(20),
-          child: Column(
-            children: [
-              FirebaseAnimatedList(
-                  query: df,
-                  shrinkWrap: true,
-                  itemBuilder: (context, snapshot, animation, index) {
-                    return Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(),
-                          borderRadius: BorderRadius.circular(6)),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                              "  Email :  ${snapshot.child('Email').value.toString()}"),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                              "  Name : ${snapshot.child('Name').value.toString()}"),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text("  Age ${snapshot.child('Age').value.toString()}"),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text("  Phone ${ snapshot.child('Phone').value.toString()}"),
-                        ],
-                      ),
-                    );
-                    
-                  }),
-            ],
-          ),
-        ),
+          return Container(
+              padding: EdgeInsets.all(15),
+              child: Container(
+                padding: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Color.fromRGBO(143, 148, 251, 1),
+                          blurRadius: 20.0,
+                          offset: Offset(0, 10))
+                    ]),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    'Order ID: ${order.orderId}'.text.bold.red600.make(),
+                    Text('Timestamp: ${order.timestamp.toString()}'),
+                    SizedBox(height: 4),
+                    Text('Items:'),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: order.items
+                          .map((item) =>
+                              Text('- ${item.name}: ${item.quantity}'))
+                          .toList(),
+                    ),
+                    20.heightBox,
+                  
+                  ],
+                ),
+              ));
+        },
       ),
       drawer: Drawer(
         width: 200,
