@@ -379,8 +379,8 @@ class _registerforinvState extends State<registerforinv> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       gradient: LinearGradient(colors: [
-                        Color.fromRGBO(143, 148, 251, 1),
-                        Color.fromRGBO(143, 148, 251, 6),
+                         Color.fromRGBO(226, 53, 57, 1),
+                            Color.fromRGBO(226, 53, 57, 5),
                       ])),
                   child: Center(
                     child: Text("Register",

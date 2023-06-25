@@ -17,10 +17,8 @@ class _spash_ScreenState extends State<spash_Screen> {
         height: double.infinity,
         width: double.infinity,
         decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-          Color.fromRGBO(143, 148, 251, 1),
-          Color.fromRGBO(143, 148, 251, 6),
-        ])),
+          color: Colors.white,
+        ),
       ),
       Positioned(
         top: 300,

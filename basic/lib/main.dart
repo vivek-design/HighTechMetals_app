@@ -60,7 +60,7 @@ class MyApp extends StatelessWidget {
         router.InvFront: (context) => Invoice_front(),
         router.customerfront: (context) => Customer_fornt(),
         router.delivfront: (context) => deliv_front(),
-        router.show_detail:(context)=>Show_detail(),
+      
         router.successordrer:(context)=>order_success(),
         router.dispatchsuccess:(context)=>MyDialogBox(),
         router.ownerfront:(context)=>Owner_front(),
@@ -272,7 +272,8 @@ class home extends StatelessWidget {
                   child: Text("Don't have an account ? Have one ",
                       style: TextStyle(
                         fontSize: 15,
-                        color: Color.fromRGBO(143, 147, 225, 1),
+                        color:  Color.fromRGBO(226, 53, 57, 1),
+                          
                       )),
                 ),
               ),
@@ -285,8 +286,8 @@ class home extends StatelessWidget {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         gradient: LinearGradient(colors: [
-                          Color.fromRGBO(143, 148, 251, 1),
-                          Color.fromRGBO(143, 148, 251, 6),
+                            Color.fromRGBO(226, 53, 57, 1),
+                            Color.fromRGBO(226, 53, 57, 5),
                         ])),
                     child: Center(
                       child: Text("Create account ",
@@ -303,7 +304,8 @@ class home extends StatelessWidget {
                   child: Text("Already have an account ",
                       style: TextStyle(
                         fontSize: 15,
-                        color: Color.fromRGBO(143, 148, 251, 1),
+                        color:   Color.fromRGBO(226, 53, 57, 1),
+                           
                       )),
                 ),
               ),
@@ -318,8 +320,8 @@ class home extends StatelessWidget {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           gradient: LinearGradient(colors: [
-                            Color.fromRGBO(143, 148, 251, 1),
-                            Color.fromRGBO(143, 148, 251, 6),
+                             Color.fromRGBO(226, 53, 57, 1),
+                            Color.fromRGBO(226, 53, 57, 5),
                           ])),
                       child: Center(
                         child: Text("Login",

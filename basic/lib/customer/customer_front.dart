@@ -1,3 +1,4 @@
+import 'package:basic/customer/showdetail.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,9 @@ class _Customer_forntState extends State<Customer_fornt> {
     DatabaseReference _dbref =
         FirebaseDatabase.instance.ref().child("Customer").child(user!.uid);
     DatabaseEvent dbenvent = await _dbref.once();
-    Object? map = dbenvent.snapshot.value;
+    // print(dbenvent.snapshot.value);
+    Map<dynamic, dynamic>? map = dbenvent.snapshot.value as Map?;
+    Username = map!['Name'];
   }
 
   void initState() {
@@ -152,8 +155,8 @@ class _Customer_forntState extends State<Customer_fornt> {
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   gradient: LinearGradient(colors: [
-                                    Color.fromRGBO(143, 148, 251, 1),
-                                    Color.fromRGBO(143, 148, 251, 6),
+                                    Color.fromRGBO(226, 53, 57, 1),
+                                    Color.fromRGBO(226, 53, 57, 5),
                                   ])),
                               child: Center(
                                   child: Text(
@@ -172,8 +175,8 @@ class _Customer_forntState extends State<Customer_fornt> {
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   gradient: LinearGradient(colors: [
-                                    Color.fromRGBO(143, 148, 251, 1),
-                                    Color.fromRGBO(143, 148, 251, 6),
+                                    Color.fromRGBO(226, 53, 57, 1),
+                                    Color.fromRGBO(226, 53, 57, 5),
                                   ])),
                               child: Center(
                                   child: Text(
@@ -220,15 +223,15 @@ class _Customer_forntState extends State<Customer_fornt> {
               60.heightBox,
               InkWell(
                 onTap: () => {
-                  Navigator.pushNamed(context, router.show_detail),
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>Show_detail(username: Username, dateTimeRange: dateRange))),
                 },
                 child: Container(
                   height: 50,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       gradient: LinearGradient(colors: [
-                        Color.fromRGBO(143, 148, 251, 1),
-                        Color.fromRGBO(143, 148, 251, 6),
+                        Color.fromRGBO(226, 53, 57, 1),
+                        Color.fromRGBO(226, 53, 57, 5),
                       ])),
                   child: Center(
                     child: Text("View",
