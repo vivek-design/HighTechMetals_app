@@ -7,7 +7,10 @@ import 'package:basic/Uitilities/ordersuccess.dart';
 import 'package:basic/Uitilities/router.dart';
 import 'package:basic/customer/customer_front.dart';
 import 'package:basic/customer/showdetail.dart';
+import 'package:basic/owner/Acceptaccount_perm.dart';
+import 'package:basic/pages/Account_req_decl.dart';
 import 'package:basic/pages/EmailaVerification.dart';
+import 'package:basic/pages/account_under_veri.dart';
 import 'package:basic/pages/gettingstart.dart';
 import 'package:basic/pages/login.dart';
 import 'package:basic/pages/register.dart';
@@ -64,6 +67,10 @@ class MyApp extends StatelessWidget {
         router.successordrer:(context)=>order_success(),
         router.dispatchsuccess:(context)=>MyDialogBox(),
         router.ownerfront:(context)=>Owner_front(),
+        router.accept_acc_req:(context) => Accept_account_request(),
+        router.account_req_veri:(context)=>account_under_veri(),
+        router.account_req_declined:(context)=>Account_req_declined(),
+        
         
       },
       debugShowCheckedModeBanner: false,

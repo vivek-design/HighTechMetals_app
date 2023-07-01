@@ -47,7 +47,7 @@ class _registerviewState extends State<registerview> {
 
   List<String> gender = ['Male', 'Female', 'Other'];
   String? selectedgender = 'Gender';
-  String Role = "User";
+  String Role = "Customer";
   String Gender = "";
   late final TextEditingController _email;
   late final TextEditingController _password;
@@ -422,13 +422,18 @@ class _registerviewState extends State<registerview> {
 
       final User = FirebaseAuth.instance.currentUser;
       if (User != null) {
-        databaseRef.child("Customer").child(User.uid).set({
+        // *******************************************
+
+          //  changing to add admin approval for the account 
+        // *********************************
+        databaseRef.child("Pending_register").child(User.uid).set({
           'role': Role,
           'Name': name.text,
           'Age': age.text,
           'gender': Gender,
           'Phone': phone.text,
           'Email': _email.text,
+          'userid': User.uid.text,
           'Password': _password.text,
           'latitude': 0,
           'longitude': 0,

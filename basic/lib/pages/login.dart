@@ -209,8 +209,10 @@ class _login_pageState extends State<login_page> {
                             dataSnapshot = Event.snapshot.exists;
                           });
 
-                          DatabaseReference databaseRefu2 =
-                              FirebaseDatabase.instance.ref("deliveymanager");
+                          DatabaseReference databaseRefu2 = FirebaseDatabase
+                              .instance
+                              .ref()
+                              .child("Delivery_manager");
 
                           var datasnapshot2;
                           await databaseRefu2
@@ -221,13 +223,23 @@ class _login_pageState extends State<login_page> {
                           });
 
                           DatabaseReference databaseRefu3 =
-                              FirebaseDatabase.instance.ref("Owner");
+                              FirebaseDatabase.instance.ref().child("Owner");
                           var dataSnapshot3;
                           await databaseRefu3
                               .child(user!.uid)
                               .once()
                               .then((Event) {
                             dataSnapshot3 = Event.snapshot.exists;
+                          });
+
+                          DatabaseReference databaseRefu4 =
+                              FirebaseDatabase.instance.ref().child("Customer");
+                          var dataSnapshot4;
+                          await databaseRefu4
+                              .child(user!.uid)
+                              .once()
+                              .then((Event) {
+                            dataSnapshot4 = Event.snapshot.exists;
                           });
 
                           if (dataSnapshot) {
@@ -238,14 +250,37 @@ class _login_pageState extends State<login_page> {
                             displaytoast("loggin in ", context);
                             Navigator.of(context).pushNamedAndRemoveUntil(
                                 router.delivfront, (route) => false);
-                          } else if(dataSnapshot3){
+                          } else if (dataSnapshot3) {
                             displaytoast("loggin in ", context);
                             Navigator.of(context).pushNamedAndRemoveUntil(
                                 router.ownerfront, (route) => false);
-                          }else{
-                                   displaytoast("loggin in ", context);
+                          } else if (dataSnapshot4) {
+                            displaytoast("loggin in ", context);
                             Navigator.of(context).pushNamedAndRemoveUntil(
                                 router.customerfront, (route) => false);
+                          } else {
+                            DatabaseReference databaseRefu5 = FirebaseDatabase
+                                .instance
+                                .ref()
+                                .child("Pending_register");
+                            var dataSnapshot5;
+                            await databaseRefu5
+                                .child(user!.uid)
+                                .once()
+                                .then((Event) {
+                              dataSnapshot5 = Event.snapshot.exists;
+                            });
+
+                            if (dataSnapshot5) {
+                              // Navigator.pushNamed(
+                              //     context, router.account_req_veri);
+                              print("pending");
+                              Auth().signOut();
+                            } else {
+                              // Navigator.pushNamed(
+                              //     context, router.account_req_declined);
+                              print("declined");
+                            }
                           }
                         } else {
                           Navigator.of(context).pushNamedAndRemoveUntil(

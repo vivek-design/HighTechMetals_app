@@ -1,3 +1,5 @@
+import 'package:basic/owner/Acceptaccount_perm.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:basic/Uitilities/auth.dart';
 import 'package:basic/Uitilities/col.dart';
@@ -11,6 +13,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:basic/Uitilities/router.dart';
 
 import '../DeliveryManagr/delivery_front.dart';
+
 class Owner_front extends StatefulWidget {
   const Owner_front({super.key});
 
@@ -19,7 +22,7 @@ class Owner_front extends StatefulWidget {
 }
 
 class _Owner_frontState extends State<Owner_front> {
-   late DatabaseReference _orderRef;
+  late DatabaseReference _orderRef;
   List<Order> orders = [];
 
   @override
@@ -104,7 +107,6 @@ class _Owner_frontState extends State<Owner_front> {
                           .toList(),
                     ),
                     20.heightBox,
-                  
                   ],
                 ),
               ));
@@ -131,6 +133,37 @@ class _Owner_frontState extends State<Owner_front> {
             )
           ]),
         ),
+      ),
+      bottomNavigationBar: CurvedNavigationBar(
+        color: rang.always,
+        backgroundColor: Colors.white,
+        index: 0,
+        items: [
+          Icon(Icons.home),
+          Icon(Icons.manage_accounts),
+        ],
+        onTap: (index) async {
+          if (index == 0) {
+            await Future.delayed(const Duration(seconds: 1));
+            index = 0;
+            // Navigator.pushNamed(context, router.History);
+            setState(() {
+              index = 0;
+            });
+          }
+
+          if (index == 1) {
+            await Future.delayed(const Duration(seconds: 1));
+            // index = 1;
+             Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) =>Accept_account_request()),
+                (Route<dynamic> route) => false);
+            setState(() {
+              index = 0;
+
+            });
+          }
+        },
       ),
     );
   }

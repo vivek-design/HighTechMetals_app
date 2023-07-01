@@ -58,23 +58,7 @@ class _deliv_frontState extends State<deliv_front> {
         itemCount: orders.length,
         itemBuilder: (BuildContext context, int index) {
           Order order = orders[index];
-          // return ListTile(
-          //   title: Text('Order ID: ${order.orderId}'),
-          //   subtitle: Column(
-          //     crossAxisAlignment: CrossAxisAlignment.start,
-          //     children: [
-          //       Text('Timestamp: ${order.timestamp.toString()}'),
-          //       SizedBox(height: 4),
-          //       Text('Items:'),
-          //       Column(
-          //         crossAxisAlignment: CrossAxisAlignment.start,
-          //         children: order.items
-          //             .map((item) => Text('- ${item.name}: ${item.quantity}'))
-          //             .toList(),
-          //       ),
-          //     ],
-          //   ),
-          // );
+      
 
           return Container(
               padding: EdgeInsets.all(15),

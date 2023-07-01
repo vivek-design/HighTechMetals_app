@@ -124,7 +124,7 @@ class _emailverifiedState extends State<emailverified> {
                   child: Text("In case not recieved click below   ",
                       style: TextStyle(
                         fontSize: 15,
-                        color: Color.fromRGBO(143, 148, 251, 1),
+                        color: rang.always,
                       )),
                 ),
               ),
@@ -164,7 +164,7 @@ class _emailverifiedState extends State<emailverified> {
                   child: Text("If done with the verification then login   ",
                       style: TextStyle(
                         fontSize: 15,
-                        color: Color.fromRGBO(143, 148, 251, 1),
+                        color: rang.always,
                       )),
                 ),
               ),

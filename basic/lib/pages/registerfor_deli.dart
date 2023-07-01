@@ -47,7 +47,7 @@ class _registerfordeliState extends State<registerfordeli> {
 
   List<String> gender = ['Male', 'Female', 'Other'];
   String? selectedgender = 'Gender';
-  String Role = "Delivery maanager";
+  String Role = "Delivery_manager";
   String Gender = "";
   late final TextEditingController _email;
   late final TextEditingController _password;
@@ -422,7 +422,13 @@ class _registerfordeliState extends State<registerfordeli> {
 
       final User = FirebaseAuth.instance.currentUser;
       if (User != null) {
-        databaseRef.child("deliveymanager").child(User.uid).set({
+
+
+        //   // *******************************************
+
+          //  changing to add admin approval for the account 
+        // *********************************
+        databaseRef.child("Pending_register").child(User.uid).set({
           'role': Role,
           'Name': name.text,
           'Age': age.text,
@@ -430,6 +436,7 @@ class _registerfordeliState extends State<registerfordeli> {
           'Phone': phone.text,
           'Email': _email.text,
           'Password': _password.text,
+          'userid':User.uid,
           'latitude': 0,
           'longitude': 0,
         }).onError((error, stackTrace) {
