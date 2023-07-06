@@ -90,7 +90,14 @@ class _Account_req_declinedState extends State<Account_req_declined> {
                 child: Center(
                   child: ("Your account Verification is being rejected  \n ".text.bold.italic.make()),
                 ),
-              )
+              ),
+
+               50.heightBox,
+             Container(
+              child: Center(
+                child: Image.asset("assets/images/alert-danger-error-exclamation-mark-red-icon-ball-bowling-balloon-sport-transparent-png-1631956.png",height: 50, ),
+              ),
+             )
              
         
       ],

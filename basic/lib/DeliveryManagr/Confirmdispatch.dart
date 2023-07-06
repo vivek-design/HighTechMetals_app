@@ -13,7 +13,7 @@ import 'delivery_front.dart';
 
 class Confirm_order_update extends StatefulWidget {
   final Order order;
-  final List<double> slider_values;
+  final List<int> slider_values;
   const Confirm_order_update({
     Key? key,
     required this.order,
@@ -27,9 +27,16 @@ class Confirm_order_update extends StatefulWidget {
 class _Confirm_order_updateState extends State<Confirm_order_update> {
   late List<Item> ordred_item = widget.order.items;
   late List<Order> orders = [widget.order];
-
-  late List<double> updated_quantity = widget.slider_values;
+  late final TextEditingController dispatch_id;
+  late List<int> updated_quantity = widget.slider_values;
   @override
+  void initState() {
+    // TODO: implement initState
+    dispatch_id = TextEditingController();
+
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -134,7 +141,7 @@ class _Confirm_order_updateState extends State<Confirm_order_update> {
                                         .text
                                         .make(),
                                     5.heightBox,
-                                    " Remaining:${ordred_item[index].quantity - updated_quantity[index].toInt()}"
+                                    " Remaining:${(ordred_item[index].quantity - updated_quantity[index].toInt())>=0?(ordred_item[index].quantity - updated_quantity[index].toInt()):0}"
                                         .text
                                         .make(),
                                     25.heightBox
@@ -146,6 +153,36 @@ class _Confirm_order_updateState extends State<Confirm_order_update> {
                           ]),
                       20.heightBox,
                     ],
+                  ),
+                ),
+                30.heightBox,
+
+                Container(
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Color.fromRGBO(143, 148, 251, 1),
+                            blurRadius: 20.0,
+                            offset: Offset(0, 10))
+                      ]),
+                  child: Container(
+                    padding: EdgeInsets.all(2.0),
+                    decoration: BoxDecoration(),
+                    child: TextFormField(
+                        controller: dispatch_id,
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "    Dispatch id  ",
+                            hintStyle: TextStyle(color: Colors.grey[400])),
+                        validator: (value) {
+                          if (value != null) if (value.isEmpty) {
+                            return "Email or phone number cannot be empty ";
+                          }
+                          return null;
+                        }),
                   ),
                 ),
                 50.heightBox,
@@ -170,11 +207,11 @@ class _Confirm_order_updateState extends State<Confirm_order_update> {
                       // DataSnapshot dataSnapshot = event.snapshot;
                       // dynamic useful = dataSnapshot.value;
 
-                      dynamic useful= orders[orderId];
+                      dynamic useful = orders[orderId];
                       // print(useful[]);
 
                       // print(useful['items']);
-                      if (//useful['timestamp'] == timestamp.toString() &&
+                      if ( //useful['timestamp'] == timestamp.toString() &&
                           orderId == order_id) {
                         print("Yes");
                         print(order_id);
@@ -187,7 +224,7 @@ class _Confirm_order_updateState extends State<Confirm_order_update> {
                         FirebaseDatabase.instance.ref().child('orders');
                     List<Map<String, dynamic>> updateorderItems = [];
                     for (int i = 0; i < ordred_item.length; i++) {
-                      if (updated_quantity[i] != ordred_item[i].quantity)
+                      if (!(updated_quantity[i] >= ordred_item[i].quantity))
                         updateorderItems.add({
                           'name': ordred_item[i].name,
                           'quantity':
@@ -195,10 +232,12 @@ class _Confirm_order_updateState extends State<Confirm_order_update> {
                         });
                     }
 
-                    _orderRef.child(order_id).push().set({
-                      'items': updateorderItems,
-                      'timestamp': timestamp.toString(),
-                    });
+                    if (updateorderItems.isNotEmpty) {
+                      _orderRef.child(order_id).push().set({
+                        'items': updateorderItems,
+                        'timestamp': timestamp.toString(),
+                      });
+                    }
 
                     //now add into dispatched section now from here user can get the required data of the dispatched item
                     DatabaseReference _disorderRef =
@@ -209,10 +248,13 @@ class _Confirm_order_updateState extends State<Confirm_order_update> {
                         'name': ordred_item[i].name,
                         'quantity': updated_quantity[i],
                       });
+                    }
 
+                    if (dispatchedorderItems.isNotEmpty) {
                       _disorderRef.child(order_id).push().set({
-                        'items': updateorderItems,
+                        'items': dispatchedorderItems,
                         'timestamp': DateTime.now().toString(),
+                        'dipatch_id': dispatch_id.text,
                       });
                     }
 
@@ -225,8 +267,8 @@ class _Confirm_order_updateState extends State<Confirm_order_update> {
                       borderRadius: BorderRadius.circular(10),
                       gradient: LinearGradient(
                         colors: [
-                          Color.fromRGBO(143, 148, 251, 1),
-                          Color.fromRGBO(143, 148, 251, 6),
+                          Color.fromRGBO(226, 53, 57, 1),
+                          Color.fromRGBO(226, 53, 57, 5),
                         ],
                       ),
                     ),

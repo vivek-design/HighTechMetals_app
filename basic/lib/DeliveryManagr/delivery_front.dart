@@ -38,7 +38,7 @@ class _deliv_frontState extends State<deliv_front> {
                 .map((itemData) => Item(itemData['name'], itemData['quantity']))
                 .toList();
             Order order =
-                Order(orderKey, items, DateTime.parse(value['timestamp']));
+                Order(orderKey, items, DateTime.parse(value['timestamp']),"gjhgh");
             orders.add(order);
           });
         });
@@ -58,7 +58,6 @@ class _deliv_frontState extends State<deliv_front> {
         itemCount: orders.length,
         itemBuilder: (BuildContext context, int index) {
           Order order = orders[index];
-      
 
           return Container(
               padding: EdgeInsets.all(15),
@@ -90,7 +89,11 @@ class _deliv_frontState extends State<deliv_front> {
                     20.heightBox,
                     ElevatedButton(
                         onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) =>update_orderdetail(order: order)));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      update_orderdetail(order: order)));
                         },
                         child: "Dispatch".text.make(),
                         style: ButtonStyle(
@@ -132,8 +135,8 @@ class Order {
   final String orderId;
   final List<Item> items;
   final DateTime timestamp;
-
-  Order(this.orderId, this.items, this.timestamp);
+  final String dispatch_id;
+  Order(this.orderId, this.items, this.timestamp, this.dispatch_id);
 }
 
 class Item {

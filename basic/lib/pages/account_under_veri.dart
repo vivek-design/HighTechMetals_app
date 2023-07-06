@@ -88,8 +88,15 @@ class _account_under_veriState extends State<account_under_veri> {
                 child: Center(
                   child: ("Your account is still under verification \n Try contacting admin and try again ".text.bold.italic.make()),
                 ),
-              )
+              ),
              
+             50.heightBox,
+             Container(
+              child: Center(
+                child: Image.asset("assets/images/pngwing.com.png",height: 50, ),
+              ),
+             )
+
         
       ],
           ),),

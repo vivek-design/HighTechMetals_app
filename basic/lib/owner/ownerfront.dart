@@ -40,8 +40,9 @@ class _Owner_frontState extends State<Owner_front> {
             List<Item> items = itemsData
                 .map((itemData) => Item(itemData['name'], itemData['quantity']))
                 .toList();
+            var dispatch_id = value['dipatch_id'];
             Order order =
-                Order(orderKey, items, DateTime.parse(value['timestamp']));
+                Order(orderKey, items, DateTime.parse(value['timestamp']),dispatch_id);
             orders.add(order);
           });
         });
@@ -96,6 +97,8 @@ class _Owner_frontState extends State<Owner_front> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     'Order ID: ${order.orderId}'.text.bold.red600.make(),
+                    4.heightBox,
+                    'Dispatch ID: ${order.dispatch_id}'.text.bold.red600.make(),
                     Text('Timestamp: ${order.timestamp.toString()}'),
                     SizedBox(height: 4),
                     Text('Items:'),
@@ -155,12 +158,12 @@ class _Owner_frontState extends State<Owner_front> {
           if (index == 1) {
             await Future.delayed(const Duration(seconds: 1));
             // index = 1;
-             Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) =>Accept_account_request()),
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                    builder: (context) => Accept_account_request()),
                 (Route<dynamic> route) => false);
             setState(() {
               index = 0;
-
             });
           }
         },

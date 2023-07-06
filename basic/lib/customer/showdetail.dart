@@ -52,18 +52,19 @@ class _Show_detailState extends State<Show_detail> {
             event.snapshot.value as Map<dynamic, dynamic>?;
         // data?.forEach((orderKey, orderData) {
         // orderData
-       data?.forEach((key, value) async {
+        data?.forEach((key, value) async {
           print(value);
           List<dynamic> itemsData = value['items'];
-         List<Item> items =  await itemsData
+          List<Item> items = await itemsData
               .map((itemData) => Item(itemData['name'], itemData['quantity']))
               .toList();
 
           DateTime? timestamp = DateTime.tryParse(value['timestamp']);
+          var dipatch_id = value['dipatch_id'].toString();
           // print(timestamp);
           if (timestamp!.isAfter(widget.dateTimeRange.start) &&
               timestamp.isBefore(widget.dateTimeRange.end)) {
-            Order order = Order(key, items, DateTime.parse(value['timestamp']));
+            Order order = Order(key, items, DateTime.parse(value['timestamp']),dipatch_id);
             orders.add(order);
           }
         });
@@ -71,7 +72,7 @@ class _Show_detailState extends State<Show_detail> {
 
       print(orders);
     });
-   await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 2));
     return true;
   }
 
@@ -124,6 +125,8 @@ class _Show_detailState extends State<Show_detail> {
                                 .bold
                                 .red600
                                 .make(),
+                                  4.heightBox,
+                            'Dispatch ID: ${order.dispatch_id}'.text.bold.red600.make(),
                             Text('Timestamp: ${order.timestamp.toString()}'),
                             SizedBox(height: 4),
                             Text('Items:'),

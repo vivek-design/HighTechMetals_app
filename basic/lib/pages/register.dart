@@ -25,21 +25,7 @@ class _registerviewState extends State<registerview> {
   // File? image;
   var selectedRadio;
   var selectedGen;
-  DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
-
-  Future pickImage() async {
-    // try {
-    //   final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-    //   if (image == null) {
-    //     return;
-    //   }
-
-    //   // final imageTemporary = File(image.path as List<Object>);
-    //   // this.image = imageTemporary;
-    // } on PlatformException catch (e) {
-    //   print('failed to pick image $e');
-    // }
-  }
+ 
 
   List<String> items = ['Register as', 'User', 'Maid'];
 
@@ -54,7 +40,7 @@ class _registerviewState extends State<registerview> {
   late final TextEditingController name;
   late final TextEditingController age;
   late final TextEditingController phone;
-
+ DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
   void initState() {
     // TODO: implement initState
     _email = TextEditingController();
@@ -81,7 +67,7 @@ class _registerviewState extends State<registerview> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Container(
@@ -175,9 +161,9 @@ class _registerviewState extends State<registerview> {
                         ),
                         child: Row(
                           children: [
-                            SizedBox(width: 75),
+                            SizedBox(width: 10),
                             Text(
-                              "Registering as Customer",
+                              "Registering as Delivery manager",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 17,
@@ -379,7 +365,7 @@ class _registerviewState extends State<registerview> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       gradient: LinearGradient(colors: [
-                        Color.fromRGBO(226, 53, 57, 1),
+                         Color.fromRGBO(226, 53, 57, 1),
                             Color.fromRGBO(226, 53, 57, 5),
                       ])),
                   child: Center(
@@ -422,7 +408,9 @@ class _registerviewState extends State<registerview> {
 
       final User = FirebaseAuth.instance.currentUser;
       if (User != null) {
-        // *******************************************
+
+
+        //   // *******************************************
 
           //  changing to add admin approval for the account 
         // *********************************
@@ -433,8 +421,8 @@ class _registerviewState extends State<registerview> {
           'gender': Gender,
           'Phone': phone.text,
           'Email': _email.text,
-          'userid': User.uid.text,
           'Password': _password.text,
+          'userid':User.uid,
           'latitude': 0,
           'longitude': 0,
         }).onError((error, stackTrace) {

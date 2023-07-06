@@ -29,7 +29,7 @@ class _Invoice_frontState extends State<Invoice_front> {
   String selected_item = 'Select Item';
 
   // List of items in our dropdown menu
-  var customer = [
+  List<String> customer = [
     'Select Customer',
     'Item 2',
     'Item 3',
@@ -55,7 +55,7 @@ class _Invoice_frontState extends State<Invoice_front> {
         .child('AppData13jq8m1WyKQ9Dhykjw2-fxD78AFT7chLZcJj7NALPTtg');
     await _orderRef.onValue.listen((event) {
       customer.clear();
-      customer.add('Select Customer');
+      // customer.add('Select Customer');
       if (event.snapshot.value != null) {
         Map<dynamic, dynamic>? data =
             event.snapshot.value as Map<dynamic, dynamic>?;
@@ -112,12 +112,13 @@ class _Invoice_frontState extends State<Invoice_front> {
                   width: double.infinity,
                   child: Column(
                     children: [
+                      20.heightBox,
                       Padding(
-                        padding: EdgeInsets.all(30.0),
+                        padding: EdgeInsets.all(5.0),
                         child: Column(
                           children: <Widget>[
                             Container(
-                              width: 300,
+                              width: double.infinity,
                               padding: EdgeInsets.all(5),
                               decoration: BoxDecoration(
                                   color: Colors.white,
@@ -130,40 +131,136 @@ class _Invoice_frontState extends State<Invoice_front> {
                                   ]),
                               child: Padding(
                                 padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                child: DropdownButton(
-                                  // Initial Value
-                                  isExpanded: true,
-                                  value: selected_customer,
+                                // child: DropdownButton(
+                                //   // Initial Value
+                                //   isExpanded: true,
+                                //   value: selected_customer,
 
-                                  // Down Arrow Icon
-                                  icon: const Icon(Icons.keyboard_arrow_down),
-                                  hint:
-                                      "Select customer                              "
-                                          .text
-                                          .black
-                                          .make(),
-                                  // Array list of items
-                                  items: customer.map((String items) {
-                                    return DropdownMenuItem(
-                                      value: items,
-                                      child: Text(items),
-                                    );
-                                  }).toList(),
-                                  // After selecting the desired option,it will
-                                  // change button value to selected value
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      selected_customer = newValue!;
-                                      products.clear();
-                                      item = [
-                                        Item('-', 0),
-                                      ];
-                                      selected_item = 'Select Item';
+                                //   // Down Arrow Icon
+                                //   icon: const Icon(Icons.keyboard_arrow_down),
+                                //   hint:
+                                //       "Select customer                              "
+                                //           .text
+                                //           .black
+                                //           .make(),
+                                //   // Array list of items
+                                //   items: customer.map((String items) {
+                                //     return DropdownMenuItem(
+                                //       value: items,
+                                //       child: Text(items),
+                                //     );
+                                //   }).toList(),
+                                //   // After selecting the desired option,it will
+                                //   // change button value to selected value
+                                //   onChanged: (String? newValue) {
+                                //     setState(() {
+                                //       selected_customer = newValue!;
+                                //       products.clear();
+                                //       item = [
+                                //         Item('-', 0),
+                                //       ];
+                                //       selected_item = 'Select Item';
 
-                                      products.add('Select Item');
-                                      products.addAll(mp[newValue]!);
-                                    });
-                                  },
+                                //       products.add('Select Item');
+                                //       products.addAll(mp[newValue]!);
+                                //     });
+                                //   },
+                                // ),
+
+                                child: Container(
+                                  padding: EdgeInsets.all(5),
+                                  child: Autocomplete<String>(
+                                    optionsBuilder:
+                                        (TextEditingValue textEditingValue) {
+                                      if (textEditingValue.text.isEmpty ||
+                                          textEditingValue
+                                                  .selection.baseOffset ==
+                                              0) {
+                                        // Return the full customer list if the field is empty or focused
+                                        return customer;
+                                      }
+                                      // Filter the customer list based on the user's input
+                                      return customer.where((String option) {
+                                        return option.toLowerCase().contains(
+                                            textEditingValue.text
+                                                .toLowerCase());
+                                      });
+                                    },
+                                    onSelected: (String selectedValue) {
+                                      setState(() {
+                                        selected_customer = selectedValue;
+                                        selected_item = "Select Item";
+                                        products.clear();
+                                        // products.add('Select Item');
+                                        products.addAll(mp[selectedValue]!);
+                                        item = [
+                                          Item('-', 0),
+                                        ];
+                                      });
+                                    },
+                                    fieldViewBuilder: (context,
+                                        textEditingController,
+                                        focusNode,
+                                        onFieldSubmitted) {
+                                      // You can use the next snip of code if you dont want the initial text to come when you use setState((){});
+                                      return TextFormField(
+                                            style: TextStyle(fontSize: 12),
+                                        decoration: InputDecoration(
+                                          labelText: 'Select customer',
+                                          fillColor: rang.always,
+                                          focusColor: rang.always,
+                                          
+                                        suffixIcon: 
+                                          IconButton(
+                                            padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
+                                            onPressed: textEditingController.clear,
+                                            icon: Icon(Icons.clear,size: 20,),
+                                          ),
+                                        ),
+                                        controller:
+                                            textEditingController, //uses fieldViewBuilder TextEditingController
+                                        focusNode: focusNode,
+                                      );
+                                    },
+
+                                    optionsMaxHeight: 400,
+                                    optionsViewBuilder:
+                                        (context, onSelected, options) {
+                                      return Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Material(
+                                          child: Container(
+                                            width: 300,
+                                            // color: Colors.cyan,
+                                            child: ListView.builder(
+                                              padding: EdgeInsets.all(10.0),
+                                              itemCount: options.length,
+                                              itemBuilder:
+                                                  (BuildContext context,
+                                                      int index) {
+                                                final String option =
+                                                    options.elementAt(index);
+
+                                                return GestureDetector(
+                                                  onTap: () {
+                                                    onSelected(option);
+                                                  },
+                                                  child: ListTile(
+                                                    title: Text(
+                                                      option,
+                                                      style: const TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 10),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
                             ),
@@ -174,7 +271,7 @@ class _Invoice_frontState extends State<Invoice_front> {
                         height: 30,
                       ),
                       Container(
-                        width: 320,
+                        width: double.infinity,
                         height: 250,
                         padding: EdgeInsets.all(5),
                         decoration: BoxDecoration(
@@ -189,32 +286,124 @@ class _Invoice_frontState extends State<Invoice_front> {
                         child: Padding(
                           padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                           child: Container(
-                            width: 250,
+                            width: 260,
                             child: Column(
                               children: [
-                                DropdownButton(
-                                  // Initial Value
-                                  isExpanded: true,
-                                  value: selected_item,
+                                // DropdownButton(
+                                //   // Initial Value
+                                //   isExpanded: true,
+                                //   value: selected_item,
 
-                                  // Down Arrow Icon
-                                  icon: const Icon(Icons.keyboard_arrow_down),
-                                  hint:
-                                      "Select customer     ".text.black.make(),
-                                  // Array list of items
-                                  items: products.map((String items) {
-                                    return DropdownMenuItem(
-                                      value: items,
-                                      child: Text(items),
-                                    );
-                                  }).toList(),
-                                  // After selecting the desired option,it will
-                                  // change button value to selected value
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      selected_item = newValue!;
-                                    });
-                                  },
+                                //   // Down Arrow Icon
+                                //   icon: const Icon(Icons.keyboard_arrow_down),
+                                //   hint:
+                                //       "Select customer     ".text.black.make(),
+                                //   // Array list of items
+                                //   items: products.map((String items) {
+                                //     return DropdownMenuItem(
+                                //       value: items,
+                                //       child: Text(items),
+                                //     );
+                                //   }).toList(),
+                                //   // After selecting the desired option,it will
+                                //   // change button value to selected value
+                                //   onChanged: (String? newValue) {
+                                //     setState(() {
+                                //       selected_item = newValue!;
+                                //     });
+                                //   },
+                                // ),
+                                Container(
+                                  padding: EdgeInsets.all(5),
+                                  width: 300,
+                                  child: Autocomplete<String>(
+                                    optionsBuilder:
+                                        (TextEditingValue textEditingValue) {
+                                      if (textEditingValue.text.isEmpty ||
+                                          textEditingValue
+                                                  .selection.baseOffset ==
+                                              0) {
+                                        // Return the full customer list if the field is empty or focused
+                                        return products;
+                                      }
+                                      // Filter the customer list based on the user's input
+                                      return products.where((String option) {
+                                        return option.toLowerCase().contains(
+                                            textEditingValue.text
+                                                .toLowerCase());
+                                      });
+                                    },
+                                    onSelected: (String selectedValue) {
+                                      setState(() {
+                                        selected_item = selectedValue!;
+                                      });
+                                    },
+
+                                    fieldViewBuilder: (context,
+                                        textEditingController,
+                                        focusNode,
+                                        onFieldSubmitted) {
+                                      // You can use the next snip of code if you dont want the initial text to come when you use setState((){});
+                                      return TextFormField(
+                                        style: TextStyle(fontSize: 12),
+                                        decoration: InputDecoration(
+                                          labelText: 'Select Items',
+                                          fillColor: rang.always,
+                                          focusColor: rang.always,
+                                          suffixIcon: 
+                                          IconButton(
+                                            padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
+                                            onPressed: textEditingController.clear,
+                                            icon: Icon(Icons.clear,size: 20,),
+                                          ),),
+                                        
+                                        controller:
+                                            textEditingController, //uses fieldViewBuilder TextEditingController
+                                        focusNode: focusNode,
+                                      );
+                                    },
+
+                                    optionsMaxHeight: 400,
+                                    optionsViewBuilder:
+                                        (context, onSelected, options) {
+                                      return Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Material(
+                                          child: Container(
+                                            width: 300,
+                                            // color: Colors.cyan,
+                                            child: ListView.builder(
+                                              padding: EdgeInsets.all(10.0),
+                                              itemCount: options.length,
+                                              itemBuilder:
+                                                  (BuildContext context,
+                                                      int index) {
+                                                final String option =
+                                                    options.elementAt(index);
+
+                                                return GestureDetector(
+                                                  onTap: () {
+                                                    onSelected(option);
+                                                  },
+                                                  child: ListTile(
+                                                    title: Text(
+                                                      option,
+                                                      style: const TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 10),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+
+                                    // initialValue: const TextEditingValue(
+                                    //     text: "Select Customer "),
+                                  ),
                                 ),
                                 SizedBox(
                                   height: 20,
@@ -258,19 +447,19 @@ class _Invoice_frontState extends State<Invoice_front> {
                                     },
                                     child: Ink(
                                       height: 50,
-                                      decoration: BoxDecoration(
+                                      child: Container(
+                                        width: 60,
+                                        decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(10),
                                           color: rang.always,
-                                          gradient: LinearGradient(colors: [
-                                            Color.fromRGBO(143, 148, 251, 1),
-                                            Color.fromRGBO(143, 148, 251, 6),
-                                          ])),
-                                      child: Center(
-                                        child: Text("Add",
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                            )),
+                                        ),
+                                        child: Center(
+                                            child: Text("Add",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.bold))),
                                       ),
                                     ),
                                   ),
@@ -296,16 +485,18 @@ class _Invoice_frontState extends State<Invoice_front> {
                             ]),
 
                         child: DataTable(
+                          dataRowHeight: 70,
                           columns: [
                             DataColumn(label: Text('Item Name')),
                             DataColumn(label: Text('Quantity')),
-                            DataColumn(label: Text('remove'))
+                            DataColumn(label: Text('Remove'))
                           ],
                           rows: item
                               .map(
                                 (iteme) => DataRow(
                                   cells: [
-                                    DataCell(Text(iteme.name)),
+                                    DataCell(Text(iteme.name,
+                                        style: TextStyle(fontSize: 10))),
                                     DataCell(Text(iteme.quantity.toString())),
                                     DataCell(
                                       IconButton(

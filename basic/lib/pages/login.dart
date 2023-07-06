@@ -272,13 +272,13 @@ class _login_pageState extends State<login_page> {
                             });
 
                             if (dataSnapshot5) {
-                              // Navigator.pushNamed(
-                              //     context, router.account_req_veri);
+                              Navigator.pushNamed(
+                                  context, router.account_req_veri);
                               print("pending");
                               Auth().signOut();
                             } else {
-                              // Navigator.pushNamed(
-                              //     context, router.account_req_declined);
+                              Navigator.pushNamed(
+                                  context, router.account_req_declined);
                               print("declined");
                             }
                           }

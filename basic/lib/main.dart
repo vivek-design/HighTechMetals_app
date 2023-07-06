@@ -220,13 +220,18 @@ class home extends StatelessWidget {
                 child: Stack(
                   children: <Widget>[
                     Positioned(
+                      top: 40,
                       left: 30,
                       width: 80,
                       height: 200,
                       child: Container(
+                        // 
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage('assets/images/light-1.png'),
+                            
+                               
+                            image: AssetImage('assets/images/Parts_of_a_Car_Coloring_Pages-removebg-preview.png'),
+                            
                           ),
                         ),
                       ),
@@ -244,14 +249,15 @@ class home extends StatelessWidget {
                       ),
                     ),
                     Positioned(
-                      right: 40,
-                      top: 40,
-                      width: 80,
+                      right: 10,
+                      top: 60,
+                      
+                      width: 90,
                       height: 150,
                       child: Container(
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage('assets/images/clock.png'),
+                            image: AssetImage('assets/images/Premium_Vector___Turbocharger-removebg-preview.png'),
                           ),
                         ),
                       ),
