@@ -1,6 +1,7 @@
 import 'package:basic/DeliveryManagr/Confirmdispatch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../Uitilities/col.dart';
@@ -73,24 +74,41 @@ class _update_orderdetailState extends State<update_orderdetail> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          'Order ID: ${order.orderId}'.text.bold.red600.make(),
-                          Text('Timestamp: ${order.timestamp.toString()}'),
-                          SizedBox(height: 4),
-                          Text('Items:'),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: order.items
-                                .map(
-                                  (item) => Text(
-                                    '- ${item.name}:    ${item.quantity}',
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                          20.heightBox,
-                        ],
-                      ),
+                        'Order ID: ${order.orderId}'.text.bold.red600.make(),
+                    5.heightBox,
+                    Text('Timestamp: ${formatTimestamp(order.timestamp)}',style: TextStyle(fontSize: 13),),
+                    SizedBox(height: 4),
+                    Text('Items:',style: TextStyle(fontSize: 13)),
+                          FittedBox(
+                      // crossAxisAlignment: CrossAxisAlignment.start,
+                      // children: order.items
+                      //     .map((item) =>
+                      //         Text('- ${item.name}: \n Quantity: ${item.quantity} \n              '),)
+                      //     .toList(),
+                   
+                   child:   DataTable(
+                          dataRowHeight: 70,
+                          
+                          columns: [
+                            DataColumn(label: Text('Item Name')),
+                            DataColumn(label: Text('Quantity')),
+                            // DataColumn(label: Text('Remove'))
+                          ],
+                          rows: order.items
+                              .map(
+                                (iteme) => DataRow(
+                                  cells: [
+                                    DataCell(Text(iteme.name,
+                                        style: TextStyle(fontSize: 10))),
+                                    DataCell(Text(iteme.quantity.toString())),
+                                   
+                                  ],
+                                ),
+                              )
+                              .toList(),
+                        ),
                     ),
+                  ]),),
                     50.heightBox,
                     Container(
                       padding: EdgeInsets.all(10),
@@ -108,6 +126,8 @@ class _update_orderdetailState extends State<update_orderdetail> {
                       ),
                       child: ListView.separated(
                         shrinkWrap: true,
+                      
+                             physics: NeverScrollableScrollPhysics(),
                         itemCount: ordred_item.length,
                         separatorBuilder: (BuildContext context, int index) =>
                             const Divider(color: Colors.grey, thickness: 3),
@@ -120,23 +140,10 @@ class _update_orderdetailState extends State<update_orderdetail> {
                           return Container(
                             child: Column(
                               children: [
-                                "- ${temp.name}: ".text.make(),
-                                " Ordered quantity= ${temp.quantity}".text.make(),
+                                "- ${temp.name}: ".text.size(13).bold.make(),
+                                " Ordered quantity= ${temp.quantity}".text.size(13).make(),
                                 10.heightBox,
-                                // Slider(
-                                //   activeColor: rang.always,
-                                //   inactiveColor: rang.always,
-                                //   value: slider_values[index],
-                                //   min: 0,
-                                //   max: temp.quantity.toDouble(),
-                                //   divisions: temp.quantity,
-                                //   label: slider_values[index].round().toString(),
-                                //   onChanged: (double value) {
-                                //     setState(() {
-                                //       slider_values[index] = value;
-                                //     });
-                                //   },
-                                // ),
+                               
                                 TextFormField(
                                   controller: texteditingController[index],
                                   keyboardType: TextInputType.number,
@@ -161,11 +168,11 @@ class _update_orderdetailState extends State<update_orderdetail> {
                                 ),
                                 10.heightBox,
                                 "  Dispatching quantity: ${(slider_values[index])}"
-                                    .text
+                                    .text.size(13)
                                     .make(),
                                 2.heightBox,
                                 "Remaining quantity: ${(temp.quantity - (slider_values[index])>0)?(temp.quantity - (slider_values[index])):0}"
-                                    .text
+                                    .text.size(13)
                                     .make(),
                                 20.heightBox,
                               ],
@@ -214,4 +221,19 @@ class _update_orderdetailState extends State<update_orderdetail> {
     
     );
   }
+  
+String formatTimestamp(DateTime timestamp) {
+
+  
+  // Format the date
+  String formattedDate = DateFormat('d MMMM yyyy').format(timestamp);
+
+  // Format the time
+  String formattedTime = DateFormat('h:mm a').format(timestamp);
+
+  // Combine the formatted date and time
+  String formattedDateTime = '$formattedDate ${formattedTime.toLowerCase()}';
+
+  return formattedDateTime;
+}
 }

@@ -1,5 +1,6 @@
 import 'package:basic/DeliveryManagr/delivery_front.dart';
 import 'package:basic/DeliveryManagr/update_order.dart';
+import 'package:basic/InvoiceManager/dataupdate.dart';
 import 'package:basic/InvoiceManager/invoicemanager.dart';
 import 'package:basic/Uitilities/dispatchsuccess.dart';
 import 'package:basic/Uitilities/ordersuccess.dart';
@@ -10,6 +11,7 @@ import 'package:basic/customer/showdetail.dart';
 import 'package:basic/owner/Acceptaccount_perm.dart';
 import 'package:basic/pages/Account_req_decl.dart';
 import 'package:basic/pages/EmailaVerification.dart';
+import 'package:basic/pages/FakeLog.dart';
 import 'package:basic/pages/account_under_veri.dart';
 import 'package:basic/pages/gettingstart.dart';
 import 'package:basic/pages/login.dart';
@@ -70,6 +72,7 @@ class MyApp extends StatelessWidget {
         router.accept_acc_req:(context) => Accept_account_request(),
         router.account_req_veri:(context)=>account_under_veri(),
         router.account_req_declined:(context)=>Account_req_declined(),
+       router.fakeloged:(context) => fakeloged(),
         
         
       },
@@ -100,12 +103,12 @@ class _HomePageState extends State<HomePage> {
       print(user.uid);
     }
 
-    await Future.delayed(Duration(seconds: (2)));
+    // await Future.delayed(Duration(seconds: (2)));
     if (user == null) {
       print(1);
       return false;
     }
-    DatabaseReference databaseRefu = FirebaseDatabase.instance.ref('Customer');
+    DatabaseReference databaseRefu = await FirebaseDatabase.instance.ref('Customer');
     var dataSnapshot;
     await databaseRefu.child(user!.uid).once().then((Event) {
       dataSnapshot = Event.snapshot.exists;
@@ -117,7 +120,7 @@ class _HomePageState extends State<HomePage> {
       customer = true;
       return true;
     } else {
-      databaseRefu = FirebaseDatabase.instance.ref('Inventory_manager');
+      databaseRefu = await FirebaseDatabase.instance.ref('Inventory_manager');
 
       await databaseRefu.child(user!.uid).once().then((Event) {
         dataSnapshot = Event.snapshot.exists;
@@ -127,7 +130,7 @@ class _HomePageState extends State<HomePage> {
         inventorymanager = true;
         return true;
       } else {
-        databaseRefu = FirebaseDatabase.instance.ref('deliveymanager');
+        databaseRefu = await FirebaseDatabase.instance.ref('Delivery_manager');
 
         await databaseRefu.child(user!.uid).once().then((Event) {
           dataSnapshot = Event.snapshot.exists;

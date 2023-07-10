@@ -13,6 +13,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../DeliveryManagr/delivery_front.dart';
@@ -33,7 +34,7 @@ class Show_detail extends StatefulWidget {
 class _Show_detailState extends State<Show_detail> {
   @override
   late DatabaseReference _orderRef;
-  List<Order> orders = [];
+  List<Orderfordispatch> orders = [];
   void initState() {
     super.initState();
   }
@@ -55,8 +56,8 @@ class _Show_detailState extends State<Show_detail> {
         data?.forEach((key, value) async {
           print(value);
           List<dynamic> itemsData = value['items'];
-          List<Item> items = await itemsData
-              .map((itemData) => Item(itemData['name'], itemData['quantity']))
+          List<Itemfordispatchsummry> items = await itemsData
+              .map((itemData) => Itemfordispatchsummry(itemData['name'].toString(),itemData['Remaining quantity'].toString(), itemData['Dispatched_quantity'].toString(),itemData['Ordered_quantity'].toString()))
               .toList();
 
           DateTime? timestamp = DateTime.tryParse(value['timestamp']);
@@ -64,7 +65,7 @@ class _Show_detailState extends State<Show_detail> {
           // print(timestamp);
           if (timestamp!.isAfter(widget.dateTimeRange.start) &&
               timestamp.isBefore(widget.dateTimeRange.end)) {
-            Order order = Order(key, items, DateTime.parse(value['timestamp']),dipatch_id);
+            Orderfordispatch order = Orderfordispatch(key, items, DateTime.parse(value['timestamp']),dipatch_id);
             orders.add(order);
           }
         });
@@ -102,7 +103,7 @@ class _Show_detailState extends State<Show_detail> {
               body: ListView.builder(
                 itemCount: orders.length,
                 itemBuilder: (BuildContext context, int index) {
-                  Order order = orders[index];
+                  Orderfordispatch order = orders[index];
 
                   return Container(
                       padding: EdgeInsets.all(15),
@@ -127,16 +128,68 @@ class _Show_detailState extends State<Show_detail> {
                                 .make(),
                                   4.heightBox,
                             'Dispatch ID: ${order.dispatch_id}'.text.bold.red600.make(),
-                            Text('Timestamp: ${order.timestamp.toString()}'),
+                            Text('Timestamp: ${formatTimestamp(order.timestamp)}' ,style: TextStyle(
+                              fontSize: 13,
+                            ),),
                             SizedBox(height: 4),
                             Text('Items:'),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: order.items
-                                  .map((item) =>
-                                      Text('- ${item.name}: ${item.quantity}'))
-                                  .toList(),
+                            // Column(
+                            //   crossAxisAlignment: CrossAxisAlignment.start,
+                            //   children: order.items
+                            //       .map((item) =>
+                            //           Text('- ${item.name}: ${item.dispatchedquantity}'))
+                            //       .toList(),
+                            // ),
+                            SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: FittedBox(
+                    
+                    child: DataTable(
+                      dataRowHeight: 70,
+                      columns: [
+                        DataColumn(label: Text('Item Name')),
+                        DataColumn(label: Text('Dispatched')),
+                        DataColumn(label: Text('Ordered')),
+                        DataColumn(label: Text('Remaining')),
+                      ],
+                      rows: order.items.map(
+                        (iteme) => DataRow(
+                          cells: [
+                            DataCell(
+                              Text(
+                                iteme.name,
+                                style: TextStyle(fontSize: 10),
+                              ),
                             ),
+                            DataCell(
+                              Text(
+                                iteme.dispatchedquantity.toString(),
+                                style: TextStyle(fontSize: 10),
+                              ),
+                            ),
+                            DataCell(
+                              Text(
+                                iteme.orderedquantity.toString(),
+                                style: TextStyle(fontSize: 10),
+                              ),
+                            ),
+                            DataCell(
+                              Text(
+                                iteme.remainingquantity.toString(),
+                                style: TextStyle(fontSize: 10),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ).toList(),
+                    ),
+                  ),
+                ),
+                               ),   // ),
+                        
+                            
                             20.heightBox,
                           ],
                         ),
@@ -183,4 +236,42 @@ class _Show_detailState extends State<Show_detail> {
           }
         });
   }
+
+  String formatTimestamp(DateTime timestamp) {
+
+  
+  // Format the date
+  String formattedDate = DateFormat('d MMMM yyyy').format(timestamp);
+
+  // Format the time
+  String formattedTime = DateFormat('h:mm a').format(timestamp);
+
+  // Combine the formatted date and time
+  String formattedDateTime = '$formattedDate ${formattedTime.toLowerCase()}';
+
+  return formattedDateTime;
 }
+}
+
+class Itemfordispatchsummry {
+        
+         final String name;
+       final  String  remainingquantity;
+         final String dispatchedquantity;
+         final String orderedquantity;
+
+  Itemfordispatchsummry(this.name, this.remainingquantity, this.dispatchedquantity, this.orderedquantity);
+}
+
+
+
+class Orderfordispatch {
+  final String orderId;
+  final List<Itemfordispatchsummry> items;
+  final DateTime timestamp;
+  final String dispatch_id;
+
+  Orderfordispatch(this.orderId, this.items, this.timestamp, this.dispatch_id);
+  
+}
+

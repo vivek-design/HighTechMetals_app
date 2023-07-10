@@ -1,3 +1,6 @@
+import 'dart:ffi';
+
+import 'package:basic/pages/FakeLog.dart';
 import 'package:basic/pages/alertbox.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -198,6 +201,11 @@ class _login_pageState extends State<login_page> {
 
                         final user = Auth().currentUser;
                         if (user?.emailVerified ?? false) {
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) => fakeloged()),
+                              (route) => false);
+
                           DatabaseReference databaseRefu = FirebaseDatabase
                               .instance
                               .ref("Inventory_manager");

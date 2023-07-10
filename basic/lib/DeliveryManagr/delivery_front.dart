@@ -10,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:basic/Uitilities/router.dart';
+import 'package:intl/intl.dart';
 
 class deliv_front extends StatefulWidget {
   const deliv_front({super.key});
@@ -55,6 +56,7 @@ class _deliv_frontState extends State<deliv_front> {
         backgroundColor: rang.always,
       ),
       body: ListView.builder(
+        shrinkWrap: true,
         itemCount: orders.length,
         itemBuilder: (BuildContext context, int index) {
           Order order = orders[index];
@@ -62,7 +64,7 @@ class _deliv_frontState extends State<deliv_front> {
           return Container(
               padding: EdgeInsets.all(15),
               child: Container(
-                padding: EdgeInsets.all(5),
+                padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
@@ -76,15 +78,38 @@ class _deliv_frontState extends State<deliv_front> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     'Order ID: ${order.orderId}'.text.bold.red600.make(),
-                    Text('Timestamp: ${order.timestamp.toString()}'),
+                    5.heightBox,
+                    Text('Timestamp: ${formatTimestamp(order.timestamp)}',style: TextStyle(fontSize: 13),),
                     SizedBox(height: 4),
-                    Text('Items:'),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: order.items
-                          .map((item) =>
-                              Text('- ${item.name}: ${item.quantity}'))
-                          .toList(),
+                    Text('Items:',style: TextStyle(fontSize: 13)),
+                    FittedBox(
+                      // crossAxisAlignment: CrossAxisAlignment.start,
+                      // children: order.items
+                      //     .map((item) =>
+                      //         Text('- ${item.name}: \n Quantity: ${item.quantity} \n              '),)
+                      //     .toList(),
+                   
+                   child:   DataTable(
+                          dataRowHeight: 70,
+                          
+                          columns: [
+                            DataColumn(label: Text('Item Name')),
+                            DataColumn(label: Text('Quantity')),
+                            // DataColumn(label: Text('Remove'))
+                          ],
+                          rows: order.items
+                              .map(
+                                (iteme) => DataRow(
+                                  cells: [
+                                    DataCell(Text(iteme.name,
+                                        style: TextStyle(fontSize: 10))),
+                                    DataCell(Text(iteme.quantity.toString())),
+                                   
+                                  ],
+                                ),
+                              )
+                              .toList(),
+                        ),
                     ),
                     20.heightBox,
                     ElevatedButton(
@@ -129,6 +154,21 @@ class _deliv_frontState extends State<deliv_front> {
       ),
     );
   }
+  
+String formatTimestamp(DateTime timestamp) {
+
+  
+  // Format the date
+  String formattedDate = DateFormat('d MMMM yyyy').format(timestamp);
+
+  // Format the time
+  String formattedTime = DateFormat('h:mm a').format(timestamp);
+
+  // Combine the formatted date and time
+  String formattedDateTime = '$formattedDate ${formattedTime.toLowerCase()}';
+
+  return formattedDateTime;
+}
 }
 
 class Order {
@@ -144,4 +184,6 @@ class Item {
   final int quantity;
 
   Item(this.name, this.quantity);
+
+  toInt() {}
 }

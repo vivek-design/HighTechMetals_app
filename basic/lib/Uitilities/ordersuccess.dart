@@ -14,8 +14,8 @@ class order_success extends StatefulWidget {
 class _order_successState extends State<order_success> {
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      child: Container(
+    return Scaffold(
+      body:Center(child: Container(
          decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(80)
          ),
@@ -38,6 +38,6 @@ class _order_successState extends State<order_success> {
           } , child: "Done".text.make(),style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(rang.always))),width: 100,)
         ]),
       ),
-    );
+    ));
   }
 }

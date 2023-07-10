@@ -1,4 +1,6 @@
+import 'package:basic/InvoiceManager/dataupdate.dart';
 import 'package:basic/Uitilities/circularpro.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:basic/Uitilities/auth.dart';
 import 'package:basic/Uitilities/col.dart';
@@ -15,6 +17,7 @@ import 'package:dio/dio.dart';
 import 'package:csv/csv.dart';
 import 'dart:convert';
 import 'package:input_quantity/input_quantity.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Invoice_front extends StatefulWidget {
   const Invoice_front({super.key});
@@ -71,7 +74,7 @@ class _Invoice_frontState extends State<Invoice_front> {
               // print(value);
 
               String a = value['Item No'].toString() +
-                  " " +
+                  "  " +
                   value['Item Description'].toString();
               will_add.add(a);
             }
@@ -102,7 +105,7 @@ class _Invoice_frontState extends State<Invoice_front> {
             return Scaffold(
               appBar: AppBar(
                 title: Center(
-                  child: "invoimanager".text.make(),
+                  child: "Invoice manager".text.make(),
                 ),
                 toolbarHeight: 90,
                 backgroundColor: rang.always,
@@ -122,7 +125,7 @@ class _Invoice_frontState extends State<Invoice_front> {
                               padding: EdgeInsets.all(5),
                               decoration: BoxDecoration(
                                   color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(40),
                                   boxShadow: [
                                     BoxShadow(
                                         color: Color.fromRGBO(143, 148, 251, 1),
@@ -130,7 +133,7 @@ class _Invoice_frontState extends State<Invoice_front> {
                                         offset: Offset(0, 10))
                                   ]),
                               child: Padding(
-                                padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                                 // child: DropdownButton(
                                 //   // Initial Value
                                 //   isExpanded: true,
@@ -168,7 +171,7 @@ class _Invoice_frontState extends State<Invoice_front> {
                                 // ),
 
                                 child: Container(
-                                  padding: EdgeInsets.all(5),
+                                  padding: EdgeInsets.all(10),
                                   child: Autocomplete<String>(
                                     optionsBuilder:
                                         (TextEditingValue textEditingValue) {
@@ -203,34 +206,47 @@ class _Invoice_frontState extends State<Invoice_front> {
                                         focusNode,
                                         onFieldSubmitted) {
                                       // You can use the next snip of code if you dont want the initial text to come when you use setState((){});
-                                      return TextFormField(
-                                            style: TextStyle(fontSize: 12),
-                                        decoration: InputDecoration(
-                                          labelText: 'Select customer',
-                                          fillColor: rang.always,
-                                          focusColor: rang.always,
-                                          
-                                        suffixIcon: 
-                                          IconButton(
-                                            padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
-                                            onPressed: textEditingController.clear,
-                                            icon: Icon(Icons.clear,size: 20,),
+                                      return Container(
+                                        child: TextFormField(
+                                          style: TextStyle(fontSize: 12),
+                                          decoration: InputDecoration(
+                                            labelText: 'Select customer',
+                                            fillColor: rang.always,
+                                            focusColor: rang.always,
+                                            suffixIcon: IconButton(
+                                              padding: EdgeInsets.fromLTRB(
+                                                  0, 12, 0, 0),
+                                              onPressed:
+                                                  textEditingController.clear,
+                                              icon: Icon(
+                                                Icons.clear,
+                                                size: 20,
+                                              ),
+                                            ),
                                           ),
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return 'Please enter customer ';
+                                            }
+                                            return null;
+                                          },
+
+                                          controller:
+                                              textEditingController, //uses fieldViewBuilder TextEditingController
+                                          focusNode: focusNode,
                                         ),
-                                        controller:
-                                            textEditingController, //uses fieldViewBuilder TextEditingController
-                                        focusNode: focusNode,
                                       );
                                     },
-
-                                    optionsMaxHeight: 400,
+                                    // optionsMaxHeight: 400,
                                     optionsViewBuilder:
                                         (context, onSelected, options) {
                                       return Align(
                                         alignment: Alignment.topLeft,
                                         child: Material(
                                           child: Container(
-                                            width: 300,
+                                            width: 250,
+                                            height: 500,
                                             // color: Colors.cyan,
                                             child: ListView.builder(
                                               padding: EdgeInsets.all(10.0),
@@ -350,20 +366,25 @@ class _Invoice_frontState extends State<Invoice_front> {
                                           labelText: 'Select Items',
                                           fillColor: rang.always,
                                           focusColor: rang.always,
-                                          suffixIcon: 
-                                          IconButton(
-                                            padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
-                                            onPressed: textEditingController.clear,
-                                            icon: Icon(Icons.clear,size: 20,),
-                                          ),),
-                                        
+                                          suffixIcon: IconButton(
+                                            padding: EdgeInsets.fromLTRB(
+                                                0, 12, 0, 0),
+                                            onPressed:
+                                                textEditingController.clear,
+                                            icon: Icon(
+                                              Icons.clear,
+                                              size: 20,
+                                            ),
+                                          ),
+                                        ),
+
                                         controller:
                                             textEditingController, //uses fieldViewBuilder TextEditingController
                                         focusNode: focusNode,
                                       );
                                     },
 
-                                    optionsMaxHeight: 400,
+                                    // optionsMaxHeight: 400,
                                     optionsViewBuilder:
                                         (context, onSelected, options) {
                                       return Align(
@@ -371,6 +392,7 @@ class _Invoice_frontState extends State<Invoice_front> {
                                         child: Material(
                                           child: Container(
                                             width: 300,
+                                            height: 400,
                                             // color: Colors.cyan,
                                             child: ListView.builder(
                                               padding: EdgeInsets.all(10.0),
@@ -436,13 +458,20 @@ class _Invoice_frontState extends State<Invoice_front> {
                                     onTap: () {
                                       //this process returns the future so withput the use of await keywoed it will return the instance of future
                                       setState(() {
-                                        item.add(
-                                            Item(selected_item, quatity_count));
-                                        if (item.length > 1 &&
-                                            isremoved == false) {
-                                          item.removeAt(0);
-                                          isremoved = true;
+                                        if (selected_item != 'Select Item') {
+                                          item.add(Item(
+                                              selected_item, quatity_count));
+                                          if (item.length > 1 &&
+                                              isremoved == false) {
+                                            item.removeAt(0);
+                                            isremoved = true;
+                                          }
+                                        } else {
+                                          displaytoast(
+                                              "select the suitable item  ",
+                                              context);
                                         }
+                                        displaytoast("Item added", context);
                                       });
                                     },
                                     child: Ink(
@@ -520,23 +549,27 @@ class _Invoice_frontState extends State<Invoice_front> {
                       InkWell(
                         onTap: () {
                           //this process returns the future so withput the use of await keywoed it will return the instance of future
+                          if (selected_customer != 'Select Customer') {
+                            List<Map<String, dynamic>> orderItems = [];
+                            for (var iteme in item) {
+                              orderItems.add({
+                                'name': iteme.name,
+                                'quantity': iteme.quantity,
+                              });
+                            }
 
-                          List<Map<String, dynamic>> orderItems = [];
-                          for (var iteme in item) {
-                            orderItems.add({
-                              'name': iteme.name,
-                              'quantity': iteme.quantity,
+                            DatabaseReference _orderRef2 =
+                                FirebaseDatabase.instance.ref().child('orders');
+                            _orderRef2.child(selected_customer).push().set({
+                              'items': orderItems,
+                              'timestamp': DateTime.now().toString(),
                             });
+
+                            Navigator.pushNamed(context, router.successordrer);
+                          } else {
+                            displaytoast(
+                                "Please select the customer first ", context);
                           }
-
-                          DatabaseReference _orderRef2 =
-                              FirebaseDatabase.instance.ref().child('orders');
-                          _orderRef2.child(selected_customer).push().set({
-                            'items': orderItems,
-                            'timestamp': DateTime.now().toString(),
-                          });
-
-                          Navigator.pushNamed(context, router.successordrer);
                         },
                         child: Ink(
                           height: 50,
@@ -582,6 +615,47 @@ class _Invoice_frontState extends State<Invoice_front> {
                   ]),
                 ),
               ),
+              bottomNavigationBar: CurvedNavigationBar(
+                color: rang.always,
+                backgroundColor: Colors.white,
+                index: 0,
+                items: [
+                  Icon(Icons.home),
+                  Icon(Icons.data_object_outlined),
+                ],
+                onTap: (index) async {
+                  if (index == 0) {
+                    await Future.delayed(const Duration(seconds: 1));
+                    index = 0;
+                    // Navigator.pushNamed(context, router.History);
+                    setState(() {
+                      index = 0;
+                    });
+                  }
+
+                  if (index == 1) {
+                    await Future.delayed(const Duration(seconds: 1));
+                    index = 1;
+                    // Navigator.of(context).pushAndRemoveUntil(
+                    //     MaterialPageRoute(builder: (context) => dataUpdate()),
+                    //     (Route<dynamic> route) => false);
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: (context) => const dataUpdate()),
+                    // );
+
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                          builder: (context) => dataUpdate(Customer: customer)),
+                      (Route<dynamic> route) => false,
+                    );
+                    setState(() {
+                      index = 0;
+                    });
+                  }
+                },
+              ),
             );
           }
           return Scaffold(
@@ -593,6 +667,10 @@ class _Invoice_frontState extends State<Invoice_front> {
             )),
           );
         });
+  }
+
+  displaytoast(String s, BuildContext context) {
+    Fluttertoast.showToast(msg: s);
   }
 }
 

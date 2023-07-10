@@ -22,4 +22,5 @@ class router {
   static String account_req_veri = '/account request Under verification ';
   static String account_req_declined =
       '/account request declined by the owner or admin ';
+  static String fakeloged = '/fakelogged';
 }

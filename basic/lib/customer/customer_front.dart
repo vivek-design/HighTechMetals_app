@@ -29,18 +29,19 @@ class _Customer_forntState extends State<Customer_fornt> {
   late var Username;
 
   @override
-  void findUsername() async {
-    User? user = FirebaseAuth.instance.currentUser;
+  Future<bool> findUsername() async {
+    User? user = await FirebaseAuth.instance.currentUser;
     DatabaseReference _dbref =
-        FirebaseDatabase.instance.ref().child("Customer").child(user!.uid);
+       await FirebaseDatabase.instance.ref().child("Customer").child(user!.uid);
     DatabaseEvent dbenvent = await _dbref.once();
     // print(dbenvent.snapshot.value);
-    Map<dynamic, dynamic>? map = dbenvent.snapshot.value as Map?;
-    Username = map!['Name'];
+    Map<dynamic, dynamic>? map = await dbenvent.snapshot.value as Map?;
+    Username = await map!['Name'];
+    return true;
   }
 
   void initState() {
-    findUsername();
+  
 
     super.initState();
   }
@@ -49,7 +50,15 @@ class _Customer_forntState extends State<Customer_fornt> {
   Widget build(BuildContext context) {
     final start = dateRange.start;
     final end = dateRange.end;
-    return Scaffold(
+    return 
+    
+    
+    FutureBuilder(
+        future: findUsername(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            
+            return  Scaffold(
       appBar: AppBar(
         title: Center(
           child: "Customer".text.make(),
@@ -68,7 +77,7 @@ class _Customer_forntState extends State<Customer_fornt> {
               ),
               Container(
                 child: Center(
-                  child: "Welcome".text.xl.bold.make(),
+                  child: "Welcome  ${Username}".text.xl.bold.make(),
                 ),
               ),
               SizedBox(
@@ -76,7 +85,7 @@ class _Customer_forntState extends State<Customer_fornt> {
               ),
               Container(
                 height: 70,
-                width: 300,
+                width: double.infinity,
                 decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
@@ -91,6 +100,7 @@ class _Customer_forntState extends State<Customer_fornt> {
                       "    As a customer you have authority to review \n    previous  orders "
                           .text
                           .semiBold
+                          .italic
                           .make(),
                 ),
               ),
@@ -109,8 +119,10 @@ class _Customer_forntState extends State<Customer_fornt> {
                     ]),
                 child: Column(
                   children: [
+                    20.heightBox,
                     Container(
-                      child: "Select the date range ".text.semiBold.make(),
+                      child:
+                          "Select the date range ".text.semiBold.italic.make(),
                     ),
                     SizedBox(
                       height: 10,
@@ -133,8 +145,13 @@ class _Customer_forntState extends State<Customer_fornt> {
                                 child: Container(
                                   height: 80,
                                   width: 80,
-                                  child: Icon(Icons.calendar_today_outlined,
-                                      size: 35),
+                                  child: CircleAvatar(
+                                    child: Icon(Icons.calendar_today_outlined),
+                                    backgroundColor: rang.always,
+                                    radius: 5,
+                                  ),
+                                  // child: CircualrIcon(Icons.calendar_today_outlined,
+                                  //     size: 35),
                                 ),
                               ),
                             ],
@@ -142,78 +159,64 @@ class _Customer_forntState extends State<Customer_fornt> {
                         ),
                       ],
                     ),
-                    Container(
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: 33,
+                    30.heightBox,
+                   
+                          Row(
+                            children:[ 
+                              20.widthBox,
+                              "From :          ".text.bold.make(),
+                               Container(
+                                width: 150,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    gradient: LinearGradient(colors: [
+                                      Color.fromRGBO(226, 53, 57, 1),
+                                      Color.fromRGBO(226, 53, 57, 5),
+                                    ])),
+                                child: Center(
+                                    child: Text(
+                                  '${start.year}/${start.month}/${start.day}',
+                                  style: TextStyle(color: Colors.white),
+                                )),
+                          
+                                // / Background color
+                              ),
+                            
+                            ]
                           ),
-                          InkWell(
-                            child: Container(
-                              width: 100,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  gradient: LinearGradient(colors: [
-                                    Color.fromRGBO(226, 53, 57, 1),
-                                    Color.fromRGBO(226, 53, 57, 5),
-                                  ])),
-                              child: Center(
-                                  child: Text(
-                                '${start.year}/${start.month}/${start.day}',
-                                style: TextStyle(color: Colors.white),
-                              )),
 
-                              // / Background color
-                            ),
-                          ),
-                          SizedBox(width: 50),
-                          InkWell(
-                            child: Container(
-                              width: 100,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  gradient: LinearGradient(colors: [
-                                    Color.fromRGBO(226, 53, 57, 1),
-                                    Color.fromRGBO(226, 53, 57, 5),
-                                  ])),
-                              child: Center(
+                          30.heightBox,
+
+                           Row(
+                            children:[ 
+                              20.widthBox,
+                              "To:               ".text.bold.make(),
+                               Container(
+                                width: 150,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    gradient: LinearGradient(colors: [
+                                      Color.fromRGBO(226, 53, 57, 1),
+                                      Color.fromRGBO(226, 53, 57, 5),
+                                    ])),
+                                child: Center(
                                   child: Text(
                                 '${end.year}/${end.month}/${end.day}',
                                 style: TextStyle(color: Colors.white),
                               )),
+                                // / Background color
+                              ),
+                            
+                            ]
+                          ),
+                       
 
-                              // / Background color
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: 86,
-                        ),
-                        Container(
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: 30,
-                              ),
-                              Container(
-                                height: 80,
-                                width: 80,
-                                child: Image.asset(
-                                  'assets/images/8726176_slider_h_range_icon.png',
-                                  height: 200,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                        
+                     
+                    
+                    
                     SizedBox(
                       height: 30,
                     ),
@@ -223,7 +226,11 @@ class _Customer_forntState extends State<Customer_fornt> {
               60.heightBox,
               InkWell(
                 onTap: () => {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>Show_detail(username: Username, dateTimeRange: dateRange))),
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Show_detail(
+                              username: Username, dateTimeRange: dateRange))),
                 },
                 child: Container(
                   height: 50,
@@ -267,9 +274,22 @@ class _Customer_forntState extends State<Customer_fornt> {
           ]),
         ),
       ),
+      
     );
-  }
+          }else{
+            return Scaffold(
+            body: Container(
+                child: Center(
+              child: CircularProgressIndicator(
+                color: rang.always,
+              ),
+            )),
+          );
+        }
+  });
+          }
 
+          
   Future pickDateRange() async {
     DateTimeRange? newDateRange = await showDateRangePicker(
         context: context,
@@ -303,3 +323,6 @@ class _Customer_forntState extends State<Customer_fornt> {
     });
   }
 }
+  
+  
+

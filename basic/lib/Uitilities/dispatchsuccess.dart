@@ -39,8 +39,8 @@ class _MyDialogBoxState extends State<MyDialogBox> with SingleTickerProviderStat
   }
 
   Widget build(BuildContext context) {
-    return Dialog(
-      child: Container(
+    return Scaffold(
+      body: Center(child: Container(
          decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(80)
          ),
@@ -63,7 +63,7 @@ class _MyDialogBoxState extends State<MyDialogBox> with SingleTickerProviderStat
           } , child: "Done".text.make(),style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(rang.always))),width: 100,)
         ]),
       ),
-    );
+    ));
   }
 }
 
