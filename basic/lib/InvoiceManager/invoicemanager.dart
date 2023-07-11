@@ -105,10 +105,22 @@ class _Invoice_frontState extends State<Invoice_front> {
             return Scaffold(
               appBar: AppBar(
                 title: Center(
-                  child: "Invoice manager".text.make(),
+                  child:Row(
+                        children: [   "Invoice manager".text.make(),
+                        90.widthBox,
+                        InkWell(
+                          onTap: () => Navigator .pushNamed(context, router.previousHistory),
+                          child: Icon(
+                                Icons.history_outlined
+                          ),
+                        ),
+                        ],
+                  )
+                
                 ),
                 toolbarHeight: 90,
                 backgroundColor: rang.always,
+
               ),
               body: SingleChildScrollView(
                 child: Container(

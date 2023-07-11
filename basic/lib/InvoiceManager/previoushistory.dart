@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:basic/DeliveryManagr/update_order.dart';
 import 'package:flutter/material.dart';
 import 'package:basic/Uitilities/auth.dart';
@@ -12,15 +13,15 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:basic/Uitilities/router.dart';
 import 'package:intl/intl.dart';
 
-class deliv_front extends StatefulWidget {
-  const deliv_front({super.key});
+class Previoushistory extends StatefulWidget {
+  const Previoushistory({super.key});
 
   @override
-  State<deliv_front> createState() => _deliv_frontState();
+  State<Previoushistory> createState() => _PrevioushistoryState();
 }
 
-class _deliv_frontState extends State<deliv_front> {
-  late DatabaseReference _orderRef;
+class _PrevioushistoryState extends State<Previoushistory> {
+ late DatabaseReference _orderRef;
   List<Order> orders = [];
   int mycomp(Order o1, Order o2) {
     if (o1.timestamp.isAfter(o2.timestamp)) {
@@ -122,19 +123,7 @@ class _deliv_frontState extends State<deliv_front> {
                       ),
                     ),
                     20.heightBox,
-                    ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      update_orderdetail(order: order)));
-                        },
-                        child: "Dispatch".text.make(),
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStatePropertyAll(rang.always),
-                        )),
+                 
                   ],
                 ),
               ));

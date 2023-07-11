@@ -23,4 +23,5 @@ class router {
   static String account_req_declined =
       '/account request declined by the owner or admin ';
   static String fakeloged = '/fakelogged';
+  static String previousHistory = '/prevhistory';
 }

@@ -39,6 +39,14 @@ class _Show_detailState extends State<Show_detail> {
     super.initState();
   }
 
+  int mycomp(Orderfordispatch d1, Orderfordispatch d2) {
+    if (d1.timestamp.isBefore(d2.timestamp)) {
+      return 1;
+    }
+
+    return -1;
+  }
+
   Future<bool> getdetail() async {
     print(widget.username);
     _orderRef = FirebaseDatabase.instance
@@ -57,7 +65,11 @@ class _Show_detailState extends State<Show_detail> {
           print(value);
           List<dynamic> itemsData = value['items'];
           List<Itemfordispatchsummry> items = await itemsData
-              .map((itemData) => Itemfordispatchsummry(itemData['name'].toString(),itemData['Remaining quantity'].toString(), itemData['Dispatched_quantity'].toString(),itemData['Ordered_quantity'].toString()))
+              .map((itemData) => Itemfordispatchsummry(
+                  itemData['name'].toString(),
+                  itemData['Remaining quantity'].toString(),
+                  itemData['Dispatched_quantity'].toString(),
+                  itemData['Ordered_quantity'].toString()))
               .toList();
 
           DateTime? timestamp = DateTime.tryParse(value['timestamp']);
@@ -65,15 +77,18 @@ class _Show_detailState extends State<Show_detail> {
           // print(timestamp);
           if (timestamp!.isAfter(widget.dateTimeRange.start) &&
               timestamp.isBefore(widget.dateTimeRange.end)) {
-            Orderfordispatch order = Orderfordispatch(key, items, DateTime.parse(value['timestamp']),dipatch_id);
+            Orderfordispatch order = Orderfordispatch(
+                key, items, DateTime.parse(value['timestamp']), dipatch_id);
             orders.add(order);
           }
         });
       }
 
-      print(orders);
+      // print(orders);
     });
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 1));
+    orders.sort(mycomp);
+    await Future.delayed(Duration(seconds: 1));
     return true;
   }
 
@@ -126,11 +141,18 @@ class _Show_detailState extends State<Show_detail> {
                                 .bold
                                 .red600
                                 .make(),
-                                  4.heightBox,
-                            'Dispatch ID: ${order.dispatch_id}'.text.bold.red600.make(),
-                            Text('Timestamp: ${formatTimestamp(order.timestamp)}' ,style: TextStyle(
-                              fontSize: 13,
-                            ),),
+                            4.heightBox,
+                            'Dispatch ID: ${order.dispatch_id}'
+                                .text
+                                .bold
+                                .red600
+                                .make(),
+                            Text(
+                              'Timestamp: ${formatTimestamp(order.timestamp)}',
+                              style: TextStyle(
+                                fontSize: 13,
+                              ),
+                            ),
                             SizedBox(height: 4),
                             Text('Items:'),
                             // Column(
@@ -141,55 +163,62 @@ class _Show_detailState extends State<Show_detail> {
                             //       .toList(),
                             // ),
                             SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  child: FittedBox(
-                    
-                    child: DataTable(
-                      dataRowHeight: 70,
-                      columns: [
-                        DataColumn(label: Text('Item Name')),
-                        DataColumn(label: Text('Dispatched')),
-                        DataColumn(label: Text('Ordered')),
-                        DataColumn(label: Text('Remaining')),
-                      ],
-                      rows: order.items.map(
-                        (iteme) => DataRow(
-                          cells: [
-                            DataCell(
-                              Text(
-                                iteme.name,
-                                style: TextStyle(fontSize: 10),
+                              scrollDirection: Axis.horizontal,
+                              child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                child: FittedBox(
+                                  child: DataTable(
+                                    dataRowHeight: 70,
+                                    columns: [
+                                      DataColumn(label: Text('Item Name')),
+                                      DataColumn(label: Text('Dispatched')),
+                                      DataColumn(label: Text('Ordered')),
+                                      DataColumn(label: Text('Remaining')),
+                                    ],
+                                    rows: order.items
+                                        .map(
+                                          (iteme) => DataRow(
+                                            cells: [
+                                              DataCell(
+                                                Text(
+                                                  iteme.name,
+                                                  style:
+                                                      TextStyle(fontSize: 10),
+                                                ),
+                                              ),
+                                              DataCell(
+                                                Text(
+                                                  iteme.dispatchedquantity
+                                                      .toString(),
+                                                  style:
+                                                      TextStyle(fontSize: 10),
+                                                ),
+                                              ),
+                                              DataCell(
+                                                Text(
+                                                  iteme.orderedquantity
+                                                      .toString(),
+                                                  style:
+                                                      TextStyle(fontSize: 10),
+                                                ),
+                                              ),
+                                              DataCell(
+                                                Text(
+                                                  iteme.remainingquantity
+                                                      .toString(),
+                                                  style:
+                                                      TextStyle(fontSize: 10),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                        .toList(),
+                                  ),
+                                ),
                               ),
-                            ),
-                            DataCell(
-                              Text(
-                                iteme.dispatchedquantity.toString(),
-                                style: TextStyle(fontSize: 10),
-                              ),
-                            ),
-                            DataCell(
-                              Text(
-                                iteme.orderedquantity.toString(),
-                                style: TextStyle(fontSize: 10),
-                              ),
-                            ),
-                            DataCell(
-                              Text(
-                                iteme.remainingquantity.toString(),
-                                style: TextStyle(fontSize: 10),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ).toList(),
-                    ),
-                  ),
-                ),
-                               ),   // ),
-                        
-                            
+                            ), // ),
+
                             20.heightBox,
                           ],
                         ),
@@ -238,32 +267,28 @@ class _Show_detailState extends State<Show_detail> {
   }
 
   String formatTimestamp(DateTime timestamp) {
+    // Format the date
+    String formattedDate = DateFormat('d MMMM yyyy').format(timestamp);
 
-  
-  // Format the date
-  String formattedDate = DateFormat('d MMMM yyyy').format(timestamp);
+    // Format the time
+    String formattedTime = DateFormat('h:mm a').format(timestamp);
 
-  // Format the time
-  String formattedTime = DateFormat('h:mm a').format(timestamp);
+    // Combine the formatted date and time
+    String formattedDateTime = '$formattedDate ${formattedTime.toLowerCase()}';
 
-  // Combine the formatted date and time
-  String formattedDateTime = '$formattedDate ${formattedTime.toLowerCase()}';
-
-  return formattedDateTime;
-}
+    return formattedDateTime;
+  }
 }
 
 class Itemfordispatchsummry {
-        
-         final String name;
-       final  String  remainingquantity;
-         final String dispatchedquantity;
-         final String orderedquantity;
+  final String name;
+  final String remainingquantity;
+  final String dispatchedquantity;
+  final String orderedquantity;
 
-  Itemfordispatchsummry(this.name, this.remainingquantity, this.dispatchedquantity, this.orderedquantity);
+  Itemfordispatchsummry(this.name, this.remainingquantity,
+      this.dispatchedquantity, this.orderedquantity);
 }
-
-
 
 class Orderfordispatch {
   final String orderId;
@@ -272,6 +297,4 @@ class Orderfordispatch {
   final String dispatch_id;
 
   Orderfordispatch(this.orderId, this.items, this.timestamp, this.dispatch_id);
-  
 }
-

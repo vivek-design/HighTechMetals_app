@@ -2,6 +2,7 @@ import 'package:basic/DeliveryManagr/delivery_front.dart';
 import 'package:basic/DeliveryManagr/update_order.dart';
 import 'package:basic/InvoiceManager/dataupdate.dart';
 import 'package:basic/InvoiceManager/invoicemanager.dart';
+import 'package:basic/InvoiceManager/previoushistory.dart';
 import 'package:basic/Uitilities/dispatchsuccess.dart';
 import 'package:basic/Uitilities/ordersuccess.dart';
 
@@ -73,6 +74,7 @@ class MyApp extends StatelessWidget {
         router.account_req_veri:(context)=>account_under_veri(),
         router.account_req_declined:(context)=>Account_req_declined(),
        router.fakeloged:(context) => fakeloged(),
+       router.previousHistory:(context)=>Previoushistory(),
         
         
       },
