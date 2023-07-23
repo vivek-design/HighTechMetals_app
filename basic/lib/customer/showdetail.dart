@@ -75,8 +75,8 @@ class _Show_detailState extends State<Show_detail> {
           DateTime? timestamp = DateTime.tryParse(value['timestamp']);
           var dipatch_id = value['dipatch_id'].toString();
           // print(timestamp);
-          if (timestamp!.isAfter(widget.dateTimeRange.start) &&
-              timestamp.isBefore(widget.dateTimeRange.end)) {
+          if (timestamp!.isAfter(widget.dateTimeRange.start.subtract(Duration(days: 1))) &&
+              timestamp.isBefore(widget.dateTimeRange.end.add(Duration(days: 1)))) {
             Orderfordispatch order = Orderfordispatch(
                 key, items, DateTime.parse(value['timestamp']), dipatch_id);
             orders.add(order);

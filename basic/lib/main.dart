@@ -4,12 +4,15 @@ import 'package:basic/InvoiceManager/dataupdate.dart';
 import 'package:basic/InvoiceManager/invoicemanager.dart';
 import 'package:basic/InvoiceManager/previoushistory.dart';
 import 'package:basic/Uitilities/dispatchsuccess.dart';
+import 'package:basic/Uitilities/nointernet.dart';
 import 'package:basic/Uitilities/ordersuccess.dart';
 
 import 'package:basic/Uitilities/router.dart';
 import 'package:basic/customer/customer_front.dart';
 import 'package:basic/customer/showdetail.dart';
 import 'package:basic/owner/Acceptaccount_perm.dart';
+import 'package:basic/owner/deletecomplete.dart';
+import 'package:basic/owner/manageaccount.dart';
 import 'package:basic/pages/Account_req_decl.dart';
 import 'package:basic/pages/EmailaVerification.dart';
 import 'package:basic/pages/FakeLog.dart';
@@ -21,6 +24,7 @@ import 'package:basic/pages/registerfor_Inv.dart';
 import 'package:basic/pages/registerfor_deli.dart';
 import 'package:basic/pages/splash_screen.dart';
 import 'package:basic/pages/startpage.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -66,23 +70,22 @@ class MyApp extends StatelessWidget {
         router.InvFront: (context) => Invoice_front(),
         router.customerfront: (context) => Customer_fornt(),
         router.delivfront: (context) => deliv_front(),
-      
-        router.successordrer:(context)=>order_success(),
-        router.dispatchsuccess:(context)=>MyDialogBox(),
-        router.ownerfront:(context)=>Owner_front(),
-        router.accept_acc_req:(context) => Accept_account_request(),
-        router.account_req_veri:(context)=>account_under_veri(),
-        router.account_req_declined:(context)=>Account_req_declined(),
-       router.fakeloged:(context) => fakeloged(),
-       router.previousHistory:(context)=>Previoushistory(),
-        
-        
+        router.successordrer: (context) => order_success(),
+        router.dispatchsuccess: (context) => MyDialogBox(),
+        router.ownerfront: (context) => Owner_front(),
+        router.accept_acc_req: (context) => Accept_account_request(),
+        router.account_req_veri: (context) => account_under_veri(),
+        router.account_req_declined: (context) => Account_req_declined(),
+        router.fakeloged: (context) => fakeloged(),
+        router.previousHistory: (context) => Previoushistory(),
+        router.manage_account_owner: (context) => manage_account_owner(),
+        router.deltecompleteforowner: (context) => deletecompleteforowner(),
+        router.noInternet: (context) => No_internet(),
       },
       debugShowCheckedModeBanner: false,
     );
   }
 }
-
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required String title}) : super(key: key);
@@ -99,6 +102,31 @@ class _HomePageState extends State<HomePage> {
   bool inventorymanager = false;
   bool deliverymanager = false;
   bool owner = false;
+
+// StreamSubscription<ConnectivityResult> subscription;
+
+  @override
+  void initState() {
+    super.initState();
+    // subscription =
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        // Navigate to NoInternetPage if there is no internet connection
+        print("IN there");
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: ((context) {
+          return No_internet();
+        })));
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    // subscription.cancel();
+  }
+
   Future<bool> data() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -110,7 +138,8 @@ class _HomePageState extends State<HomePage> {
       print(1);
       return false;
     }
-    DatabaseReference databaseRefu = await FirebaseDatabase.instance.ref('Customer');
+    DatabaseReference databaseRefu =
+        await FirebaseDatabase.instance.ref('Customer');
     var dataSnapshot;
     await databaseRefu.child(user!.uid).once().then((Event) {
       dataSnapshot = Event.snapshot.exists;
@@ -152,8 +181,6 @@ class _HomePageState extends State<HomePage> {
     return true;
   }
 
-  
-
   Widget build(BuildContext context) {
     //scaffold class for structure building in flutter
     displaytoast(String s, BuildContext context) {
@@ -192,8 +219,6 @@ class _HomePageState extends State<HomePage> {
               return Customer_fornt();
             }
 
-
-
             return Center_page();
           } else {
             return spash_Screen();
@@ -230,13 +255,11 @@ class home extends StatelessWidget {
                       width: 80,
                       height: 200,
                       child: Container(
-                        // 
+                        //
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            
-                               
-                            image: AssetImage('assets/images/Parts_of_a_Car_Coloring_Pages-removebg-preview.png'),
-                            
+                            image: AssetImage(
+                                'assets/images/Parts_of_a_Car_Coloring_Pages-removebg-preview.png'),
                           ),
                         ),
                       ),
@@ -256,13 +279,13 @@ class home extends StatelessWidget {
                     Positioned(
                       right: 10,
                       top: 60,
-                      
                       width: 90,
                       height: 150,
                       child: Container(
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage('assets/images/Premium_Vector___Turbocharger-removebg-preview.png'),
+                            image: AssetImage(
+                                'assets/images/Premium_Vector___Turbocharger-removebg-preview.png'),
                           ),
                         ),
                       ),
@@ -290,8 +313,7 @@ class home extends StatelessWidget {
                   child: Text("Don't have an account ? Have one ",
                       style: TextStyle(
                         fontSize: 15,
-                        color:  Color.fromRGBO(226, 53, 57, 1),
-                          
+                        color: Color.fromRGBO(226, 53, 57, 1),
                       )),
                 ),
               ),
@@ -304,8 +326,8 @@ class home extends StatelessWidget {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         gradient: LinearGradient(colors: [
-                            Color.fromRGBO(226, 53, 57, 1),
-                            Color.fromRGBO(226, 53, 57, 5),
+                          Color.fromRGBO(226, 53, 57, 1),
+                          Color.fromRGBO(226, 53, 57, 5),
                         ])),
                     child: Center(
                       child: Text("Create account ",
@@ -322,8 +344,7 @@ class home extends StatelessWidget {
                   child: Text("Already have an account ",
                       style: TextStyle(
                         fontSize: 15,
-                        color:   Color.fromRGBO(226, 53, 57, 1),
-                           
+                        color: Color.fromRGBO(226, 53, 57, 1),
                       )),
                 ),
               ),
@@ -338,7 +359,7 @@ class home extends StatelessWidget {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           gradient: LinearGradient(colors: [
-                             Color.fromRGBO(226, 53, 57, 1),
+                            Color.fromRGBO(226, 53, 57, 1),
                             Color.fromRGBO(226, 53, 57, 5),
                           ])),
                       child: Center(

@@ -24,4 +24,7 @@ class router {
       '/account request declined by the owner or admin ';
   static String fakeloged = '/fakelogged';
   static String previousHistory = '/prevhistory';
+  static String manage_account_owner = '/manageaccountbyowner';
+  static String deltecompleteforowner = '/deletecompleteforowner';
+  static String noInternet = '/nointenet ';
 }

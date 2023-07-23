@@ -1,5 +1,6 @@
 import 'package:basic/InvoiceManager/dataupdate.dart';
 import 'package:basic/Uitilities/circularpro.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:basic/Uitilities/auth.dart';
@@ -18,6 +19,8 @@ import 'package:csv/csv.dart';
 import 'dart:convert';
 import 'package:input_quantity/input_quantity.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+
+import '../Uitilities/nointernet.dart';
 
 class Invoice_front extends StatefulWidget {
   const Invoice_front({super.key});
@@ -93,6 +96,16 @@ class _Invoice_frontState extends State<Invoice_front> {
 
   @override
   void initState() {
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        // Navigate to NoInternetPage if there is no internet connection
+        print("IN there");
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: ((context) {
+          return No_internet();
+        })));
+      }
+    });
     super.initState();
   }
 
@@ -105,22 +118,19 @@ class _Invoice_frontState extends State<Invoice_front> {
             return Scaffold(
               appBar: AppBar(
                 title: Center(
-                  child:Row(
-                        children: [   "Invoice manager".text.make(),
-                        90.widthBox,
-                        InkWell(
-                          onTap: () => Navigator .pushNamed(context, router.previousHistory),
-                          child: Icon(
-                                Icons.history_outlined
-                          ),
-                        ),
-                        ],
-                  )
-                
-                ),
+                    child: Row(
+                  children: [
+                    "Invoice manager".text.make(),
+                    90.widthBox,
+                    InkWell(
+                      onTap: () =>
+                          Navigator.pushNamed(context, router.previousHistory),
+                      child: Icon(Icons.history_outlined),
+                    ),
+                  ],
+                )),
                 toolbarHeight: 90,
                 backgroundColor: rang.always,
-
               ),
               body: SingleChildScrollView(
                 child: Container(

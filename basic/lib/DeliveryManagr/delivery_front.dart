@@ -53,7 +53,9 @@ class _deliv_frontState extends State<deliv_front> {
       }
 
       orders.sort(mycomp);
-      setState(() {});
+      setState(() {
+        
+      });
     });
   }
 

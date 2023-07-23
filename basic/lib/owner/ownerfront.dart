@@ -68,10 +68,10 @@ class _Owner_frontState extends State<Owner_front> {
       }
     });
 
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 1));
 
     orders.sort(mycomp);
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(Duration(seconds: 2));
     return true;
   }
 
@@ -88,14 +88,20 @@ class _Owner_frontState extends State<Owner_front> {
         if (snapshot.hasData) {
           return Scaffold(
             appBar: AppBar(
-              title: Text('All dispatched Orders'),
+              title: Container(
+                  child: Row(children: [Text('All dispatched Orders'),
+                 
+                 ],
+                  )),
               backgroundColor: rang.always,
+              actions: [],
             ),
             body: NotificationListener<ScrollNotification>(
               onNotification: (scrollNotification) {
                 if (!_isLoading &&
                     scrollNotification.metrics.pixels ==
-                        scrollNotification.metrics.maxScrollExtent && orders.length >_currentItemCount) {
+                        scrollNotification.metrics.maxScrollExtent &&
+                    orders.length > _currentItemCount) {
                   // Reached the end of the list, trigger loading more data
                   // print(scrollNotification.metrics.pixels);
                   _loadMoreData();
@@ -223,6 +229,14 @@ class _Owner_frontState extends State<Owner_front> {
                       Navigator.of(context).pushNamedAndRemoveUntil(
                           router.loginroute, (route) => false),
                     },
+                  ),
+
+                   ListTile(
+                    leading: Icon(Icons.account_tree_sharp),
+                    title: "Manage account".text.make(),
+                    onTap: () => {
+                     Navigator.pushNamed(context, router.manage_account_owner),
+                    },
                   )
                 ]),
               ),
@@ -292,25 +306,24 @@ class _Owner_frontState extends State<Owner_front> {
   }
 
   void _loadMoreData() {
-  // Simulate loading more data by fetching it from an API or other source
-  // Add your logic here to fetch the next batch of data
+    // Simulate loading more data by fetching it from an API or other source
+    // Add your logic here to fetch the next batch of data
 
-  // After loading the new data, update the itemCount and set isLoading to false
-  setState(() {
-    if (_currentItemCount + 5 >= orders.length) {
-      // Reached the end of the list
-      _currentItemCount = orders.length;
-    } else {
-      // Increase the number of items to load
-      _currentItemCount += 5;
-    }
-    _isLoading = false;
+    // After loading the new data, update the itemCount and set isLoading to false
+    setState(() {
+      if (_currentItemCount + 5 >= orders.length) {
+        // Reached the end of the list
+        _currentItemCount = orders.length;
+      } else {
+        // Increase the number of items to load
+        _currentItemCount += 5;
+      }
+      _isLoading = false;
 
-    // Sort the orders list
-    // orders.sort(mycomp);
-  });
-}
-
+      // Sort the orders list
+      // orders.sort(mycomp);
+    });
+  }
 }
 
 class Itemfordispatchsummry {
