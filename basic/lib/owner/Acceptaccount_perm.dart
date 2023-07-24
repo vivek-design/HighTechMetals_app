@@ -3,10 +3,13 @@
 import 'package:basic/Uitilities/col.dart';
 import 'package:basic/Uitilities/router.dart';
 import 'package:basic/owner/ownerfront.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
+
+import '../Uitilities/nointernet.dart';
 
 class Accept_account_request extends StatefulWidget {
   const Accept_account_request({super.key});
@@ -59,6 +62,17 @@ class _Accept_account_requestState extends State<Accept_account_request> {
 
   @override
   void initState() {
+
+     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        // Navigate to NoInternetPage if there is no internet connection
+        print("IN there");
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: ((context) {
+          return No_internet();
+        })));
+      }
+    });
     super.initState();
     get_Pending_request();
   }

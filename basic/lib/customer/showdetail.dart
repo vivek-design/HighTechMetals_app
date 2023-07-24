@@ -6,6 +6,7 @@ import 'package:basic/Uitilities/col.dart';
 import 'package:basic/Uitilities/router.dart';
 import 'package:basic/Uitilities/router.dart';
 import 'package:basic/pages/login.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
@@ -17,6 +18,7 @@ import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../DeliveryManagr/delivery_front.dart';
+import '../Uitilities/nointernet.dart';
 
 class Show_detail extends StatefulWidget {
   var username;
@@ -36,6 +38,17 @@ class _Show_detailState extends State<Show_detail> {
   late DatabaseReference _orderRef;
   List<Orderfordispatch> orders = [];
   void initState() {
+
+     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        // Navigate to NoInternetPage if there is no internet connection
+        print("IN there");
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: ((context) {
+          return No_internet();
+        })));
+      }
+    });
     super.initState();
   }
 

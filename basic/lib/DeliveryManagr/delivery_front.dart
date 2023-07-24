@@ -1,4 +1,5 @@
 import 'package:basic/DeliveryManagr/update_order.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:basic/Uitilities/auth.dart';
 import 'package:basic/Uitilities/col.dart';
@@ -11,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:basic/Uitilities/router.dart';
 import 'package:intl/intl.dart';
+
+import '../Uitilities/nointernet.dart';
 
 class deliv_front extends StatefulWidget {
   const deliv_front({super.key});
@@ -33,6 +36,18 @@ class _deliv_frontState extends State<deliv_front> {
   @override
   void initState() {
     super.initState();
+
+
+     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        // Navigate to NoInternetPage if there is no internet connection
+        print("IN there");
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: ((context) {
+          return No_internet();
+        })));
+      }
+    });
     _orderRef = FirebaseDatabase.instance.ref().child('orders');
     _orderRef.onValue.listen((event) {
       orders.clear();

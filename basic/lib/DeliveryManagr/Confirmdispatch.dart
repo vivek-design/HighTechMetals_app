@@ -4,6 +4,7 @@ import 'dart:ffi';
 import 'package:basic/Uitilities/dispatchsuccess.dart';
 import 'package:basic/Uitilities/router.dart';
 import 'package:basic/main.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -11,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../Uitilities/col.dart';
+import '../Uitilities/nointernet.dart';
 import 'delivery_front.dart';
 
 class Confirm_order_update extends StatefulWidget {
@@ -35,7 +37,16 @@ class _Confirm_order_updateState extends State<Confirm_order_update> {
   void initState() {
     // TODO: implement initState
     dispatch_id = TextEditingController();
-
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        // Navigate to NoInternetPage if there is no internet connection
+        print("IN there");
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: ((context) {
+          return No_internet();
+        })));
+      }
+    });
     super.initState();
   }
 

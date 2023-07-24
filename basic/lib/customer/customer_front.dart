@@ -1,4 +1,5 @@
 import 'package:basic/customer/showdetail.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:basic/Uitilities/router.dart';
 import '../Uitilities/auth.dart';
+import '../Uitilities/nointernet.dart';
 
 class Customer_fornt extends StatefulWidget {
   const Customer_fornt({super.key});
@@ -41,7 +43,16 @@ class _Customer_forntState extends State<Customer_fornt> {
   }
 
   void initState() {
-  
+   Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        // Navigate to NoInternetPage if there is no internet connection
+        print("IN there");
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: ((context) {
+          return No_internet();
+        })));
+      }
+    });
 
     super.initState();
   }

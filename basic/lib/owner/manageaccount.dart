@@ -5,6 +5,7 @@ import 'package:basic/Uitilities/router.dart';
 import 'package:basic/Uitilities/router.dart';
 import 'package:basic/owner/Acceptaccount_perm.dart';
 import 'package:basic/pages/login.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
@@ -18,6 +19,7 @@ import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../DeliveryManagr/delivery_front.dart';
+import '../Uitilities/nointernet.dart';
 
 class manage_account_owner extends StatefulWidget {
   const manage_account_owner({super.key});
@@ -109,6 +111,16 @@ class _manage_account_ownerState extends State<manage_account_owner> {
 
   @override
   void initState() {
+     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        // Navigate to NoInternetPage if there is no internet connection
+        print("IN there");
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: ((context) {
+          return No_internet();
+        })));
+      }
+    });
     super.initState();
   }
 

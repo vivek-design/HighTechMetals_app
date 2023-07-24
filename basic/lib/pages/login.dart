@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:basic/pages/FakeLog.dart';
 import 'package:basic/pages/alertbox.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -13,6 +14,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:flutter/material.dart';
 
 import '../Uitilities/auth.dart';
+import '../Uitilities/nointernet.dart';
 
 class login_page extends StatefulWidget {
   const login_page({super.key});
@@ -36,6 +38,16 @@ class _login_pageState extends State<login_page> {
 
   void initState() {
     // TODO: implement initState
+     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        // Navigate to NoInternetPage if there is no internet connection
+        print("IN there");
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: ((context) {
+          return No_internet();
+        })));
+      }
+    });
     _email = TextEditingController();
     _password = TextEditingController();
     super.initState();

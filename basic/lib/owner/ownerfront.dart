@@ -1,4 +1,5 @@
 import 'package:basic/owner/Acceptaccount_perm.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:basic/Uitilities/auth.dart';
@@ -16,6 +17,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:basic/Uitilities/router.dart';
 
 import '../DeliveryManagr/delivery_front.dart';
+import '../Uitilities/nointernet.dart';
 
 class Owner_front extends StatefulWidget {
   const Owner_front({super.key});
@@ -77,6 +79,16 @@ class _Owner_frontState extends State<Owner_front> {
 
   @override
   void initState() {
+     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        // Navigate to NoInternetPage if there is no internet connection
+        print("IN there");
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: ((context) {
+          return No_internet();
+        })));
+      }
+    });
     super.initState();
   }
 

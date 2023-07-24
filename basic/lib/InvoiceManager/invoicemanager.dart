@@ -571,7 +571,8 @@ class _Invoice_frontState extends State<Invoice_front> {
                       InkWell(
                         onTap: () {
                           //this process returns the future so withput the use of await keywoed it will return the instance of future
-                          if (selected_customer != 'Select Customer') {
+                          if (selected_customer != 'Select Customer' &&
+                              item[0].name != '-') {
                             List<Map<String, dynamic>> orderItems = [];
                             for (var iteme in item) {
                               orderItems.add({
@@ -589,8 +590,8 @@ class _Invoice_frontState extends State<Invoice_front> {
 
                             Navigator.pushNamed(context, router.successordrer);
                           } else {
-                            displaytoast(
-                                "Please select the customer first ", context);
+                            displaytoast("Please select the customer and items",
+                                context);
                           }
                         },
                         child: Ink(

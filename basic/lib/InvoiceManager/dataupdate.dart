@@ -6,6 +6,7 @@ import 'package:basic/InvoiceManager/invoicemanager.dart';
 import 'package:basic/Uitilities/col.dart';
 import 'package:basic/Uitilities/router.dart';
 import 'package:basic/owner/ownerfront.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:excel/excel.dart';
 
 import 'package:flutter/widgets.dart';
+
+import '../Uitilities/nointernet.dart';
 
 class dataUpdate extends StatefulWidget {
   final List<String> Customer;
@@ -34,6 +37,22 @@ class _dataUpdateState extends State<dataUpdate> {
   List<Item> item = [
     Item('-', 0),
   ];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        // Navigate to NoInternetPage if there is no internet connection
+        print("IN there");
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: ((context) {
+          return No_internet();
+        })));
+      }
+    });
+    super.initState();
+  }
 
   late List<String> customer = widget.Customer;
   Widget build(BuildContext context) {
