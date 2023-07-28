@@ -3,6 +3,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:basic/Uitilities/auth.dart';
 import 'package:basic/Uitilities/col.dart';
@@ -33,8 +34,10 @@ class _Customer_forntState extends State<Customer_fornt> {
   @override
   Future<bool> findUsername() async {
     User? user = await FirebaseAuth.instance.currentUser;
-    DatabaseReference _dbref =
-       await FirebaseDatabase.instance.ref().child("Customer").child(user!.uid);
+    DatabaseReference _dbref = await FirebaseDatabase.instance
+        .ref()
+        .child("Customer")
+        .child(user!.uid);
     DatabaseEvent dbenvent = await _dbref.once();
     // print(dbenvent.snapshot.value);
     Map<dynamic, dynamic>? map = await dbenvent.snapshot.value as Map?;
@@ -42,8 +45,10 @@ class _Customer_forntState extends State<Customer_fornt> {
     return true;
   }
 
+  bool is_today = false;
+
   void initState() {
-   Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if (result == ConnectivityResult.none) {
         // Navigate to NoInternetPage if there is no internet connection
         print("IN there");
@@ -61,246 +66,265 @@ class _Customer_forntState extends State<Customer_fornt> {
   Widget build(BuildContext context) {
     final start = dateRange.start;
     final end = dateRange.end;
-    return 
-    
-    
-    FutureBuilder(
+    return FutureBuilder(
         future: findUsername(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            
-            return  Scaffold(
-      appBar: AppBar(
-        title: Center(
-          child: "Customer".text.make(),
-        ),
-        toolbarHeight: 90,
-        backgroundColor: rang.always,
-      ),
-      body: SafeArea(
-        child: Container(
-          height: double.infinity,
-          padding: EdgeInsets.all(20),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                child: Center(
-                  child: "Welcome  ${Username}".text.xl.bold.make(),
+            return Scaffold(
+              appBar: AppBar(
+                title: Center(
+                  child: "High Tech".text.make(),
                 ),
+                toolbarHeight: 90,
+                backgroundColor: rang.always,
               ),
-              SizedBox(
-                height: 30,
-              ),
-              Container(
-                height: 70,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Color.fromRGBO(143, 148, 251, 1),
-                          blurRadius: 20.0,
-                          offset: Offset(0, 10))
-                    ]),
-                child: Center(
-                  child:
-                      "    As a customer you have authority to review \n    previous  orders "
-                          .text
-                          .semiBold
-                          .italic
-                          .make(),
-                ),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Color.fromRGBO(143, 148, 251, 1),
-                          blurRadius: 20.0,
-                          offset: Offset(0, 10))
-                    ]),
-                child: Column(
-                  children: [
-                    20.heightBox,
-                    Container(
-                      child:
-                          "Select the date range ".text.semiBold.italic.make(),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: 86,
-                        ),
-                        Container(
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: 30,
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  pickDateRange();
-                                },
-                                child: Container(
-                                  height: 80,
-                                  width: 80,
-                                  child: CircleAvatar(
-                                    child: Icon(Icons.calendar_today_outlined),
-                                    backgroundColor: rang.always,
-                                    radius: 5,
-                                  ),
-                                  // child: CircualrIcon(Icons.calendar_today_outlined,
-                                  //     size: 35),
+              body: SafeArea(
+                child: Expanded(
+                  child: SingleChildScrollView(
+                    child: Container(
+                      // height: double.infinity,
+                      padding: EdgeInsets.all(20),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Container(
+                            child: Center(
+                              child: "Welcome  ${Username}"
+                                  .text
+                                  .xl
+                                  .semiBold
+                                  .make(),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+                          Container(
+                            height: 70,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(30),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Color.fromRGBO(143, 148, 251, 1),
+                                      blurRadius: 20.0,
+                                      offset: Offset(0, 10))
+                                ]),
+                            child: Center(
+                              child:
+                                  "    As a customer you have authority to review previous  orders "
+                                      .text
+                                      .semiBold
+                                      .xs
+                                      .make(),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Color.fromRGBO(143, 148, 251, 1),
+                                      blurRadius: 20.0,
+                                      offset: Offset(0, 10))
+                                ]),
+                            child: Column(
+                              children: [
+                                20.heightBox,
+                                Container(
+                                  child: "  Select the date range ".text.make(),
                                 ),
-                              ),
-                            ],
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 86,
+                                    ),
+                                    Container(
+                                      child: Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 30,
+                                          ),
+                                          10.widthBox,
+                                          InkWell(
+                                            onTap: () {
+                                              pickDateRange();
+                                            },
+                                            child: Container(
+                                              height: 80,
+                                              width: 80,
+
+                                              child: CircleAvatar(
+                                                child: Icon(Icons
+                                                    .calendar_today_outlined),
+                                                backgroundColor: Colors.grey,
+                                                radius: 5,
+                                              ),
+                                              // child: CircualrIcon(Icons.calendar_today_outlined,
+                                              //     size: 35),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                30.heightBox,
+                                Row(
+                                  children: [
+                                    115.widthBox,
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          is_today = !is_today;
+                                          dateRange = new DateTimeRange(
+                                              start: DateTime.now(), end: DateTime.now());
+                                        });
+                                      },
+                                      child: Container(
+                                        height: 40,
+                                        width: 100,
+                                        child: Center(child: Text("Today")),
+                                        decoration: BoxDecoration(
+                                          color: is_today
+                                              ? rang.always
+                                              : Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          border: Border.all(),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                30.heightBox,
+                                Row(children: [
+                                  20.widthBox,
+                                  "From :          ".text.bold.make(),
+                                  Container(
+                                    width: 150,
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        gradient: LinearGradient(colors: [
+                                          Color.fromRGBO(226, 53, 57, 1),
+                                          Color.fromRGBO(226, 53, 57, 5),
+                                        ])),
+                                    child: Center(
+                                        child: Text(
+                                      '${start.year}/${start.month}/${start.day}',
+                                      style: TextStyle(color: Colors.white),
+                                    )),
+
+                                    // / Background color
+                                  ),
+                                ]),
+                                30.heightBox,
+                                Row(children: [
+                                  20.widthBox,
+                                  "  To:              ".text.bold.make(),
+                                  Container(
+                                    width: 150,
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        gradient: LinearGradient(colors: [
+                                          Color.fromRGBO(226, 53, 57, 1),
+                                          Color.fromRGBO(226, 53, 57, 5),
+                                        ])),
+                                    child: Center(
+                                        child: Text(
+                                      '${end.year}/${end.month}/${end.day}',
+                                      style: TextStyle(color: Colors.white),
+                                    )),
+                                    // / Background color
+                                  ),
+                                ]),
+                                SizedBox(
+                                  height: 30,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                          60.heightBox,
+                          InkWell(
+                            onTap: () => {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Show_detail(
+                                          username: Username,
+                                          dateTimeRange: dateRange))),
+                            },
+                            child: Container(
+                              height: 50,
+                              width: 300,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  gradient: LinearGradient(colors: [
+                                    Color.fromRGBO(226, 53, 57, 1),
+                                    Color.fromRGBO(226, 53, 57, 5),
+                                  ])),
+                              child: Center(
+                                child: Text("View",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    )),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    30.heightBox,
-                   
-                          Row(
-                            children:[ 
-                              20.widthBox,
-                              "From :          ".text.bold.make(),
-                               Container(
-                                width: 150,
-                                height: 40,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    gradient: LinearGradient(colors: [
-                                      Color.fromRGBO(226, 53, 57, 1),
-                                      Color.fromRGBO(226, 53, 57, 5),
-                                    ])),
-                                child: Center(
-                                    child: Text(
-                                  '${start.year}/${start.month}/${start.day}',
-                                  style: TextStyle(color: Colors.white),
-                                )),
-                          
-                                // / Background color
-                              ),
-                            
-                            ]
-                          ),
-
-                          30.heightBox,
-
-                           Row(
-                            children:[ 
-                              20.widthBox,
-                              "To:               ".text.bold.make(),
-                               Container(
-                                width: 150,
-                                height: 40,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    gradient: LinearGradient(colors: [
-                                      Color.fromRGBO(226, 53, 57, 1),
-                                      Color.fromRGBO(226, 53, 57, 5),
-                                    ])),
-                                child: Center(
-                                  child: Text(
-                                '${end.year}/${end.month}/${end.day}',
-                                style: TextStyle(color: Colors.white),
-                              )),
-                                // / Background color
-                              ),
-                            
-                            ]
-                          ),
-                       
-
-                        
-                     
-                    
-                    
-                    SizedBox(
-                      height: 30,
-                    ),
-                  ],
-                ),
-              ),
-              60.heightBox,
-              InkWell(
-                onTap: () => {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Show_detail(
-                              username: Username, dateTimeRange: dateRange))),
-                },
-                child: Container(
-                  height: 50,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      gradient: LinearGradient(colors: [
-                        Color.fromRGBO(226, 53, 57, 1),
-                        Color.fromRGBO(226, 53, 57, 5),
-                      ])),
-                  child: Center(
-                    child: Text("View",
-                        style: TextStyle(
-                          color: Colors.white,
-                        )),
                   ),
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
-      drawer: Drawer(
-        width: 200,
-        child: Container(
-          child: Column(children: [
-            SizedBox(
-              height: 125,
-              child: Container(
-                color: rang.always,
+              drawer: Drawer(
+                width: 200,
+                child: Container(
+                  child: Column(children: [
+                    SizedBox(
+                      height: 125,
+                      child: Container(
+                        color: rang.always,
+                      ),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.logout),
+                      title: "Logout".text.make(),
+                      onTap: () => {
+                        Auth().signOut(),
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            router.loginroute, (route) => false),
+                      },
+                    )
+                  ]),
+                ),
               ),
-            ),
-            ListTile(
-              leading: Icon(Icons.logout),
-              title: "Logout".text.make(),
-              onTap: () => {
-                Auth().signOut(),
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    router.loginroute, (route) => false),
-              },
-            )
-          ]),
-        ),
-      ),
-      
-    );
-          }else{
+            );
+          } else {
             return Scaffold(
-            body: Container(
-                child: Center(
-              child: CircularProgressIndicator(
-                color: rang.always,
-              ),
-            )),
-          );
-        }
-  });
+              body: Container(
+                  child: Center(
+                child: CircularProgressIndicator(
+                  color: rang.always,
+                ),
+              )),
+            );
           }
+        });
+  }
 
-          
   Future pickDateRange() async {
     DateTimeRange? newDateRange = await showDateRangePicker(
         context: context,
@@ -334,6 +358,3 @@ class _Customer_forntState extends State<Customer_fornt> {
     });
   }
 }
-  
-  
-

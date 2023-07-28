@@ -34,6 +34,8 @@ class _manage_account_ownerState extends State<manage_account_owner> {
   List<AppUserDummy> Employee = [];
 
   Future<bool> GetData() async {
+    customers.clear();
+    Employee.clear();
     DatabaseReference databaseReference =
         await FirebaseDatabase.instance.ref().child('Customer');
     await databaseReference.onValue.listen((event) {
@@ -102,7 +104,7 @@ class _manage_account_ownerState extends State<manage_account_owner> {
         print(Employee);
       }
     });
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 1));
 
     return true;
   }
@@ -111,7 +113,7 @@ class _manage_account_ownerState extends State<manage_account_owner> {
 
   @override
   void initState() {
-     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if (result == ConnectivityResult.none) {
         // Navigate to NoInternetPage if there is no internet connection
         print("IN there");
