@@ -38,8 +38,7 @@ class _Show_detailState extends State<Show_detail> {
   late DatabaseReference _orderRef;
   List<Orderfordispatch> orders = [];
   void initState() {
-
-     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if (result == ConnectivityResult.none) {
         // Navigate to NoInternetPage if there is no internet connection
         print("IN there");
@@ -88,10 +87,12 @@ class _Show_detailState extends State<Show_detail> {
           DateTime? timestamp = DateTime.tryParse(value['timestamp']);
           var dipatch_id = value['dipatch_id'].toString();
           // print(timestamp);
-          if (timestamp!.isAfter(widget.dateTimeRange.start.subtract(Duration(days: 1))) &&
-              timestamp.isBefore(widget.dateTimeRange.end.add(Duration(days: 1)))) {
+          if (timestamp!.isAfter(
+                  widget.dateTimeRange.start.subtract(Duration(days: 1))) &&
+              timestamp
+                  .isBefore(widget.dateTimeRange.end.add(Duration(days: 1)))) {
             Orderfordispatch order = Orderfordispatch(
-                key, items, DateTime.parse(value['timestamp']), dipatch_id);
+                key, items, DateTime.parse(value['timestamp']), dipatch_id,DateTime.parse(value['order_timestamp']));
             orders.add(order);
           }
         });
@@ -161,7 +162,14 @@ class _Show_detailState extends State<Show_detail> {
                                 .red600
                                 .make(),
                             Text(
-                              'Timestamp: ${formatTimestamp(order.timestamp)}',
+                              'Dispatched Time: ${formatTimestamp(order.timestamp)}',
+                              style: TextStyle(
+                                fontSize: 13,
+                              ),
+                            ),
+                            4.heightBox,
+                              Text(
+                              'Ordered Time: ${formatTimestamp(order.order_timestamp)}',
                               style: TextStyle(
                                 fontSize: 13,
                               ),
@@ -308,6 +316,13 @@ class Orderfordispatch {
   final List<Itemfordispatchsummry> items;
   final DateTime timestamp;
   final String dispatch_id;
+  final DateTime order_timestamp;
 
-  Orderfordispatch(this.orderId, this.items, this.timestamp, this.dispatch_id);
+  Orderfordispatch(
+    this.orderId,
+    this.items,
+    this.timestamp,
+    this.dispatch_id,
+    this.order_timestamp,
+  );
 }

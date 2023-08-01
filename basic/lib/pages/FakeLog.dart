@@ -40,7 +40,7 @@ class _fakelogedState extends State<fakeloged> {
 
                           var datasnapshot2;
                           await databaseRefu2
-                              .child(user!.uid)
+                              .child(user.uid)
                               .once()
                               .then((Event) {
                             datasnapshot2 = Event.snapshot.exists;
@@ -50,7 +50,7 @@ class _fakelogedState extends State<fakeloged> {
                               FirebaseDatabase.instance.ref().child("Owner");
                           var dataSnapshot3;
                           await databaseRefu3
-                              .child(user!.uid)
+                              .child(user.uid)
                               .once()
                               .then((Event) {
                             dataSnapshot3 = Event.snapshot.exists;
@@ -60,7 +60,7 @@ class _fakelogedState extends State<fakeloged> {
                               FirebaseDatabase.instance.ref().child("Customer");
                           var dataSnapshot4;
                           await databaseRefu4
-                              .child(user!.uid)
+                              .child(user.uid)
                               .once()
                               .then((Event) {
                             dataSnapshot4 = Event.snapshot.exists;
@@ -89,7 +89,7 @@ class _fakelogedState extends State<fakeloged> {
                                 .child("Pending_register");
                             var dataSnapshot5;
                             await databaseRefu5
-                                .child(user!.uid)
+                                .child(user.uid)
                                 .once()
                                 .then((Event) {
                               dataSnapshot5 = Event.snapshot.exists;
@@ -99,7 +99,7 @@ class _fakelogedState extends State<fakeloged> {
                               Navigator.pushNamed(
                                   context, router.account_req_veri);
                               print("pending");
-                              Auth().signOut();
+                            await  Auth().signOut();
                             } else {
                               Navigator.pushNamed(
                                   context, router.account_req_declined);
@@ -118,7 +118,7 @@ class _fakelogedState extends State<fakeloged> {
       decoration: BoxDecoration(color: Colors.white),
       child: Center(
           child: Lottie.network(
-        "https://assets5.lottiefiles.com/packages/lf20_jfmoxuty.json",
+        "https://lottie.host/91c2aa90-5b11-4fc8-abb9-eed260bb1f7a/YyF1ubl5e6.json",
         repeat: true,
         height: 250,
         width: 250,

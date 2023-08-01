@@ -43,6 +43,7 @@ class _Invoice_frontState extends State<Invoice_front> {
     'Item 5',
   ];
 
+  
   var products = ['Select Item'];
   Map<String, List<String>> mp = {};
 
@@ -111,6 +112,10 @@ class _Invoice_frontState extends State<Invoice_front> {
 
   @override
   Widget build(BuildContext context) {
+      var size = MediaQuery.of(context).size;
+    var heigh = size.height;
+    var widt = size.width;
+
     return FutureBuilder(
         future: getCustomer(),
         builder: (context, snapshot) {
@@ -134,7 +139,7 @@ class _Invoice_frontState extends State<Invoice_front> {
               ),
               body: SingleChildScrollView(
                 child: Container(
-                  width: double.infinity,
+                  width: widt,
                   child: Column(
                     children: [
                       20.heightBox,
@@ -143,7 +148,7 @@ class _Invoice_frontState extends State<Invoice_front> {
                         child: Column(
                           children: <Widget>[
                             Container(
-                              width: double.infinity,
+                              width: widt,
                               padding: EdgeInsets.all(5),
                               decoration: BoxDecoration(
                                   color: Colors.white,
@@ -156,41 +161,7 @@ class _Invoice_frontState extends State<Invoice_front> {
                                   ]),
                               child: Padding(
                                 padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                // child: DropdownButton(
-                                //   // Initial Value
-                                //   isExpanded: true,
-                                //   value: selected_customer,
-
-                                //   // Down Arrow Icon
-                                //   icon: const Icon(Icons.keyboard_arrow_down),
-                                //   hint:
-                                //       "Select customer                              "
-                                //           .text
-                                //           .black
-                                //           .make(),
-                                //   // Array list of items
-                                //   items: customer.map((String items) {
-                                //     return DropdownMenuItem(
-                                //       value: items,
-                                //       child: Text(items),
-                                //     );
-                                //   }).toList(),
-                                //   // After selecting the desired option,it will
-                                //   // change button value to selected value
-                                //   onChanged: (String? newValue) {
-                                //     setState(() {
-                                //       selected_customer = newValue!;
-                                //       products.clear();
-                                //       item = [
-                                //         Item('-', 0),
-                                //       ];
-                                //       selected_item = 'Select Item';
-
-                                //       products.add('Select Item');
-                                //       products.addAll(mp[newValue]!);
-                                //     });
-                                //   },
-                                // ),
+                              
 
                                 child: Container(
                                   padding: EdgeInsets.all(10),
@@ -309,7 +280,7 @@ class _Invoice_frontState extends State<Invoice_front> {
                         height: 30,
                       ),
                       Container(
-                        width: double.infinity,
+                        width: 325,
                         height: 250,
                         padding: EdgeInsets.all(5),
                         decoration: BoxDecoration(
@@ -522,7 +493,7 @@ class _Invoice_frontState extends State<Invoice_front> {
                       ),
                       50.heightBox,
                       Container(
-                        width: double.infinity,
+                        width: widt,
                         // height: 250,
                         padding: EdgeInsets.all(5),
                         decoration: BoxDecoration(

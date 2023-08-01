@@ -211,7 +211,7 @@ class _Confirm_order_updateState extends State<Confirm_order_update> {
                           controller: dispatch_id,
                           decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: "    Dispatch id  ",
+                              hintText: "    Dispatch manager name ",
                               hintStyle: TextStyle(color: Colors.grey[400])),
                           validator: (value) {
                             if (value != null) if (value.isEmpty) {
@@ -296,13 +296,14 @@ class _Confirm_order_updateState extends State<Confirm_order_update> {
                             'items': dispatchedorderItems,
                             'timestamp': DateTime.now().toString(),
                             'dipatch_id': dispatch_id.text,
+                            'order_timestamp':timestamp.toString()
                           });
                         }
 
                         Navigator.of(context).pushNamedAndRemoveUntil(
                             router.dispatchsuccess, (route) => false);
                       } else {
-                        displaytoast("Enter dispatch id first ", context);
+                        displaytoast("Enter manager name first ", context);
                       }
                     },
                     child: Container(

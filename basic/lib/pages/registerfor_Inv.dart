@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -175,7 +176,9 @@ class _registerforinvState extends State<registerforinv> {
                         ),
                         child: Row(
                           children: [
-                            SizedBox(width: 10,),
+                            SizedBox(
+                              width: 10,
+                            ),
                             Text(
                               "Registering as Inventory manager",
                               style: TextStyle(
@@ -329,21 +332,25 @@ class _registerforinvState extends State<registerforinv> {
                               return null;
                             }),
                       ),
+                      20.heightBox,
 
-                      // Container(
-                      //   decoration: BoxDecoration(
-                      //     borderRadius: BorderRadius.circular(40),
-                      //   ),
-                      //   child: ElevatedButton(
-                      //     style: ButtonStyle(
-                      //         backgroundColor:
-                      //             MaterialStateProperty.all(rang.always)),
-                      //     onPressed: () async {
-                      //       pickImage();
-                      //     },
-                      //     child: const Text('Upload avatar'),
-                      //   ),
-                      // ),
+                      FlutterPwValidator(
+                        controller: _password,
+                        minLength: 8,
+                        uppercaseCharCount: 2,
+                        lowercaseCharCount: 2,
+                        numericCharCount: 3,
+                        specialCharCount: 1,
+                        width: 400,
+                        height: 150,
+                        onSuccess: () {},
+                        onFail: () {
+                          showErrorDialog(
+                              context, "Enter correct formate of password");
+                        },
+                      ),
+
+                    
                     ],
                   ),
                 ),
@@ -355,7 +362,7 @@ class _registerforinvState extends State<registerforinv> {
                 onTap: () {
                   //this process returns the future so withput the use of await keywoed it will return the instance of future
 
-                 if (!_email.text.contains('@')) {
+                  if (!_email.text.contains('@')) {
                     displaytoast("Enter a valid email", context);
                   } else if (_email == null) {
                     displaytoast("Email field is mandatory", context);
@@ -366,12 +373,12 @@ class _registerforinvState extends State<registerforinv> {
                   } else if (phone == null || phone.text.length != 10) {
                     displaytoast("Please enter valid phone number", context);
                   } else if (_password.text.length < 8 || _password == null) {
-                    displaytoast("Please selelect appropriate password", context);
+                    displaytoast(
+                        "Please selelect appropriate password", context);
                   } else if (age.text == null) {
                     displaytoast("Please enter valid age", context);
                   } else {
                     registeruser(context);
-                    
                   }
                 },
                 child: Ink(
@@ -379,8 +386,8 @@ class _registerforinvState extends State<registerforinv> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       gradient: LinearGradient(colors: [
-                         Color.fromRGBO(226, 53, 57, 1),
-                            Color.fromRGBO(226, 53, 57, 5),
+                        Color.fromRGBO(226, 53, 57, 1),
+                        Color.fromRGBO(226, 53, 57, 5),
                       ])),
                   child: Center(
                     child: Text("Register",
@@ -422,12 +429,9 @@ class _registerforinvState extends State<registerforinv> {
 
       final User = FirebaseAuth.instance.currentUser;
       if (User != null) {
-
-
-        
         //   // *******************************************
 
-          //  changing to add admin approval for the account 
+        //  changing to add admin approval for the account
         // *********************************
         databaseRef.child("Pending_register").child(User.uid).set({
           'role': Role,
@@ -437,7 +441,7 @@ class _registerforinvState extends State<registerforinv> {
           'Phone': phone.text,
           'Email': _email.text,
           'Password': _password.text,
-          'userid':User.uid,
+          'userid': User.uid,
           'latitude': 0,
           'longitude': 0,
         }).onError((error, stackTrace) {

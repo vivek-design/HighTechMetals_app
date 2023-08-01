@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -314,6 +315,24 @@ class _registerviewState extends State<registerview> {
                               }
                               return null;
                             }),
+                      ),
+
+                      20.heightBox,
+
+                      FlutterPwValidator(
+                        controller: _password,
+                        minLength: 8,
+                        uppercaseCharCount: 2,
+                        lowercaseCharCount: 2,
+                        numericCharCount: 3,
+                        specialCharCount: 1,
+                        width: 400,
+                        height: 150,
+                        onSuccess: () {},
+                        onFail: () {
+                          showErrorDialog(
+                              context, "Enter correct formate of password");
+                        },
                       ),
 
                       // Container(

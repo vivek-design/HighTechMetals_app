@@ -67,6 +67,7 @@ dependencies:
   dependencies:
   pinch_zoom: ^1.0.0
   connectivity: ^3.0.0
+  flutter_pw_validator: ^1.6.0
 
 dev_dependencies:
 

@@ -77,7 +77,7 @@ class _PrevioushistoryState extends State<Previoushistory> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Order List'),
-        backgroundColor: rang.always,
+        backgroundColor:rang.always,
       ),
       body: ListView.builder(
         shrinkWrap: true,
@@ -87,6 +87,7 @@ class _PrevioushistoryState extends State<Previoushistory> {
 
           return Container(
               padding: EdgeInsets.all(15),
+              color: Colors.grey,
               child: Container(
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(

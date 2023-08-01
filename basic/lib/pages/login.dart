@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:basic/Uitilities/col.dart';
 import 'package:basic/pages/FakeLog.dart';
 import 'package:basic/pages/alertbox.dart';
 import 'package:connectivity/connectivity.dart';
@@ -27,6 +28,8 @@ class _login_pageState extends State<login_page> {
   late final TextEditingController _email;
   late final TextEditingController _password;
 
+  bool isChecked = false;
+
   displaytoast(String s, BuildContext context) {
     Fluttertoast.showToast(msg: s);
   }
@@ -38,7 +41,7 @@ class _login_pageState extends State<login_page> {
 
   void initState() {
     // TODO: implement initState
-     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if (result == ConnectivityResult.none) {
         // Navigate to NoInternetPage if there is no internet connection
         print("IN there");
@@ -188,6 +191,35 @@ class _login_pageState extends State<login_page> {
                       ],
                     ),
                   ),
+                  SizedBox(height: 10),
+                  Container(
+                      child: Row(
+                    children: [
+                      Checkbox(
+
+                          value: isChecked,
+                          checkColor: Colors.black,
+                          onChanged: (value) {
+                           
+                            setState(() {
+                               isChecked = value!;
+                            });
+                          },
+                          fillColor:
+                              MaterialStateProperty.resolveWith((states) {
+                            // if (states==MaterialState.pressed || states==MaterialState.selected ) {
+                            return Colors.red;
+                            // }
+
+                            return Colors.white;
+                          })),
+                      10.widthBox,
+                      Text(
+                        "Remember me ",
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ],
+                  )),
                   SizedBox(
                     height: 30,
                   ),

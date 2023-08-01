@@ -112,7 +112,7 @@ class _gettingstartedState extends State<gettingstarted> {
                             Color.fromRGBO(226, 53, 57, 5),
                           ])),
                       child: Center(
-                        child: Text("Register as invantory manager",
+                        child: Text("Register as inventory manager",
                             style: TextStyle(
                               color: Colors.white,
                             )),

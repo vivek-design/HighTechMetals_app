@@ -1,20 +1,21 @@
-import 'package:basic/owner/Acceptaccount_perm.dart';
-import 'package:connectivity/connectivity.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:flutter/material.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:basic/Uitilities/auth.dart';
 import 'package:basic/Uitilities/col.dart';
 import 'package:basic/Uitilities/router.dart';
+import 'package:basic/Uitilities/router.dart';
+import 'package:basic/owner/Acceptaccount_perm.dart';
 import 'package:basic/pages/login.dart';
+import 'package:connectivity/connectivity.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
-import 'package:basic/Uitilities/router.dart';
 
 import '../DeliveryManagr/delivery_front.dart';
 import '../Uitilities/nointernet.dart';
@@ -63,7 +64,7 @@ class _Owner_frontState extends State<Owner_front> {
 
             var dispatch_id = value['dipatch_id'];
             Orderfordispatch order = await Orderfordispatch(orderKey, items,
-                DateTime.parse(value['timestamp']), dispatch_id);
+                DateTime.parse(value['timestamp']), dispatch_id,value['order_timestamp']);
             orders.add(order);
           });
         });
@@ -79,7 +80,7 @@ class _Owner_frontState extends State<Owner_front> {
 
   @override
   void initState() {
-     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if (result == ConnectivityResult.none) {
         // Navigate to NoInternetPage if there is no internet connection
         print("IN there");
@@ -101,10 +102,11 @@ class _Owner_frontState extends State<Owner_front> {
           return Scaffold(
             appBar: AppBar(
               title: Container(
-                  child: Row(children: [Text('All dispatched Orders'),
-                 
-                 ],
-                  )),
+                  child: Row(
+                children: [
+                  Text('All dispatched Orders'),
+                ],
+              )),
               backgroundColor: rang.always,
               actions: [],
             ),
@@ -157,6 +159,9 @@ class _Owner_frontState extends State<Owner_front> {
                                 .make(),
                             Text(
                                 'Timestamp: ${formatTimestamp(order.timestamp)}'),
+                                4.heightBox,
+                                 Text(
+                                'Timestamp: ${formatTimestamp(order.order_timestamp)}'),
                             SizedBox(height: 4),
                             Text('Items:'),
                             SingleChildScrollView(
@@ -242,12 +247,11 @@ class _Owner_frontState extends State<Owner_front> {
                           router.loginroute, (route) => false),
                     },
                   ),
-
-                   ListTile(
+                  ListTile(
                     leading: Icon(Icons.account_tree_sharp),
                     title: "Manage account".text.make(),
                     onTap: () => {
-                     Navigator.pushNamed(context, router.manage_account_owner),
+                      Navigator.pushNamed(context, router.manage_account_owner),
                     },
                   )
                 ]),
@@ -353,6 +357,13 @@ class Orderfordispatch {
   final List<Itemfordispatchsummry> items;
   final DateTime timestamp;
   final String dispatch_id;
+  final DateTime order_timestamp;
 
-  Orderfordispatch(this.orderId, this.items, this.timestamp, this.dispatch_id);
+  Orderfordispatch(
+    this.orderId,
+    this.items,
+    this.timestamp,
+    this.dispatch_id,
+    this.order_timestamp,
+  );
 }

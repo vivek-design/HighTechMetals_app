@@ -56,6 +56,9 @@ class _dataUpdateState extends State<dataUpdate> {
 
   late List<String> customer = widget.Customer;
   Widget build(BuildContext context) {
+        var size = MediaQuery.of(context).size;
+    var heigh = size.height;
+    var widt = size.width;
     return Scaffold(
         appBar: AppBar(
           title: "Upload order  Data".text.bold.white.make(),
@@ -89,7 +92,7 @@ class _dataUpdateState extends State<dataUpdate> {
         ),
         body: SingleChildScrollView(
             child: Container(
-                width: double.infinity,
+                width: widt,
                 child: Column(children: [
                   20.heightBox,
                   Padding(
@@ -218,7 +221,7 @@ class _dataUpdateState extends State<dataUpdate> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 "Note :".text.bold.make(),
-                                "1. Uploded file should be in the appropriate formate ."
+                                "1. Uploaded file should be in the appropriate format ."
                                     .text
                                     .xs
                                     .make(),
