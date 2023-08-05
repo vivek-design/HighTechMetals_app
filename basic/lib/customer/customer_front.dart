@@ -25,11 +25,21 @@ class Customer_fornt extends StatefulWidget {
   State<Customer_fornt> createState() => _Customer_forntState();
 }
 
+enum which {
+  today,
+  date_range,
+}
+
 class _Customer_forntState extends State<Customer_fornt> {
   @override
   DateTimeRange dateRange =
       DateTimeRange(start: DateTime(2023, 01, 01), end: DateTime.now());
+  DateTimeRange actual_range =
+      DateTimeRange(start: DateTime.now().subtract(Duration(days: 1)), end: DateTime.now().add(Duration(days: 1)));
   late var Username;
+  bool is_today = true;
+  which selected = which.today;
+  DatabaseReference df = FirebaseDatabase.instance.ref().child('Customer');
 
   @override
   Future<bool> findUsername() async {
@@ -44,8 +54,6 @@ class _Customer_forntState extends State<Customer_fornt> {
     Username = await map!['Name'];
     return true;
   }
-
-  bool is_today = false;
 
   void initState() {
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
@@ -62,7 +70,6 @@ class _Customer_forntState extends State<Customer_fornt> {
     super.initState();
   }
 
-  DatabaseReference df = FirebaseDatabase.instance.ref().child('Customer');
   Widget build(BuildContext context) {
     final start = dateRange.start;
     final end = dateRange.end;
@@ -73,7 +80,7 @@ class _Customer_forntState extends State<Customer_fornt> {
             return Scaffold(
               appBar: AppBar(
                 title: Center(
-                  child: "High Tech".text.make(),
+                  child: "Hi-Tech".text.make(),
                 ),
                 toolbarHeight: 90,
                 backgroundColor: rang.always,
@@ -137,13 +144,89 @@ class _Customer_forntState extends State<Customer_fornt> {
                                 ]),
                             child: Column(
                               children: [
-                                20.heightBox,
-                                Container(
-                                  child: "  Select the date range ".text.make(),
+                                30.heightBox,
+
+                                Row(
+                                  children: [
+                                    10.widthBox,
+                                    Radio(
+                                        value: which.today,
+                                        groupValue: selected,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            selected = value!;
+                                            if (selected == which.today) {
+                                              is_today = true;
+                                            } else {
+                                              is_today = false;
+                                            }
+                                          });
+                                        }),
+                                    Container(
+                                      height: 40,
+                                      width: 100,
+                                      child: Center(
+                                          child: Text(
+                                        "Today",
+                                        style: (TextStyle(
+                                            fontWeight: FontWeight.bold)),
+                                      )),
+                                    ),
+                                    Container(
+                                      width: 150,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          gradient: LinearGradient(colors: [
+                                            rang.always,
+                                            Color.fromRGBO(226, 53, 57, 5),
+                                          ])),
+                                      child: Center(
+                                          child: Text(
+                                        '${DateTime.now().year}/${DateTime.now().month}/${DateTime.now().day}',
+                                        style: TextStyle(color: Colors.white),
+                                      )),
+
+                                      // / Background color
+                                    ),
+                                  ],
                                 ),
+
+                                50.heightBox,
+                                Row(children: [
+                                  10.widthBox,
+                                  Radio(
+                                      value: which.date_range,
+                                      groupValue: selected,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          selected = value!;
+                                          if (selected == which.today) {
+                                            is_today = true;
+                                          } else {
+                                            is_today = false;
+                                          }
+                                        });
+                                      }),
+                                  Container(
+                                    child: Center(
+                                        child: Text(
+                                      "         Select Range",
+                                      style: (TextStyle(
+                                          fontWeight: FontWeight.bold)),
+                                    )),
+                                  ),
+                                ]),
+
+                                // / Background color
+
+                                10.heightBox,
+
                                 SizedBox(
                                   height: 10,
                                 ),
+
                                 Row(
                                   children: [
                                     SizedBox(
@@ -180,33 +263,7 @@ class _Customer_forntState extends State<Customer_fornt> {
                                   ],
                                 ),
                                 30.heightBox,
-                                Row(
-                                  children: [
-                                    115.widthBox,
-                                    InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          is_today = !is_today;
-                                          dateRange = new DateTimeRange(
-                                              start: DateTime.now(), end: DateTime.now());
-                                        });
-                                      },
-                                      child: Container(
-                                        height: 40,
-                                        width: 100,
-                                        child: Center(child: Text("Today")),
-                                        decoration: BoxDecoration(
-                                          color: is_today
-                                              ? rang.always
-                                              : Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          border: Border.all(),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+
                                 30.heightBox,
                                 Row(children: [
                                   20.widthBox,
@@ -217,7 +274,7 @@ class _Customer_forntState extends State<Customer_fornt> {
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
                                         gradient: LinearGradient(colors: [
-                                          Color.fromRGBO(226, 53, 57, 1),
+                                          rang.always,
                                           Color.fromRGBO(226, 53, 57, 5),
                                         ])),
                                     child: Center(
@@ -239,7 +296,7 @@ class _Customer_forntState extends State<Customer_fornt> {
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
                                         gradient: LinearGradient(colors: [
-                                          Color.fromRGBO(226, 53, 57, 1),
+                                          rang.always,
                                           Color.fromRGBO(226, 53, 57, 5),
                                         ])),
                                     child: Center(
@@ -259,12 +316,26 @@ class _Customer_forntState extends State<Customer_fornt> {
                           60.heightBox,
                           InkWell(
                             onTap: () => {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Show_detail(
-                                          username: Username,
-                                          dateTimeRange: dateRange))),
+                              if (is_today)
+                                {
+                                  print("Yes"),
+                                  print(actual_range),
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Show_detail(
+                                              username: Username,
+                                              dateTimeRange: actual_range,is_today: true,))),
+                                }
+                              else
+                                {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Show_detail(
+                                              username: Username,
+                                              dateTimeRange: dateRange,is_today:false,))),
+                                }
                             },
                             child: Container(
                               height: 50,
@@ -272,7 +343,7 @@ class _Customer_forntState extends State<Customer_fornt> {
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   gradient: LinearGradient(colors: [
-                                    Color.fromRGBO(226, 53, 57, 1),
+                                    rang.always,
                                     Color.fromRGBO(226, 53, 57, 5),
                                   ])),
                               child: Center(
@@ -338,7 +409,7 @@ class _Customer_forntState extends State<Customer_fornt> {
               ),
               textButtonTheme: TextButtonThemeData(
                 style: TextButton.styleFrom(
-                  foregroundColor: Colors.red, // button text color
+                  foregroundColor: rang.always, // button text color
                 ),
               ),
             ),

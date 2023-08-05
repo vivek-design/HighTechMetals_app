@@ -52,6 +52,7 @@ class _Owner_frontState extends State<Owner_front> {
         Map<dynamic, dynamic>? data =
             await event.snapshot.value as Map<dynamic, dynamic>?;
         data?.forEach((orderKey, orderData) async {
+          var temp = orderKey;
           await orderData.forEach((key, value) async {
             List<dynamic> itemsData = value['items'];
             List<Itemfordispatchsummry> items = await itemsData
@@ -63,8 +64,12 @@ class _Owner_frontState extends State<Owner_front> {
                 .toList();
 
             var dispatch_id = value['dipatch_id'];
-            Orderfordispatch order = await Orderfordispatch(orderKey, items,
-                DateTime.parse(value['timestamp']), dispatch_id,value['order_timestamp']);
+            Orderfordispatch order = await Orderfordispatch(
+                orderKey,
+                items,
+                DateTime.parse(value['timestamp']),
+                dispatch_id,
+                DateTime.parse(value['order_timestamp']));
             orders.add(order);
           });
         });
@@ -74,7 +79,7 @@ class _Owner_frontState extends State<Owner_front> {
     await Future.delayed(Duration(seconds: 1));
 
     orders.sort(mycomp);
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 1));
     return true;
   }
 
@@ -99,196 +104,288 @@ class _Owner_frontState extends State<Owner_front> {
       future: getData(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Container(
-                  child: Row(
-                children: [
-                  Text('All dispatched Orders'),
-                ],
-              )),
-              backgroundColor: rang.always,
-              actions: [],
-            ),
-            body: NotificationListener<ScrollNotification>(
-              onNotification: (scrollNotification) {
-                if (!_isLoading &&
-                    scrollNotification.metrics.pixels ==
-                        scrollNotification.metrics.maxScrollExtent &&
-                    orders.length > _currentItemCount) {
-                  // Reached the end of the list, trigger loading more data
-                  // print(scrollNotification.metrics.pixels);
-                  _loadMoreData();
-                }
-                return true;
-              },
-              child: ListView.builder(
-                controller: _scrollController,
-                itemCount: _currentItemCount,
-                //  orders.length,
-                // itemCount: orders.length,
-                itemBuilder: (BuildContext context, int index) {
-                  Orderfordispatch order = orders[index];
+          if (orders.length != 0) {
+            return Scaffold(
+              appBar: AppBar(
+                title: Container(
+                    child: Row(
+                  children: [
+                    Text('All dispatched Orders'),
+                  ],
+                )),
+                backgroundColor: rang.always,
+                actions: [],
+              ),
+              body: NotificationListener<ScrollNotification>(
+                onNotification: (scrollNotification) {
+                  if (!_isLoading &&
+                      scrollNotification.metrics.pixels ==
+                          scrollNotification.metrics.maxScrollExtent &&
+                      orders.length > _currentItemCount) {
+                    // Reached the end of the list, trigger loading more data
+                    // print(scrollNotification.metrics.pixels);
+                    _loadMoreData();
+                  }
+                  return true;
+                },
+                child:
+                RefreshIndicator(
+                  onRefresh: () {
+                  return Future.delayed(
+                    (Duration(milliseconds: 1)),(){
+                             setState(() {});
+                    }
+                  );
+                  },
+                  
+                  child: ListView.builder(
+                  controller: _scrollController,
+                  itemCount: _currentItemCount,
+                  //  orders.length,
+                  // itemCount: orders.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    Orderfordispatch order = orders[index];
 
-                  return Container(
-                      padding: EdgeInsets.all(15),
-                      child: Container(
-                        padding: EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Color.fromRGBO(143, 148, 251, 1),
-                                  blurRadius: 20.0,
-                                  offset: Offset(0, 10))
-                            ]),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            'Order ID: ${order.orderId}'
-                                .text
-                                .bold
-                                .red600
-                                .make(),
-                            4.heightBox,
-                            'Dispatch ID: ${order.dispatch_id}'
-                                .text
-                                .bold
-                                .red600
-                                .make(),
-                            Text(
-                                'Timestamp: ${formatTimestamp(order.timestamp)}'),
-                                4.heightBox,
-                                 Text(
-                                'Timestamp: ${formatTimestamp(order.order_timestamp)}'),
-                            SizedBox(height: 4),
-                            Text('Items:'),
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Container(
-                                width: MediaQuery.of(context).size.width,
-                                child: FittedBox(
-                                  child: DataTable(
-                                    dataRowHeight: 70,
-                                    columns: [
-                                      DataColumn(label: Text('Item Name')),
-                                      DataColumn(label: Text('Dispatched')),
-                                      DataColumn(label: Text('Ordered')),
-                                      DataColumn(label: Text('Remaining')),
-                                    ],
-                                    rows: order.items
-                                        .map(
-                                          (iteme) => DataRow(
-                                            cells: [
-                                              DataCell(
-                                                Text(
-                                                  iteme.name,
-                                                  style:
-                                                      TextStyle(fontSize: 10),
+                    return Container(
+                        padding: EdgeInsets.all(15),
+                        child: Container(
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Color.fromRGBO(143, 148, 251, 1),
+                                    blurRadius: 20.0,
+                                    offset: Offset(0, 10))
+                              ]),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              'Order ID: ${order.orderId}'
+                                  .text
+                                  .bold
+                                  .red600
+                                  .make(),
+                              4.heightBox,
+                              'Dispatch ID: ${order.dispatch_id}'
+                                  .text
+                                  .bold
+                                  .red600
+                                  .make(),
+                              Text(
+                                  'Dispatch Time: ${formatTimestamp(order.timestamp)}'),
+                              4.heightBox,
+                              Text(
+                                  'Ordered Time: ${formatTimestamp(order.order_timestamp)}'),
+                              SizedBox(height: 4),
+                              Text('Items:'),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: FittedBox(
+                                    child: DataTable(
+                                      dataRowHeight: 70,
+                                      columns: [
+                                        DataColumn(label: Text('Item Name')),
+                                        DataColumn(label: Text('Dispatched')),
+                                        DataColumn(label: Text('Ordered')),
+                                        DataColumn(label: Text('Remaining')),
+                                      ],
+                                      rows: order.items
+                                          .map(
+                                            (iteme) => DataRow(
+                                              cells: [
+                                                DataCell(
+                                                  Text(
+                                                    iteme.name,
+                                                    style:
+                                                        TextStyle(fontSize: 10),
+                                                  ),
                                                 ),
-                                              ),
-                                              DataCell(
-                                                Text(
-                                                  iteme.dispatchedquantity
-                                                      .toString(),
-                                                  style:
-                                                      TextStyle(fontSize: 10),
+                                                DataCell(
+                                                  Text(
+                                                    iteme.dispatchedquantity
+                                                        .toString(),
+                                                    style:
+                                                        TextStyle(fontSize: 10),
+                                                  ),
                                                 ),
-                                              ),
-                                              DataCell(
-                                                Text(
-                                                  iteme.orderedquantity
-                                                      .toString(),
-                                                  style:
-                                                      TextStyle(fontSize: 10),
+                                                DataCell(
+                                                  Text(
+                                                    iteme.orderedquantity
+                                                        .toString(),
+                                                    style:
+                                                        TextStyle(fontSize: 10),
+                                                  ),
                                                 ),
-                                              ),
-                                              DataCell(
-                                                Text(
-                                                  iteme.remainingquantity
-                                                      .toString(),
-                                                  style:
-                                                      TextStyle(fontSize: 10),
+                                                DataCell(
+                                                  Text(
+                                                    iteme.remainingquantity
+                                                        .toString(),
+                                                    style:
+                                                        TextStyle(fontSize: 10),
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                        )
-                                        .toList(),
+                                              ],
+                                            ),
+                                          )
+                                          .toList(),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ), // ),
+                              ), // ),
 
-                            20.heightBox,
-                          ],
-                        ),
-                      ));
+                              20.heightBox,
+                            ],
+                          ),
+                        ));
+                  },
+                ),
+                )
+              ),
+              drawer: Drawer(
+                width: 200,
+                child: Container(
+                  child: Column(children: [
+                    SizedBox(
+                      height: 125,
+                      child: Container(
+                        color: rang.always,
+                      ),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.logout),
+                      title: "Logout".text.make(),
+                      onTap: () => {
+                        Auth().signOut(),
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            router.loginroute, (route) => false),
+                      },
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.account_tree_sharp),
+                      title: "Manage account".text.make(),
+                      onTap: () => {
+                        Navigator.pushNamed(
+                            context, router.manage_account_owner),
+                      },
+                    )
+                  ]),
+                ),
+              ),
+              bottomNavigationBar: CurvedNavigationBar(
+                color: rang.always,
+                backgroundColor: Colors.white,
+                index: 0,
+                items: [
+                  Icon(Icons.home),
+                  Icon(Icons.manage_accounts),
+                ],
+                onTap: (index) async {
+                  if (index == 0) {
+                    await Future.delayed(const Duration(seconds: 1));
+                    index = 0;
+                    // Navigator.pushNamed(context, router.History);
+                    setState(() {
+                      index = 0;
+                    });
+                  }
+
+                  if (index == 1) {
+                    await Future.delayed(const Duration(seconds: 1));
+                    // index = 1;
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (context) => Accept_account_request()),
+                        (Route<dynamic> route) => false);
+                    setState(() {
+                      index = 0;
+                    });
+                  }
                 },
               ),
-            ),
-            drawer: Drawer(
-              width: 200,
-              child: Container(
-                child: Column(children: [
-                  SizedBox(
-                    height: 125,
-                    child: Container(
-                      color: rang.always,
+            );
+          } else {
+            return Scaffold(
+              appBar: AppBar(
+                title: Text('All dispatched Orders'),
+                backgroundColor: rang.always,
+              ),
+              body: Container(
+                child: Center(
+                  child: Center(
+                    child: Text(
+                      "No dispatches to show",
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
-                  ListTile(
-                    leading: Icon(Icons.logout),
-                    title: "Logout".text.make(),
-                    onTap: () => {
-                      Auth().signOut(),
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          router.loginroute, (route) => false),
-                    },
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.account_tree_sharp),
-                    title: "Manage account".text.make(),
-                    onTap: () => {
-                      Navigator.pushNamed(context, router.manage_account_owner),
-                    },
-                  )
-                ]),
+                ),
               ),
-            ),
-            bottomNavigationBar: CurvedNavigationBar(
-              color: rang.always,
-              backgroundColor: Colors.white,
-              index: 0,
-              items: [
-                Icon(Icons.home),
-                Icon(Icons.manage_accounts),
-              ],
-              onTap: (index) async {
-                if (index == 0) {
-                  await Future.delayed(const Duration(seconds: 1));
-                  index = 0;
-                  // Navigator.pushNamed(context, router.History);
-                  setState(() {
+              drawer: Drawer(
+                width: 200,
+                child: Container(
+                  child: Column(children: [
+                    SizedBox(
+                      height: 125,
+                      child: Container(
+                        color: rang.always,
+                      ),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.logout),
+                      title: "Logout".text.make(),
+                      onTap: () => {
+                        Auth().signOut(),
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            router.loginroute, (route) => false),
+                      },
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.account_tree_sharp),
+                      title: "Manage account".text.make(),
+                      onTap: () => {
+                        Navigator.pushNamed(
+                            context, router.manage_account_owner),
+                      },
+                    )
+                  ]),
+                ),
+              ),
+              bottomNavigationBar: CurvedNavigationBar(
+                color: rang.always,
+                backgroundColor: Colors.white,
+                index: 0,
+                items: [
+                  Icon(Icons.home),
+                  Icon(Icons.manage_accounts),
+                ],
+                onTap: (index) async {
+                  if (index == 0) {
+                    await Future.delayed(const Duration(seconds: 1));
                     index = 0;
-                  });
-                }
+                    // Navigator.pushNamed(context, router.History);
+                    setState(() {
+                      index = 0;
+                    });
+                  }
 
-                if (index == 1) {
-                  await Future.delayed(const Duration(seconds: 1));
-                  // index = 1;
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                          builder: (context) => Accept_account_request()),
-                      (Route<dynamic> route) => false);
-                  setState(() {
-                    index = 0;
-                  });
-                }
-              },
-            ),
-          );
+                  if (index == 1) {
+                    await Future.delayed(const Duration(seconds: 1));
+                    // index = 1;
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (context) => Accept_account_request()),
+                        (Route<dynamic> route) => false);
+                    setState(() {
+                      index = 0;
+                    });
+                  }
+                },
+              ),
+            );
+          }
         } else {
           return Scaffold(
             appBar: AppBar(

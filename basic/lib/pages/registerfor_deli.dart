@@ -27,7 +27,8 @@ class _registerfordeliState extends State<registerfordeli> {
   var selectedRadio;
   var selectedGen;
   DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
-
+  bool issuccess = false;
+  bool _passwordVisible = false;
   Future pickImage() async {
     // try {
     //   final image = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -77,6 +78,9 @@ class _registerfordeliState extends State<registerfordeli> {
     // TODO: implement dispose
     _email.dispose();
     _password.dispose();
+    name.dispose();
+    age.dispose();
+    phone.dispose();
     super.dispose();
   }
 
@@ -187,7 +191,6 @@ class _registerfordeliState extends State<registerfordeli> {
                           ],
                         ),
                       ),
-
                       SizedBox(
                         height: 20,
                       ),
@@ -235,7 +238,6 @@ class _registerfordeliState extends State<registerfordeli> {
                       SizedBox(
                         height: 20,
                       ),
-
                       Container(
                         padding: EdgeInsets.all(8.0),
                         decoration: BoxDecoration(
@@ -271,7 +273,6 @@ class _registerfordeliState extends State<registerfordeli> {
                       SizedBox(
                         height: 20,
                       ),
-
                       Container(
                         padding: EdgeInsets.all(8.0),
                         decoration: BoxDecoration(
@@ -293,7 +294,6 @@ class _registerfordeliState extends State<registerfordeli> {
                       SizedBox(
                         height: 20,
                       ),
-
                       Container(
                         padding: EdgeInsets.all(8.0),
                         decoration: BoxDecoration(
@@ -310,7 +310,6 @@ class _registerfordeliState extends State<registerfordeli> {
                       SizedBox(
                         height: 20,
                       ),
-
                       Container(
                         padding: EdgeInsets.all(8.0),
                         decoration: BoxDecoration(
@@ -331,37 +330,27 @@ class _registerfordeliState extends State<registerfordeli> {
                             }),
                       ),
                       20.heightBox,
-
                       FlutterPwValidator(
-                        controller: _password,
-                        minLength: 8,
-                        uppercaseCharCount: 2,
-                        lowercaseCharCount: 2,
-                        numericCharCount: 3,
-                        specialCharCount: 1,
-                        width: 400,
-                        height: 150,
-                        onSuccess: () {},
-                        onFail: () {
-                          showErrorDialog(
-                              context, "Enter correct formate of password");
-                        },
-                      ),
-
-                      // Container(
-                      //   decoration: BoxDecoration(
-                      //     borderRadius: BorderRadius.circular(40),
-                      //   ),
-                      //   child: ElevatedButton(
-                      //     style: ButtonStyle(
-                      //         backgroundColor:
-                      //             MaterialStateProperty.all(rang.always)),
-                      //     onPressed: () async {
-                      //       pickImage();
-                      //     },
-                      //     child: const Text('Upload avatar'),
-                      //   ),
-                      // ),
+                          controller: _password,
+                          minLength: 8,
+                          uppercaseCharCount: 1,
+                          lowercaseCharCount: 2,
+                          numericCharCount: 1,
+                          specialCharCount: 1,
+                          width: 400,
+                          height: 150,
+                          onSuccess: () {
+                            setState(() {
+                              issuccess = true;
+                            });
+                          },
+                          onFail: () {
+                            // showErrorDialog(
+                            //     context, "Enter correct formate of password");
+                            setState(() {
+                              issuccess = false;
+                            });
+                          }),
                     ],
                   ),
                 ),
@@ -373,7 +362,7 @@ class _registerfordeliState extends State<registerfordeli> {
                 onTap: () {
                   //this process returns the future so withput the use of await keywoed it will return the instance of future
 
-                 if (!_email.text.contains('@')) {
+                  if (!_email.text.contains('@')) {
                     displaytoast("Enter a valid email", context);
                   } else if (_email == null) {
                     displaytoast("Email field is mandatory", context);
@@ -384,12 +373,12 @@ class _registerfordeliState extends State<registerfordeli> {
                   } else if (phone == null || phone.text.length != 10) {
                     displaytoast("Please enter valid phone number", context);
                   } else if (_password.text.length < 8 || _password == null) {
-                    displaytoast("Please selelect appropriate password", context);
+                    displaytoast(
+                        "Please selelect appropriate password", context);
                   } else if (age.text == null) {
                     displaytoast("Please enter valid age", context);
                   } else {
                     registeruser(context);
-                    
                   }
                 },
                 child: Ink(
@@ -397,8 +386,8 @@ class _registerfordeliState extends State<registerfordeli> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       gradient: LinearGradient(colors: [
-                         Color.fromRGBO(226, 53, 57, 1),
-                            Color.fromRGBO(226, 53, 57, 5),
+                        rang.always,
+                        Color.fromRGBO(226, 53, 57, 5),
                       ])),
                   child: Center(
                     child: Text("Register",
@@ -440,11 +429,9 @@ class _registerfordeliState extends State<registerfordeli> {
 
       final User = FirebaseAuth.instance.currentUser;
       if (User != null) {
-
-
         //   // *******************************************
 
-          //  changing to add admin approval for the account 
+        //  changing to add admin approval for the account
         // *********************************
         databaseRef.child("Pending_register").child(User.uid).set({
           'role': Role,
@@ -454,7 +441,7 @@ class _registerfordeliState extends State<registerfordeli> {
           'Phone': phone.text,
           'Email': _email.text,
           'Password': _password.text,
-          'userid':User.uid,
+          'userid': User.uid,
           'latitude': 0,
           'longitude': 0,
         }).onError((error, stackTrace) {

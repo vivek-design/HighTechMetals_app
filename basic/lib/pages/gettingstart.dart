@@ -2,7 +2,7 @@ import 'package:basic/Uitilities/router.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
-
+import '../Uitilities/col.dart';
 class gettingstarted extends StatefulWidget {
   const gettingstarted({super.key});
 
@@ -73,7 +73,7 @@ class _gettingstartedState extends State<gettingstarted> {
                         child: Container(
                           child: Center(
                               child: Text(
-                            "Getting started",
+                            "Getting Started",
                             style: TextStyle(
                                 fontSize: 30,
                                 fontWeight: FontWeight.bold,
@@ -88,15 +88,7 @@ class _gettingstartedState extends State<gettingstarted> {
                 height: 20,
               ),
               SizedBox(height: 30),
-              Container(
-                child: Center(
-                  child: Text("Register as a Inventory manager  ",
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Color.fromRGBO(226, 53, 57, 1),
-                      )),
-                ),
-              ),
+             
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: InkWell(
@@ -108,11 +100,11 @@ class _gettingstartedState extends State<gettingstarted> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           gradient: LinearGradient(colors: [
-                            Color.fromRGBO(226, 53, 57, 1),
+                            rang.always,
                             Color.fromRGBO(226, 53, 57, 5),
                           ])),
                       child: Center(
-                        child: Text("Register as inventory manager",
+                        child: Text("Register as Inventory Manager",
                             style: TextStyle(
                               color: Colors.white,
                             )),
@@ -121,15 +113,7 @@ class _gettingstartedState extends State<gettingstarted> {
                   ),
                 ),
               ),
-              Container(
-                child: Center(
-                  child: Text("Register as a  Delivery manager ",
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Color.fromRGBO(226, 53, 57, 1),
-                      )),
-                ),
-              ),
+              
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: InkWell(
@@ -141,11 +125,11 @@ class _gettingstartedState extends State<gettingstarted> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           gradient: LinearGradient(colors: [
-                            Color.fromRGBO(226, 53, 57, 1),
+                        rang.always,
                             Color.fromRGBO(226, 53, 57, 5),
                           ])),
                       child: Center(
-                        child: Text("Register as Delivery manager",
+                        child: Text("Register as Delivery Manager",
                             style: TextStyle(
                               color: Colors.white,
                             )),
@@ -154,16 +138,7 @@ class _gettingstartedState extends State<gettingstarted> {
                   ),
                 ),
               ),
-              Container(
-                child: Center(
-                  child: Text("Register as a customer  ",
-                      style: TextStyle(
-                        fontSize: 15,
-                        color:   Color.fromRGBO(226, 53, 57, 1),
-                          
-                      )),
-                ),
-              ),
+              
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: InkWell(
@@ -175,7 +150,7 @@ class _gettingstartedState extends State<gettingstarted> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           gradient: LinearGradient(colors: [
-                            Color.fromRGBO(226, 53, 57, 1),
+                                rang.always,
                             Color.fromRGBO(226, 53, 57, 5),
                           ])),
                       child: Center(

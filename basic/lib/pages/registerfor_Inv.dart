@@ -28,20 +28,6 @@ class _registerforinvState extends State<registerforinv> {
   var selectedGen;
   DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
 
-  Future pickImage() async {
-    // try {
-    //   final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-    //   if (image == null) {
-    //     return;
-    //   }
-
-    //   // final imageTemporary = File(image.path as List<Object>);
-    //   // this.image = imageTemporary;
-    // } on PlatformException catch (e) {
-    //   print('failed to pick image $e');
-    // }
-  }
-
   List<String> items = ['Register as', 'User', 'Maid'];
 
   String? selectedItem = 'Register as';
@@ -55,6 +41,8 @@ class _registerforinvState extends State<registerforinv> {
   late final TextEditingController name;
   late final TextEditingController age;
   late final TextEditingController phone;
+  bool issuccess = false;
+  bool _passwordVisible = false;
 
   void initState() {
     // TODO: implement initState
@@ -77,6 +65,9 @@ class _registerforinvState extends State<registerforinv> {
     // TODO: implement dispose
     _email.dispose();
     _password.dispose();
+    name.dispose();
+    age.dispose();
+    phone.dispose();
     super.dispose();
   }
 
@@ -157,12 +148,6 @@ class _registerforinvState extends State<registerforinv> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
-                    // boxShadow: [
-                    //   BoxShadow(
-                    //       color: Color.fromRGBO(143, 148, 251, 1),
-                    //       blurRadius: 20.0,
-                    //       offset: Offset(0, 10))
-                    // ]
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -189,7 +174,6 @@ class _registerforinvState extends State<registerforinv> {
                           ],
                         ),
                       ),
-
                       SizedBox(
                         height: 20,
                       ),
@@ -237,7 +221,6 @@ class _registerforinvState extends State<registerforinv> {
                       SizedBox(
                         height: 20,
                       ),
-
                       Container(
                         padding: EdgeInsets.all(8.0),
                         decoration: BoxDecoration(
@@ -273,7 +256,6 @@ class _registerforinvState extends State<registerforinv> {
                       SizedBox(
                         height: 20,
                       ),
-
                       Container(
                         padding: EdgeInsets.all(8.0),
                         decoration: BoxDecoration(
@@ -295,7 +277,6 @@ class _registerforinvState extends State<registerforinv> {
                       SizedBox(
                         height: 20,
                       ),
-
                       Container(
                         padding: EdgeInsets.all(8.0),
                         decoration: BoxDecoration(
@@ -312,7 +293,6 @@ class _registerforinvState extends State<registerforinv> {
                       SizedBox(
                         height: 20,
                       ),
-
                       Container(
                         padding: EdgeInsets.all(8.0),
                         decoration: BoxDecoration(
@@ -320,11 +300,27 @@ class _registerforinvState extends State<registerforinv> {
                             borderRadius: BorderRadius.circular(20)),
                         child: TextFormField(
                             controller: _password,
-                            obscureText: true,
+                            obscureText: !_passwordVisible,
                             decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: "Password",
-                                hintStyle: TextStyle(color: Colors.grey[400])),
+                              border: InputBorder.none,
+                              hintText: "Password",
+                              hintStyle: TextStyle(color: Colors.grey[400]),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  // Based on passwordVisible state choose the icon
+                                  _passwordVisible
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: Theme.of(context).primaryColorDark,
+                                ),
+                                onPressed: () {
+                                  // Update the state i.e. toogle the state of passwordVisible variable
+                                  setState(() {
+                                    _passwordVisible = !_passwordVisible;
+                                  });
+                                },
+                              ),
+                            ),
                             validator: (value) {
                               if (value != null) if (value.isEmpty) {
                                 return "password connot be null";
@@ -333,24 +329,28 @@ class _registerforinvState extends State<registerforinv> {
                             }),
                       ),
                       20.heightBox,
-
                       FlutterPwValidator(
                         controller: _password,
                         minLength: 8,
-                        uppercaseCharCount: 2,
+                        uppercaseCharCount: 1,
                         lowercaseCharCount: 2,
-                        numericCharCount: 3,
+                        numericCharCount: 1,
                         specialCharCount: 1,
                         width: 400,
                         height: 150,
-                        onSuccess: () {},
+                        onSuccess: () {
+                          setState(() {
+                            issuccess = true;
+                          });
+                        },
                         onFail: () {
-                          showErrorDialog(
-                              context, "Enter correct formate of password");
+                          // showErrorDialog(
+                          //     context, "Enter correct formate of password");
+                          setState(() {
+                            issuccess = false;
+                          });
                         },
                       ),
-
-                    
                     ],
                   ),
                 ),
@@ -372,7 +372,9 @@ class _registerforinvState extends State<registerforinv> {
                     displaytoast("Please select gender", context);
                   } else if (phone == null || phone.text.length != 10) {
                     displaytoast("Please enter valid phone number", context);
-                  } else if (_password.text.length < 8 || _password == null) {
+                  } else if (_password.text.length < 8 ||
+                      _password == null ||
+                      issuccess == false) {
                     displaytoast(
                         "Please selelect appropriate password", context);
                   } else if (age.text == null) {
@@ -386,7 +388,7 @@ class _registerforinvState extends State<registerforinv> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       gradient: LinearGradient(colors: [
-                        Color.fromRGBO(226, 53, 57, 1),
+                       rang.always,
                         Color.fromRGBO(226, 53, 57, 5),
                       ])),
                   child: Center(

@@ -67,19 +67,19 @@ class _fakelogedState extends State<fakeloged> {
                           });
 
                           if (dataSnapshot) {
-                            displaytoast("loggin in ", context);
+                            displaytoast("logging in ", context);
                             Navigator.of(context).pushNamedAndRemoveUntil(
                                 router.InvFront, (route) => false);
                           } else if (datasnapshot2) {
-                            displaytoast("loggin in ", context);
+                            displaytoast("logging in ", context);
                             Navigator.of(context).pushNamedAndRemoveUntil(
                                 router.delivfront, (route) => false);
                           } else if (dataSnapshot3) {
-                            displaytoast("loggin in ", context);
+                            displaytoast("logging in ", context);
                             Navigator.of(context).pushNamedAndRemoveUntil(
                                 router.ownerfront, (route) => false);
                           } else if (dataSnapshot4) {
-                            displaytoast("loggin in ", context);
+                            displaytoast("logging in ", context);
                             Navigator.of(context).pushNamedAndRemoveUntil(
                                 router.customerfront, (route) => false);
                           } else {
@@ -119,6 +119,7 @@ class _fakelogedState extends State<fakeloged> {
       child: Center(
           child: Lottie.network(
         "https://lottie.host/91c2aa90-5b11-4fc8-abb9-eed260bb1f7a/YyF1ubl5e6.json",
+        
         repeat: true,
         height: 250,
         width: 250,

@@ -208,7 +208,7 @@ class _update_orderdetailState extends State<update_orderdetail> {
                           borderRadius: BorderRadius.circular(10),
                           gradient: LinearGradient(
                             colors: [
-                              Color.fromRGBO(226, 53, 57, 1),
+                                      rang.always,
                               Color.fromRGBO(226, 53, 57, 5),
                             ],
                           ),

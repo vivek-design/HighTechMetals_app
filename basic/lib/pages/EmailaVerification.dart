@@ -107,7 +107,7 @@ class _emailverifiedState extends State<emailverified> {
                     child: Text("We have sent you an email verification on your  \n   registered Email ",
                         style: TextStyle(
                           fontSize: 15,
-                          color:   Color.fromRGBO(226, 53, 57, 1),
+                          color:  rang.always,
                               
                         )),
                   ),

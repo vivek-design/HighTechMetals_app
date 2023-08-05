@@ -23,7 +23,7 @@ class _Center_pageState extends State<Center_page> {
     return Scaffold(
       appBar: AppBar(
         title: Center(
-          child: "High tech ".text.make(),
+          child: "High Tech ".text.make(),
         ),
         toolbarHeight: 90,
         backgroundColor: rang.always,
@@ -31,15 +31,7 @@ class _Center_pageState extends State<Center_page> {
       body: SafeArea(
         child:
 
-            // Container(
-            //   padding: EdgeInsets.all(20),
-            //   child: Center(
-            //       child: "List of all the registered user is "
-            //           .text
-            //           .bold
-            //           .black
-            //           .make()),
-            // ),
+           
 
             Container(
           height: double.infinity,

@@ -6,6 +6,7 @@ import 'package:basic/pages/alertbox.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -27,6 +28,8 @@ class login_page extends StatefulWidget {
 class _login_pageState extends State<login_page> {
   late final TextEditingController _email;
   late final TextEditingController _password;
+  bool isCheckedRememberMe = false;
+  bool _passwordVisible = false;
 
   bool isChecked = false;
 
@@ -175,12 +178,27 @@ class _login_pageState extends State<login_page> {
                           decoration: BoxDecoration(),
                           child: TextFormField(
                               controller: _password,
-                              obscureText: true,
+                              obscureText: !_passwordVisible,
                               decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: "  Password",
-                                  hintStyle:
-                                      TextStyle(color: Colors.grey[400])),
+                                border: InputBorder.none,
+                                hintText: "  Password",
+                                hintStyle: TextStyle(color: Colors.grey[400]),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    // Based on passwordVisible state choose the icon
+                                    _passwordVisible
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                    color: Theme.of(context).primaryColorDark,
+                                  ),
+                                  onPressed: () {
+                                    // Update the state i.e. toogle the state of passwordVisible variable
+                                    setState(() {
+                                      _passwordVisible = !_passwordVisible;
+                                    });
+                                  },
+                                ),
+                              ),
                               validator: (value) {
                                 if (value != null) if (value.isEmpty) {
                                   return "password connot be null";
@@ -196,22 +214,19 @@ class _login_pageState extends State<login_page> {
                       child: Row(
                     children: [
                       Checkbox(
-
                           value: isChecked,
                           checkColor: Colors.black,
                           onChanged: (value) {
-                           
                             setState(() {
-                               isChecked = value!;
+                              isChecked = value!;
+                              isCheckedRememberMe = !isCheckedRememberMe;
                             });
                           },
                           fillColor:
                               MaterialStateProperty.resolveWith((states) {
                             // if (states==MaterialState.pressed || states==MaterialState.selected ) {
-                            return Colors.red;
+                            return rang.always;
                             // }
-
-                            return Colors.white;
                           })),
                       10.widthBox,
                       Text(
@@ -245,95 +260,18 @@ class _login_pageState extends State<login_page> {
 
                         final user = Auth().currentUser;
                         if (user?.emailVerified ?? false) {
+                          // if (isCheckedRememberMe) {
+                          //   SharedPreferences.getInstance().then(
+                          //     (prefs) {
+                          //       prefs.setString('userId', _email.text);
+                          //       prefs.setString('password', _password.text);
+                          //     },
+                          //   );
+                          // }
                           Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
                                   builder: (context) => fakeloged()),
                               (route) => false);
-
-                          DatabaseReference databaseRefu = FirebaseDatabase
-                              .instance
-                              .ref("Inventory_manager");
-                          var dataSnapshot;
-                          await databaseRefu
-                              .child(user!.uid)
-                              .once()
-                              .then((Event) {
-                            dataSnapshot = Event.snapshot.exists;
-                          });
-
-                          DatabaseReference databaseRefu2 = FirebaseDatabase
-                              .instance
-                              .ref()
-                              .child("Delivery_manager");
-
-                          var datasnapshot2;
-                          await databaseRefu2
-                              .child(user!.uid)
-                              .once()
-                              .then((Event) {
-                            datasnapshot2 = Event.snapshot.exists;
-                          });
-
-                          DatabaseReference databaseRefu3 =
-                              FirebaseDatabase.instance.ref().child("Owner");
-                          var dataSnapshot3;
-                          await databaseRefu3
-                              .child(user!.uid)
-                              .once()
-                              .then((Event) {
-                            dataSnapshot3 = Event.snapshot.exists;
-                          });
-
-                          DatabaseReference databaseRefu4 =
-                              FirebaseDatabase.instance.ref().child("Customer");
-                          var dataSnapshot4;
-                          await databaseRefu4
-                              .child(user!.uid)
-                              .once()
-                              .then((Event) {
-                            dataSnapshot4 = Event.snapshot.exists;
-                          });
-
-                          if (dataSnapshot) {
-                            displaytoast("loggin in ", context);
-                            Navigator.of(context).pushNamedAndRemoveUntil(
-                                router.InvFront, (route) => false);
-                          } else if (datasnapshot2) {
-                            displaytoast("loggin in ", context);
-                            Navigator.of(context).pushNamedAndRemoveUntil(
-                                router.delivfront, (route) => false);
-                          } else if (dataSnapshot3) {
-                            displaytoast("loggin in ", context);
-                            Navigator.of(context).pushNamedAndRemoveUntil(
-                                router.ownerfront, (route) => false);
-                          } else if (dataSnapshot4) {
-                            displaytoast("loggin in ", context);
-                            Navigator.of(context).pushNamedAndRemoveUntil(
-                                router.customerfront, (route) => false);
-                          } else {
-                            DatabaseReference databaseRefu5 = FirebaseDatabase
-                                .instance
-                                .ref()
-                                .child("Pending_register");
-                            var dataSnapshot5;
-                            await databaseRefu5
-                                .child(user!.uid)
-                                .once()
-                                .then((Event) {
-                              dataSnapshot5 = Event.snapshot.exists;
-                            });
-
-                            if (dataSnapshot5) {
-                              Navigator.pushNamed(
-                                  context, router.account_req_veri);
-                              print("pending");
-                              Auth().signOut();
-                            } else {
-                              Navigator.pushNamed(
-                                  context, router.account_req_declined);
-                              print("declined");
-                            }
-                          }
                         } else {
                           Navigator.of(context).pushNamedAndRemoveUntil(
                               router.emailveri, (route) => false);
@@ -361,7 +299,7 @@ class _login_pageState extends State<login_page> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           gradient: LinearGradient(colors: [
-                            Color.fromRGBO(226, 53, 57, 1),
+                            rang.always,
                             Color.fromRGBO(226, 53, 57, 5),
                           ])),
                       child: Center(
@@ -379,15 +317,19 @@ class _login_pageState extends State<login_page> {
                     child: Center(
                       child: InkWell(
                         onTap: () async {
-                          await showErrorDialog(
-                              context, "Password reset mail has sent ");
+                          if (_email.text.isNotEmpty) {
+                            await showErrorDialog(
+                                context, "Password reset mail has sent ");
 
-                          await Auth()
-                              .sendPasswordResetEmail(email: _email.text);
+                            await Auth()
+                                .sendPasswordResetEmail(email: _email.text);
+                          } else {
+                            showErrorDialog(context, "Please enter Email");
+                          }
                         },
                         child: Text("Forgot password?",
                             style: TextStyle(
-                              color: Color.fromRGBO(143, 148, 251, 1),
+                              color: rang.always,
                             )),
                       ),
                     ),

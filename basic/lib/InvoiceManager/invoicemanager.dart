@@ -43,7 +43,6 @@ class _Invoice_frontState extends State<Invoice_front> {
     'Item 5',
   ];
 
-  
   var products = ['Select Item'];
   Map<String, List<String>> mp = {};
 
@@ -112,7 +111,7 @@ class _Invoice_frontState extends State<Invoice_front> {
 
   @override
   Widget build(BuildContext context) {
-      var size = MediaQuery.of(context).size;
+    var size = MediaQuery.of(context).size;
     var heigh = size.height;
     var widt = size.width;
 
@@ -148,6 +147,24 @@ class _Invoice_frontState extends State<Invoice_front> {
                         child: Column(
                           children: <Widget>[
                             Container(
+                              child: Row(
+                                children: [
+                                  50.widthBox,
+                                  Image.asset(
+                                    "assets/images/logo.png",
+                                    height: 30,
+                                  ),
+                                  20.widthBox,
+                                  Text(
+                                    "Welcome to High Tech Metals",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w300),
+                                  )
+                                ],
+                              ),
+                            ),
+                            30.heightBox,
+                            Container(
                               width: widt,
                               padding: EdgeInsets.all(5),
                               decoration: BoxDecoration(
@@ -161,8 +178,6 @@ class _Invoice_frontState extends State<Invoice_front> {
                                   ]),
                               child: Padding(
                                 padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                              
-
                                 child: Container(
                                   padding: EdgeInsets.all(10),
                                   child: Autocomplete<String>(
@@ -220,7 +235,7 @@ class _Invoice_frontState extends State<Invoice_front> {
                                           validator: (value) {
                                             if (value == null ||
                                                 value.isEmpty) {
-                                              return 'Please enter customer ';
+                                              return 'Please select customer ';
                                             }
                                             return null;
                                           },
@@ -252,7 +267,10 @@ class _Invoice_frontState extends State<Invoice_front> {
 
                                                 return GestureDetector(
                                                   onTap: () {
-                                                    onSelected(option);
+                                                    setState(() {
+                                                      onSelected(option);
+                                                      isremoved = false;
+                                                    });
                                                   },
                                                   child: ListTile(
                                                     title: Text(
@@ -298,30 +316,6 @@ class _Invoice_frontState extends State<Invoice_front> {
                             width: 260,
                             child: Column(
                               children: [
-                                // DropdownButton(
-                                //   // Initial Value
-                                //   isExpanded: true,
-                                //   value: selected_item,
-
-                                //   // Down Arrow Icon
-                                //   icon: const Icon(Icons.keyboard_arrow_down),
-                                //   hint:
-                                //       "Select customer     ".text.black.make(),
-                                //   // Array list of items
-                                //   items: products.map((String items) {
-                                //     return DropdownMenuItem(
-                                //       value: items,
-                                //       child: Text(items),
-                                //     );
-                                //   }).toList(),
-                                //   // After selecting the desired option,it will
-                                //   // change button value to selected value
-                                //   onChanged: (String? newValue) {
-                                //     setState(() {
-                                //       selected_item = newValue!;
-                                //     });
-                                //   },
-                                // ),
                                 Container(
                                   padding: EdgeInsets.all(5),
                                   width: 300,
@@ -452,8 +446,25 @@ class _Invoice_frontState extends State<Invoice_front> {
                                       //this process returns the future so withput the use of await keywoed it will return the instance of future
                                       setState(() {
                                         if (selected_item != 'Select Item') {
-                                          item.add(Item(
-                                              selected_item, quatity_count));
+                                          int index = -1;
+                                          bool flag = false;
+                                          for (int i = 0;
+                                              i < item.length;
+                                              i++) {
+                                            if (item[i].name == selected_item) {
+                                              flag = true;
+
+                                              handle_multiple(context, i);
+                                              break;
+                                            }
+                                          }
+
+                                          if (flag == false) {
+                                            item.add(Item(
+                                                selected_item, quatity_count));
+                                                    displaytoast("Item added", context);
+
+                                          }
                                           if (item.length > 1 &&
                                               isremoved == false) {
                                             item.removeAt(0);
@@ -464,7 +475,6 @@ class _Invoice_frontState extends State<Invoice_front> {
                                               "select the suitable item  ",
                                               context);
                                         }
-                                        displaytoast("Item added", context);
                                       });
                                     },
                                     child: Ink(
@@ -571,7 +581,7 @@ class _Invoice_frontState extends State<Invoice_front> {
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               gradient: LinearGradient(colors: [
-                                Color.fromRGBO(226, 53, 57, 1),
+                                rang.always,
                                 Color.fromRGBO(226, 53, 57, 5),
                               ])),
                           child: Center(
@@ -663,9 +673,55 @@ class _Invoice_frontState extends State<Invoice_front> {
         });
   }
 
-  displaytoast(String s, BuildContext context) {
-    Fluttertoast.showToast(msg: s);
+  Future<void> handle_multiple(
+    BuildContext context,
+    int i,
+  ) {
+    return showDialog<void>(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            title: "Item already added".text.make(),
+            content: "This item is already been added \n Do you want to add it again?"
+                .text
+                .make(),
+            actions: [
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: Theme.of(context).textTheme.labelLarge,
+                ),
+                child: const Text('Cancle',style: TextStyle(
+                  color:  Color.fromARGB(255, 142, 10, 10),
+                ),),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: Theme.of(context).textTheme.labelLarge,
+                ),
+                child: const Text('Add',style: TextStyle(
+                  color:  Color.fromARGB(255, 142, 10, 10),
+                ),),
+                onPressed: () {
+                  setState(() {
+                    item[i].quantity += quatity_count;
+                    displaytoast("Item added", context);
+                    Navigator.of(context).pop();
+                    
+                  });
+                },
+              ),
+            ],
+          );
+        });
   }
+}
+
+displaytoast(String s, BuildContext context) {
+  Fluttertoast.showToast(msg: s);
 }
 
 class Item {
