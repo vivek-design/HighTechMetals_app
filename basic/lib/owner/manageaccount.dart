@@ -1,24 +1,22 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:basic/Uitilities/auth.dart';
+
 import 'package:basic/Uitilities/col.dart';
 import 'package:basic/Uitilities/router.dart';
-import 'package:basic/Uitilities/router.dart';
-import 'package:basic/owner/Acceptaccount_perm.dart';
-import 'package:basic/pages/login.dart';
+
+
 import 'package:connectivity/connectivity.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
+
+
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:intl/intl.dart';
+
 import 'package:velocity_x/velocity_x.dart';
 
-import '../DeliveryManagr/delivery_front.dart';
 import '../Uitilities/nointernet.dart';
 
 class manage_account_owner extends StatefulWidget {
@@ -42,7 +40,7 @@ class _manage_account_ownerState extends State<manage_account_owner> {
       if (event.snapshot.value != null) {
         Map<dynamic, dynamic> data =
             event.snapshot.value as Map<dynamic, dynamic>;
-        AppUserDummy hell;
+       
         data.forEach((key, value) => {
               //  print(value),
               customers.add(new AppUserDummy(
@@ -52,10 +50,10 @@ class _manage_account_ownerState extends State<manage_account_owner> {
                 gender: value['gender'],
                 age: value['Age'],
                 userid: value['userid'],
-                role: "customer".toString(),
+                role: "Customer".toString(),
               )),
             });
-        // print(customers);
+    
       }
     });
 
@@ -75,10 +73,10 @@ class _manage_account_ownerState extends State<manage_account_owner> {
                 gender: value['gender'],
                 age: value['Age'],
                 userid: value['userid'],
-                role: value['role'],
+                role: "Delivery Manager",
               )),
             });
-        print(Employee);
+       
       }
     });
 
@@ -98,10 +96,10 @@ class _manage_account_ownerState extends State<manage_account_owner> {
                 gender: value['gender'],
                 age: value['Age'],
                 userid: value['userid'],
-                role: value['role'],
+                role: "Invoice Manager",
               )),
             });
-        print(Employee);
+        
       }
     });
     await Future.delayed(Duration(seconds: 1));
@@ -116,7 +114,7 @@ class _manage_account_ownerState extends State<manage_account_owner> {
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if (result == ConnectivityResult.none) {
         // Navigate to NoInternetPage if there is no internet connection
-        print("IN there");
+       
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: ((context) {
           return No_internet();

@@ -1,9 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:ffi';
 
-import 'package:basic/Uitilities/dispatchsuccess.dart';
+
+
 import 'package:basic/Uitilities/router.dart';
-import 'package:basic/main.dart';
+
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +40,7 @@ class _Confirm_order_updateState extends State<Confirm_order_update> {
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if (result == ConnectivityResult.none) {
         // Navigate to NoInternetPage if there is no internet connection
-        print("IN there");
+      
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: ((context) {
           return No_internet();
@@ -243,10 +243,10 @@ class _Confirm_order_updateState extends State<Confirm_order_update> {
                           dynamic useful = orders[orderId];
                           if (orderId == order_id) {
                             useful.forEach((id, value) async {
-                              print(value);
+                           
                               if (value['timestamp'].toString() == timestamp.toString()) {
-                                print("Yes");
-                                // print(order_id);
+                           
+                            
                                 await ordersRef
                                     .child(orderId)
                                     .child(id)

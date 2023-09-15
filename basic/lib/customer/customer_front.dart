@@ -1,21 +1,18 @@
 import 'package:basic/customer/showdetail.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 import 'package:velocity_x/velocity_x.dart';
 import 'package:basic/Uitilities/auth.dart';
 import 'package:basic/Uitilities/col.dart';
 import 'package:basic/Uitilities/router.dart';
-import 'package:basic/pages/login.dart';
+
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
+
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:velocity_x/velocity_x.dart';
-import 'package:basic/Uitilities/router.dart';
-import '../Uitilities/auth.dart';
+
 import '../Uitilities/nointernet.dart';
 
 class Customer_fornt extends StatefulWidget {
@@ -49,7 +46,7 @@ class _Customer_forntState extends State<Customer_fornt> {
         .child("Customer")
         .child(user!.uid);
     DatabaseEvent dbenvent = await _dbref.once();
-    // print(dbenvent.snapshot.value);
+  
     Map<dynamic, dynamic>? map = await dbenvent.snapshot.value as Map?;
     Username = await map!['Name'];
     return true;
@@ -59,7 +56,7 @@ class _Customer_forntState extends State<Customer_fornt> {
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if (result == ConnectivityResult.none) {
         // Navigate to NoInternetPage if there is no internet connection
-        print("IN there");
+     
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: ((context) {
           return No_internet();
@@ -318,8 +315,8 @@ class _Customer_forntState extends State<Customer_fornt> {
                             onTap: () => {
                               if (is_today)
                                 {
-                                  print("Yes"),
-                                  print(actual_range),
+                               
+                         
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -328,6 +325,9 @@ class _Customer_forntState extends State<Customer_fornt> {
                                               dateTimeRange: actual_range,is_today: true,))),
                                 }
                               else
+
+
+                              
                                 {
                                   Navigator.push(
                                       context,

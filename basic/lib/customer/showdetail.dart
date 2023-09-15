@@ -1,23 +1,20 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:ffi';
+
 
 import 'package:basic/Uitilities/auth.dart';
 import 'package:basic/Uitilities/col.dart';
 import 'package:basic/Uitilities/router.dart';
-import 'package:basic/Uitilities/router.dart';
-import 'package:basic/pages/login.dart';
+
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
+
 import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-import '../DeliveryManagr/delivery_front.dart';
+
 import '../Uitilities/nointernet.dart';
 
 class Show_detail extends StatefulWidget {

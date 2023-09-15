@@ -165,7 +165,7 @@ class _registerforinvState extends State<registerforinv> {
                               width: 10,
                             ),
                             Text(
-                              "Registering as Inventory manager",
+                              "Registering as Inventory Manager",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 17,
@@ -205,6 +205,7 @@ class _registerforinvState extends State<registerforinv> {
                             borderRadius: BorderRadius.circular(20)),
                         child: TextFormField(
                             controller: age,
+                            keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: "Age",
@@ -279,10 +280,15 @@ class _registerforinvState extends State<registerforinv> {
                       ),
                       Container(
                         padding: EdgeInsets.all(8.0),
+                        
                         decoration: BoxDecoration(
+
+
+                      
                             border: Border.all(),
                             borderRadius: BorderRadius.circular(20)),
                         child: TextFormField(
+                          keyboardType: TextInputType.number,
                           controller: phone,
                           decoration: InputDecoration(
                               border: InputBorder.none,

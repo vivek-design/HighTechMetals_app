@@ -1,12 +1,12 @@
 import 'package:basic/DeliveryManagr/Confirmdispatch.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../Uitilities/col.dart';
-import '../Uitilities/circularpro.dart';
+
 import '../Uitilities/nointernet.dart';
 import 'delivery_front.dart';
 
@@ -33,8 +33,7 @@ class _update_orderdetailState extends State<update_orderdetail> {
   void initState() {
      Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if (result == ConnectivityResult.none) {
-        // Navigate to NoInternetPage if there is no internet connection
-        print("IN there");
+   
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: ((context) {
           return No_internet();

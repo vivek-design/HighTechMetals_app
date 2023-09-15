@@ -44,40 +44,44 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyD2NMsGXPypwNH4Pl-Eo040U_1k_xSJXkQ',
-    appId: '1:1088447951476:web:f5fab574e8d9be2d2ed721',
-    messagingSenderId: '1088447951476',
-    projectId: 'internship-80ac4',
-    authDomain: 'internship-80ac4.firebaseapp.com',
-    storageBucket: 'internship-80ac4.appspot.com',
-    measurementId: 'G-BRMQYG8Z39',
+    apiKey: 'AIzaSyAPG1qPKdNa16GbqMKZVu-T-vuuaazFf5I',
+    appId: '1:747249998495:web:61615d4eebf54f600de0aa',
+    messagingSenderId: '747249998495',
+    projectId: 'hi-tech-metals',
+    authDomain: 'hi-tech-metals.firebaseapp.com',
+    databaseURL: 'https://hi-tech-metals-default-rtdb.firebaseio.com',
+    storageBucket: 'hi-tech-metals.appspot.com',
+    measurementId: 'G-4Y692JW0SJ',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDPRkCKn1xEnoPBCKkrJi4C3Gva6SIVbKU',
-    appId: '1:1088447951476:android:5488c5078d0cb9b62ed721',
-    messagingSenderId: '1088447951476',
-    projectId: 'internship-80ac4',
-    storageBucket: 'internship-80ac4.appspot.com',
+    apiKey: 'AIzaSyDO7xLVCiTrNp-b5Ww4KJ03EPcDlW2g2BI',
+    appId: '1:747249998495:android:a91dbae6745834390de0aa',
+    messagingSenderId: '747249998495',
+    projectId: 'hi-tech-metals',
+    databaseURL: 'https://hi-tech-metals-default-rtdb.firebaseio.com',
+    storageBucket: 'hi-tech-metals.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCPDh3FArihOvN0vViZj0RUpKkN-XkUvkk',
-    appId: '1:1088447951476:ios:220cfa7885853c312ed721',
-    messagingSenderId: '1088447951476',
-    projectId: 'internship-80ac4',
-    storageBucket: 'internship-80ac4.appspot.com',
-    iosClientId: '1088447951476-t88jhpta7hgb4fe0osbtmq7866tsstum.apps.googleusercontent.com',
+    apiKey: 'AIzaSyD0_8yrmfpEWEYfGg5DJKekIMS8GDWumQ0',
+    appId: '1:747249998495:ios:650a253d072240bc0de0aa',
+    messagingSenderId: '747249998495',
+    projectId: 'hi-tech-metals',
+    databaseURL: 'https://hi-tech-metals-default-rtdb.firebaseio.com',
+    storageBucket: 'hi-tech-metals.appspot.com',
+    iosClientId: '747249998495-3tgout7bvschdfpooet9s2bcl93vq9sp.apps.googleusercontent.com',
     iosBundleId: 'com.example.basic',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyCPDh3FArihOvN0vViZj0RUpKkN-XkUvkk',
-    appId: '1:1088447951476:ios:220cfa7885853c312ed721',
-    messagingSenderId: '1088447951476',
-    projectId: 'internship-80ac4',
-    storageBucket: 'internship-80ac4.appspot.com',
-    iosClientId: '1088447951476-t88jhpta7hgb4fe0osbtmq7866tsstum.apps.googleusercontent.com',
+    apiKey: 'AIzaSyD0_8yrmfpEWEYfGg5DJKekIMS8GDWumQ0',
+    appId: '1:747249998495:ios:650a253d072240bc0de0aa',
+    messagingSenderId: '747249998495',
+    projectId: 'hi-tech-metals',
+    databaseURL: 'https://hi-tech-metals-default-rtdb.firebaseio.com',
+    storageBucket: 'hi-tech-metals.appspot.com',
+    iosClientId: '747249998495-3tgout7bvschdfpooet9s2bcl93vq9sp.apps.googleusercontent.com',
     iosBundleId: 'com.example.basic',
   );
 }

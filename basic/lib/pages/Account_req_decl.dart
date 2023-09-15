@@ -1,9 +1,8 @@
-import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
-import '../Uitilities/auth.dart';
+
 class Account_req_declined extends StatefulWidget {
   const Account_req_declined({super.key});
 

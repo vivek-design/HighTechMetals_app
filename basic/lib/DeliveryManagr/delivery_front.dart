@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:basic/Uitilities/auth.dart';
 import 'package:basic/Uitilities/col.dart';
 import 'package:basic/Uitilities/router.dart';
-import 'package:basic/pages/login.dart';
+
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
+
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+
 import 'package:velocity_x/velocity_x.dart';
-import 'package:basic/Uitilities/router.dart';
+
 import 'package:intl/intl.dart';
 
 import '../Uitilities/nointernet.dart';
@@ -39,26 +39,8 @@ class _deliv_frontState extends State<deliv_front> {
   Future<bool> cal() async {
     User? user = FirebaseAuth.instance.currentUser;
     String? ema = user?.email;
-    DatabaseReference dbref =
-        await FirebaseDatabase.instance.ref().child("Delivery_responsibility");
-    dbref.onValue.listen((event) async{
-      if (event.snapshot.value != null) {
-        Map<dynamic, dynamic>? data =
-           await event.snapshot.value as Map<dynamic, dynamic>?;
-      data?.forEach((key, value) async{
-          if (value["Email"].toString() == ema.toString()) {
-            helper = value["Customers"];
-            print(ema);
+   
 
-         helper.forEach((element) {
-              helper2.add(element.toString().trim());
-            });
-            print(helper2);
-          }
-        });
-      }
-    });
-    
     await Future.delayed(Duration(seconds: 1));
 
     _orderRef = await FirebaseDatabase.instance.ref().child('orders');
@@ -66,13 +48,12 @@ class _deliv_frontState extends State<deliv_front> {
       orders.clear();
       if (event.snapshot.value != null) {
         Map<dynamic, dynamic>? data =
-           event.snapshot.value as Map<dynamic, dynamic>?;
+            event.snapshot.value as Map<dynamic, dynamic>?;
         data?.forEach((orderKey, orderData) async {
-         await orderData.forEach((key, value)async {
-            print(orderKey);
-            // print(helper);
-            print(helper2.contains(orderKey.toString().trim()));
-            if (helper2.contains(orderKey.toString().trim())) {
+          await orderData.forEach((key, value) async {
+          
+  
+           
               List<dynamic> itemsData = value['items'];
               List<Item> items = itemsData
                   .map((itemData) =>
@@ -82,7 +63,8 @@ class _deliv_frontState extends State<deliv_front> {
                   orderKey, items, DateTime.parse(value['timestamp']), "gjhgh");
               orders.add(order);
             }
-          });
+          // }
+          );
         });
       }
 
@@ -98,8 +80,7 @@ class _deliv_frontState extends State<deliv_front> {
 
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if (result == ConnectivityResult.none) {
-        // Navigate to NoInternetPage if there is no internet connection
-        print("IN there");
+        
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: ((context) {
           return No_internet();
@@ -110,6 +91,9 @@ class _deliv_frontState extends State<deliv_front> {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    var heigh = size.height;
+    var widt = size.width;
     return FutureBuilder(
         future: cal(),
         builder: (context, snapshot) {
@@ -122,18 +106,16 @@ class _deliv_frontState extends State<deliv_front> {
                 ),
                 body: RefreshIndicator(
                   onRefresh: () {
-                  return Future.delayed(
-                    (Duration(milliseconds: 1)),(){
-                             setState(() {});
-                    }
-                  );
+                    return Future.delayed((Duration(seconds: 1)), () {
+                      setState(() {});
+                    });
                   },
                   child: ListView.builder(
                     shrinkWrap: true,
                     itemCount: orders.length,
                     itemBuilder: (BuildContext context, int index) {
                       Order order = orders[index];
-                
+
                       return Container(
                           padding: EdgeInsets.all(15),
                           child: Container(
@@ -163,12 +145,6 @@ class _deliv_frontState extends State<deliv_front> {
                                 SizedBox(height: 4),
                                 Text('Items:', style: TextStyle(fontSize: 13)),
                                 FittedBox(
-                                  // crossAxisAlignment: CrossAxisAlignment.start,
-                                  // children: order.items
-                                  //     .map((item) =>
-                                  //         Text('- ${item.name}: \n Quantity: ${item.quantity} \n              '),)
-                                  //     .toList(),
-                
                                   child: DataTable(
                                     dataRowHeight: 70,
                                     columns: [
@@ -241,26 +217,26 @@ class _deliv_frontState extends State<deliv_front> {
                   title: Text('Order List'),
                   backgroundColor: rang.always,
                 ),
-                body: 
-                RefreshIndicator(
-                  onRefresh: () {
-                  return Future.delayed(
-                    (Duration(milliseconds: 1)),(){
-                             setState(() {});
-                    }
-                  );
-                  },
-                  child:
-                Container(
-                  child: Center(
-                    child: Center(
-                      child: Text(
-                        "No orders to dispatch",
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                body:  RefreshIndicator(
+                    onRefresh: () {
+                    
+                      return Future.delayed(Duration(seconds: 1), () {
+                        setState(() {});
+                      });
+                    },
+                    child:SingleChildScrollView(
+                      child: Container(
+                                      height: heigh,
+                                      width: widt,
+                                      
+                      child: Center(
+                        child: Text(
+                          "No orders to dispatch",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ),
+                                      ),
                     ),
-                  ),
-                ),
                 ),
                 drawer: Drawer(
                   width: 200,
@@ -294,12 +270,9 @@ class _deliv_frontState extends State<deliv_front> {
               ),
               body: RefreshIndicator(
                 onRefresh: () {
-                  return Future.delayed(
-                    (Duration(milliseconds: 1)),(){
-                             setState(() {});
-                    }
-                  );
-                
+                  return Future.delayed((Duration(milliseconds: 1)), () {
+                    setState(() {});
+                  });
                 },
                 child: Container(
                   child: Center(child: CircularProgressIndicator()),

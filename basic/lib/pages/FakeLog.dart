@@ -22,7 +22,7 @@ class _fakelogedState extends State<fakeloged> {
   void navigateuser() async{
     
                         final user = Auth().currentUser;
-      DatabaseReference databaseRefu = FirebaseDatabase
+      DatabaseReference databaseRefu = await FirebaseDatabase
                               .instance
                               .ref("Inventory_manager");
                           var dataSnapshot;
@@ -33,7 +33,7 @@ class _fakelogedState extends State<fakeloged> {
                             dataSnapshot = Event.snapshot.exists;
                           });
 
-                          DatabaseReference databaseRefu2 = FirebaseDatabase
+                          DatabaseReference databaseRefu2 = await FirebaseDatabase
                               .instance
                               .ref()
                               .child("Delivery_manager");
@@ -47,7 +47,7 @@ class _fakelogedState extends State<fakeloged> {
                           });
 
                           DatabaseReference databaseRefu3 =
-                              FirebaseDatabase.instance.ref().child("Owner");
+                            await   FirebaseDatabase.instance.ref().child("Owner");
                           var dataSnapshot3;
                           await databaseRefu3
                               .child(user.uid)
@@ -57,7 +57,7 @@ class _fakelogedState extends State<fakeloged> {
                           });
 
                           DatabaseReference databaseRefu4 =
-                              FirebaseDatabase.instance.ref().child("Customer");
+                            await  FirebaseDatabase.instance.ref().child("Customer");
                           var dataSnapshot4;
                           await databaseRefu4
                               .child(user.uid)

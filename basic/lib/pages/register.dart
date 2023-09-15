@@ -169,7 +169,7 @@ class _registerviewState extends State<registerview> {
                           children: [
                             SizedBox(width: 10),
                             Text(
-                              "Registering as Delivery manager",
+                              "Registering as customer",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 17,
@@ -209,6 +209,7 @@ class _registerviewState extends State<registerview> {
                             borderRadius: BorderRadius.circular(20)),
                         child: TextFormField(
                             controller: age,
+                            keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: "Age",
@@ -287,6 +288,7 @@ class _registerviewState extends State<registerview> {
                             border: Border.all(),
                             borderRadius: BorderRadius.circular(20)),
                         child: TextFormField(
+                          keyboardType: TextInputType.number,
                           controller: phone,
                           decoration: InputDecoration(
                               border: InputBorder.none,
@@ -304,8 +306,24 @@ class _registerviewState extends State<registerview> {
                             borderRadius: BorderRadius.circular(20)),
                         child: TextFormField(
                             controller: _password,
-                            obscureText: true,
+                            obscureText:! _passwordVisible,
+                            
                             decoration: InputDecoration(
+                               suffixIcon: IconButton(
+                                      icon: Icon(
+                                        // Based on passwordVisible state choose the icon
+                                        _passwordVisible
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                        color: Theme.of(context).primaryColorDark,
+                                      ),
+                                      onPressed: () {
+                                        // Update the state i.e. toogle the state of passwordVisible variable
+                                        setState(() {
+                                          _passwordVisible = !_passwordVisible;
+                                        });
+                                      },
+                                    ),
                                 border: InputBorder.none,
                                 hintText: "Password",
                                 hintStyle: TextStyle(color: Colors.grey[400])),

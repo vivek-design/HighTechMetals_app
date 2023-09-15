@@ -1,8 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
 import 'package:basic/Uitilities/col.dart';
-import 'package:basic/Uitilities/router.dart';
+
 import 'package:basic/owner/ownerfront.dart';
+import 'package:basic/owner/showpending.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -31,7 +32,7 @@ class _Accept_account_requestState extends State<Accept_account_request> {
       if (event.snapshot.value != null) {
         Map<dynamic, dynamic>? data =
             event.snapshot.value as Map<dynamic, dynamic>?;
-        print(data);
+        
         data?.forEach((orderKey, orderData) {
           var Name = orderData["Name"];
           var Age = orderData["Age"];
@@ -66,7 +67,7 @@ class _Accept_account_requestState extends State<Accept_account_request> {
      Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if (result == ConnectivityResult.none) {
         // Navigate to NoInternetPage if there is no internet connection
-        print("IN there");
+      
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: ((context) {
           return No_internet();
@@ -90,27 +91,50 @@ class _Accept_account_requestState extends State<Accept_account_request> {
             bottomNavigationBar: CurvedNavigationBar(
               color: rang.always,
               backgroundColor: Colors.white,
-              index: 1,
+              index: 2,
               items: [
-                Icon(Icons.home),
-                Icon(Icons.manage_accounts),
+                   Icon(Icons.home),
+                   Icon(Icons.pending_actions),
+                  Icon(Icons.manage_accounts),
               ],
               onTap: (index) async {
-                if (index == 0) {
-                  await Future.delayed(const Duration(seconds: 1));
-                  index = 0;
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => Owner_front()),
-                      (Route<dynamic> route) => false);
-                  setState(() {});
-                }
+                 if (index == 0) {
+                    await Future.delayed(const Duration(seconds: 1));
+                    index = 0;
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (context) => Owner_front()),
+                        (Route<dynamic> route) => false);
+                    setState(() {
+                      index = 0;
+                    });
+                                   
+    
+                  }
 
-                if (index == 1) {
-                  await Future.delayed(const Duration(seconds: 1));
-                  // index = 1;
-                  // Navigator.pushNamed(context, router.accept_acc_req);
-                  setState(() {});
-                }
+                  if(index==1){
+                       await Future.delayed(const Duration(seconds: 1));
+                    // index = 1;
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (context) => showpending()),
+                        (Route<dynamic> route) => false);
+                    setState(() {
+                      index = 0;
+                    });
+                  }
+
+                  if (index == 2) {
+                    await Future.delayed(const Duration(seconds: 1));
+                    // index = 1;
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (context) => Accept_account_request()),
+                        (Route<dynamic> route) => false);
+                    setState(() {
+                      index = 0;
+                    });
+                  }
               },
             ),
             body: Container(
@@ -129,32 +153,53 @@ class _Accept_account_requestState extends State<Accept_account_request> {
                 title: "Pending account request".text.bold.white.make(),
                 backgroundColor: rang.always,
               ),
-              bottomNavigationBar: CurvedNavigationBar(
-                color: rang.always,
-                backgroundColor: Colors.white,
-                index: 1,
-                items: [
-                  Icon(Icons.home),
+               bottomNavigationBar: CurvedNavigationBar(
+              color: rang.always,
+              backgroundColor: Colors.white,
+              index: 2,
+              items: [
+                   Icon(Icons.home),
+                   Icon(Icons.pending_actions),
                   Icon(Icons.manage_accounts),
-                ],
-                onTap: (index) async {
-                  if (index == 0) {
+              ],
+              onTap: (index) async {
+                 if (index == 0) {
                     await Future.delayed(const Duration(seconds: 1));
-                    index = 0;
                     Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => Owner_front()),
+                        MaterialPageRoute(
+                            builder: (context) => Owner_front()),
                         (Route<dynamic> route) => false);
-                    setState(() {});
+                    setState(() {
+                      index = 0;
+                    });
+    
                   }
 
-                  if (index == 1) {
+                  if(index==1){
+                       await Future.delayed(const Duration(seconds: 1));
+                    // index = 1;
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (context) => showpending()),
+                        (Route<dynamic> route) => false);
+                    setState(() {
+                      index = 0;
+                    });
+                  }
+
+                  if (index == 2) {
                     await Future.delayed(const Duration(seconds: 1));
                     // index = 1;
-                    // Navigator.pushNamed(context, router.accept_acc_req);
-                    setState(() {});
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (context) => Accept_account_request()),
+                        (Route<dynamic> route) => false);
+                    setState(() {
+                      index = 0;
+                    });
                   }
-                },
-              ),
+              },
+            ),
               body: Container(
                 child: Center(
                   child: "No Pending account requests".text.black.make(),
@@ -169,30 +214,52 @@ class _Accept_account_requestState extends State<Accept_account_request> {
               title: "Pending account request".text.bold.white.make(),
               backgroundColor: rang.always,
             ),
-            bottomNavigationBar: CurvedNavigationBar(
+           bottomNavigationBar: CurvedNavigationBar(
               color: rang.always,
               backgroundColor: Colors.white,
-              index: 1,
+              index: 2,
               items: [
-                Icon(Icons.home),
-                Icon(Icons.manage_accounts),
+                   Icon(Icons.home),
+                   Icon(Icons.pending_actions),
+                  Icon(Icons.manage_accounts),
               ],
               onTap: (index) async {
-                if (index == 0) {
-                  await Future.delayed(const Duration(seconds: 1));
-                  index = 0;
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => Owner_front()),
-                      (Route<dynamic> route) => false);
-                  setState(() {});
-                }
+                 if (index == 0) {
+                    await Future.delayed(const Duration(seconds: 1));
+                    index = 0;
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (context) => Owner_front()),
+                        (Route<dynamic> route) => false);
+                    setState(() {
+                      index = 0;
+                    });
+    
+                  }
 
-                if (index == 1) {
-                  await Future.delayed(const Duration(seconds: 1));
-                  // index = 1;
-                  // Navigator.pushNamed(context, router.accept_acc_req);
-                  setState(() {});
-                }
+                  if(index==1){
+                       await Future.delayed(const Duration(seconds: 1));
+                    // index = 1;
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (context) => showpending()),
+                        (Route<dynamic> route) => false);
+                    setState(() {
+                      index = 0;
+                    });
+                  }
+
+                  if (index == 2) {
+                    await Future.delayed(const Duration(seconds: 1));
+                    // index = 1;
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (context) => Accept_account_request()),
+                        (Route<dynamic> route) => false);
+                    setState(() {
+                      index = 0;
+                    });
+                  }
               },
             ),
             body: ListView.builder(

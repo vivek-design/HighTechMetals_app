@@ -1,17 +1,17 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:basic/DeliveryManagr/update_order.dart';
-import 'package:flutter/material.dart';
+
+
 import 'package:basic/Uitilities/auth.dart';
 import 'package:basic/Uitilities/col.dart';
 import 'package:basic/Uitilities/router.dart';
-import 'package:basic/pages/login.dart';
+
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
+
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+
 import 'package:velocity_x/velocity_x.dart';
-import 'package:basic/Uitilities/router.dart';
+
 import 'package:intl/intl.dart';
 
 import '../Uitilities/nointernet.dart';
@@ -40,7 +40,7 @@ class _PrevioushistoryState extends State<Previoushistory> {
      Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if (result == ConnectivityResult.none) {
         // Navigate to NoInternetPage if there is no internet connection
-        print("IN there");
+       
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: ((context) {
           return No_internet();
@@ -111,18 +111,14 @@ class _PrevioushistoryState extends State<Previoushistory> {
                     SizedBox(height: 4),
                     Text('Items:', style: TextStyle(fontSize: 13)),
                     FittedBox(
-                      // crossAxisAlignment: CrossAxisAlignment.start,
-                      // children: order.items
-                      //     .map((item) =>
-                      //         Text('- ${item.name}: \n Quantity: ${item.quantity} \n              '),)
-                      //     .toList(),
+                   
 
                       child: DataTable(
                         dataRowHeight: 70,
                         columns: [
                           DataColumn(label: Text('Item Name')),
                           DataColumn(label: Text('Quantity')),
-                          // DataColumn(label: Text('Remove'))
+                        
                         ],
                         rows: order.items
                             .map(

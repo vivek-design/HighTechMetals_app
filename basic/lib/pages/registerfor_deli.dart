@@ -182,7 +182,7 @@ class _registerfordeliState extends State<registerfordeli> {
                           children: [
                             SizedBox(width: 10),
                             Text(
-                              "Registering as Delivery manager",
+                              "Registering as Delivery Manager",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 17,
@@ -221,6 +221,7 @@ class _registerfordeliState extends State<registerfordeli> {
                             border: Border.all(),
                             borderRadius: BorderRadius.circular(20)),
                         child: TextFormField(
+                          keyboardType: TextInputType.number,
                             controller: age,
                             decoration: InputDecoration(
                                 border: InputBorder.none,
@@ -300,6 +301,7 @@ class _registerfordeliState extends State<registerfordeli> {
                             border: Border.all(),
                             borderRadius: BorderRadius.circular(20)),
                         child: TextFormField(
+                          keyboardType: TextInputType.number,
                           controller: phone,
                           decoration: InputDecoration(
                               border: InputBorder.none,
@@ -317,9 +319,24 @@ class _registerfordeliState extends State<registerfordeli> {
                             borderRadius: BorderRadius.circular(20)),
                         child: TextFormField(
                             controller: _password,
-                            obscureText: true,
+                            obscureText:! _passwordVisible,
                             decoration: InputDecoration(
                                 border: InputBorder.none,
+                                 suffixIcon: IconButton(
+                                      icon: Icon(
+                                        // Based on passwordVisible state choose the icon
+                                        _passwordVisible
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                        color: Theme.of(context).primaryColorDark,
+                                      ),
+                                      onPressed: () {
+                                        // Update the state i.e. toogle the state of passwordVisible variable
+                                        setState(() {
+                                          _passwordVisible = !_passwordVisible;
+                                        });
+                                      },
+                                    ),
                                 hintText: "Password",
                                 hintStyle: TextStyle(color: Colors.grey[400])),
                             validator: (value) {

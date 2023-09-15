@@ -1,33 +1,34 @@
 {
   "project_info": {
-    "project_number": "1088447951476",
-    "project_id": "internship-80ac4",
-    "storage_bucket": "internship-80ac4.appspot.com"
+    "project_number": "747249998495",
+    "firebase_url": "https://hi-tech-metals-default-rtdb.firebaseio.com",
+    "project_id": "hi-tech-metals",
+    "storage_bucket": "hi-tech-metals.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1088447951476:android:5488c5078d0cb9b62ed721",
+        "mobilesdk_app_id": "1:747249998495:android:a91dbae6745834390de0aa",
         "android_client_info": {
           "package_name": "com.example.basic"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1088447951476-ldssgdu1em7lqt7bn8shvpsp2aoqipgq.apps.googleusercontent.com",
+          "client_id": "747249998495-vlarbph23gbumnt0958k8e4p75h7e0sm.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDPRkCKn1xEnoPBCKkrJi4C3Gva6SIVbKU"
+          "current_key": "AIzaSyDO7xLVCiTrNp-b5Ww4KJ03EPcDlW2g2BI"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1088447951476-ldssgdu1em7lqt7bn8shvpsp2aoqipgq.apps.googleusercontent.com",
+              "client_id": "747249998495-vlarbph23gbumnt0958k8e4p75h7e0sm.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

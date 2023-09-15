@@ -74,272 +74,286 @@ class _login_pageState extends State<login_page> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Container(
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Container(
-              height: 400,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/background.png'),
-                  fit: BoxFit.fill,
-                ),
-              ),
-              child: Stack(
-                children: <Widget>[
-                  Positioned(
-                    left: 30,
-                    width: 80,
-                    height: 200,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/light-1.png'),
-                        ),
-                      ),
+      body: 
+       SingleChildScrollView(
+          
+            child: Container(
+              
+               decoration: BoxDecoration(
+                // color: Colors.grey
+               ),
+              child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Container(
+                  height: 400,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/background.png'),
+                      fit: BoxFit.fill,
                     ),
                   ),
-                  Positioned(
-                    left: 140,
-                    width: 80,
-                    height: 150,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/light-2.png'),
+                  child: Stack(
+                    children: <Widget>[
+                      Positioned(
+                        left: 30,
+                        width: 80,
+                        height: 200,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage('assets/images/light-1.png'),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  Positioned(
-                    right: 40,
-                    top: 40,
-                    width: 80,
-                    height: 150,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/clock.png'),
+                      Positioned(
+                        left: 140,
+                        width: 80,
+                        height: 150,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage('assets/images/light-2.png'),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  Positioned(
-                      child: Container(
-                    child: Center(
-                        child: Text(
-                      "Login",
-                      style: TextStyle(
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold,
-                          fontStyle: FontStyle.italic,
-                          color: Colors.white),
-                    )),
-                  )),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(30.0),
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Color.fromRGBO(143, 148, 251, 1),
-                              blurRadius: 20.0,
-                              offset: Offset(0, 10))
-                        ]),
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          padding: EdgeInsets.all(2.0),
-                          decoration: BoxDecoration(),
-                          child: TextFormField(
-                              controller: _email,
-                              decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: "    Email ",
-                                  hintStyle:
-                                      TextStyle(color: Colors.grey[400])),
-                              validator: (value) {
-                                if (value != null) if (value.isEmpty) {
-                                  return "Email or phone number cannot be empty ";
-                                }
-                                return null;
-                              }),
+                      Positioned(
+                        right: 40,
+                        top: 40,
+                        width: 80,
+                        height: 150,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage('assets/images/clock.png'),
+                            ),
+                          ),
                         ),
-                        Container(
-                          padding: EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(),
-                          child: TextFormField(
-                              controller: _password,
-                              obscureText: !_passwordVisible,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: "  Password",
-                                hintStyle: TextStyle(color: Colors.grey[400]),
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    // Based on passwordVisible state choose the icon
-                                    _passwordVisible
-                                        ? Icons.visibility
-                                        : Icons.visibility_off,
-                                    color: Theme.of(context).primaryColorDark,
-                                  ),
-                                  onPressed: () {
-                                    // Update the state i.e. toogle the state of passwordVisible variable
-                                    setState(() {
-                                      _passwordVisible = !_passwordVisible;
-                                    });
-                                  },
-                                ),
-                              ),
-                              validator: (value) {
-                                if (value != null) if (value.isEmpty) {
-                                  return "password connot be null";
-                                }
-                                return null;
-                              }),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Container(
-                      child: Row(
-                    children: [
-                      Checkbox(
-                          value: isChecked,
-                          checkColor: Colors.black,
-                          onChanged: (value) {
-                            setState(() {
-                              isChecked = value!;
-                              isCheckedRememberMe = !isCheckedRememberMe;
-                            });
-                          },
-                          fillColor:
-                              MaterialStateProperty.resolveWith((states) {
-                            // if (states==MaterialState.pressed || states==MaterialState.selected ) {
-                            return rang.always;
-                            // }
-                          })),
-                      10.widthBox,
-                      Text(
-                        "Remember me ",
-                        style: TextStyle(color: Colors.grey),
                       ),
+                      Positioned(
+                          child: Container(
+                        child: Center(
+                            child: Text(
+                          "Login",
+                          style: TextStyle(
+                              fontSize: 40,
+                              fontWeight: FontWeight.bold,
+                              fontStyle: FontStyle.italic,
+                              color: Colors.white),
+                        )
+                        ),
+                      )),
                     ],
-                  )),
-                  SizedBox(
-                    height: 30,
                   ),
-                  InkWell(
-                    onTap: () async {
-                      //this process returns the future so withput the use of await keywoed it will return the instance of future
-                      //   on hitting the login button if there is no such user than the firebase  throw an exception so to interact with this
-                      //problem then we will use exception handling
-
-                      try {
-                        if (_email.text.length == 0) {
-                          displaytoast("Email field can't be empty", context);
-                          setState(() {});
-                        }
-                        if (_password.text.length == 0) {
-                          displaytoast(
-                              "password field can't be empty", context);
-                          setState(() {});
-                        }
-
-                        await Auth().signInWithEmailAndPassword(
-                            email: _email.text, password: _password.text);
-
-                        final user = Auth().currentUser;
-                        if (user?.emailVerified ?? false) {
-                          // if (isCheckedRememberMe) {
-                          //   SharedPreferences.getInstance().then(
-                          //     (prefs) {
-                          //       prefs.setString('userId', _email.text);
-                          //       prefs.setString('password', _password.text);
-                          //     },
-                          //   );
-                          // }
-                          Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                  builder: (context) => fakeloged()),
-                              (route) => false);
-                        } else {
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              router.emailveri, (route) => false);
-                        }
-                      } on FirebaseAuthException catch (e) {
-                        // await showErrorDialog(context, e.toString());
-
-                        if (e.code == 'user-not-found') {
-                          showErrorDialog(context, "    User not found");
-                          setState(() {});
-                        } else if (e.code == 'wrong-password') {
-                          showErrorDialog(context, "   Wrong Password");
-                          setState(() {});
-                        } else if (e.code == 'invalid-email') {
-                          showErrorDialog(context, "   Invalid Email");
-                          setState(() {});
-                        } else {
-                          showErrorDialog(context, e.toString());
-                          setState(() {});
-                        }
-                      }
-                    },
-                    child: Ink(
-                      height: 50,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          gradient: LinearGradient(colors: [
-                            rang.always,
-                            Color.fromRGBO(226, 53, 57, 5),
-                          ])),
-                      child: Center(
-                        child: Text("Login",
-                            style: TextStyle(
-                              color: Colors.white,
-                            )),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(30.0),
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        padding: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Color.fromRGBO(143, 148, 251, 1),
+                                  blurRadius: 20.0,
+                                  offset: Offset(0, 10))
+                            ]),
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              padding: EdgeInsets.all(2.0),
+                              decoration: BoxDecoration(),
+                              child: TextFormField(
+                                  controller: _email,
+                                  decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      hintText: "    Email ",
+                                      hintStyle:
+                                          TextStyle(color: Colors.grey[400])),
+                                  validator: (value) {
+                                    if (value != null) if (value.isEmpty) {
+                                      return "Email or phone number cannot be empty ";
+                                    }
+                                    return null;
+                                  }),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(8.0),
+                              decoration: BoxDecoration(),
+                              child: TextFormField(
+                                  controller: _password,
+                                  obscureText: !_passwordVisible,
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: "  Password",
+                                    hintStyle: TextStyle(color: Colors.grey[400]),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        // Based on passwordVisible state choose the icon
+                                        _passwordVisible
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                        color: Theme.of(context).primaryColorDark,
+                                      ),
+                                      onPressed: () {
+                                        // Update the state i.e. toogle the state of passwordVisible variable
+                                        setState(() {
+                                          _passwordVisible = !_passwordVisible;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value != null) if (value.isEmpty) {
+                                      return "password connot be null";
+                                    }
+                                    return null;
+                                  }),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Container(
-                    child: Center(
-                      child: InkWell(
+                      SizedBox(height: 10),
+                      Container(
+                          child: Row(
+                        children: [
+          
+                          Checkbox(
+                              value: isChecked,
+                              checkColor: Colors.black,
+                              onChanged: (value) {
+                                setState(() {
+                                  isChecked = value!;
+                                  isCheckedRememberMe = !isCheckedRememberMe;
+                                });
+                              },
+                              
+                              fillColor:
+                                  MaterialStateProperty.resolveWith((states) {
+                              
+                                return rang.always;
+                              
+                              })),
+                          10.widthBox,
+                          Text(
+                            "Remember me ",
+                            style: TextStyle(color: rang.always),
+                          ),
+                        ],
+                      )),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      InkWell(
+          
                         onTap: () async {
-                          if (_email.text.isNotEmpty) {
-                            await showErrorDialog(
-                                context, "Password reset mail has sent ");
+                          //this process returns the future so withput the use of await keywoed it will return the instance of future
+                          //   on hitting the login button if there is no such user than the firebase  throw an exception so to interact with this
+                          //problem then we will use exception handling
+          
+                          try {
+                            if (_email.text.length == 0) {
+                              displaytoast("Email field can't be empty", context);
+                              setState(() {});
+                            }
+                            if (_password.text.length == 0) {
+                              displaytoast(
+                                  "password field can't be empty", context);
+                              setState(() {});
+                            }
+          
+                            await Auth().signInWithEmailAndPassword(
+                                email: _email.text, password: _password.text);
+          
+                            final user = Auth().currentUser;
+                            if (user?.emailVerified ?? false) {
+                              
+                              Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                      builder: (context) => fakeloged()),
+                                  (route) => false);
+                            } else {
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  router.emailveri, (route) => false);
+                            }
+                          } on FirebaseAuthException catch (e) {
+                            // await showErrorDialog(context, e.toString());
+          
+                            if (e.code == 'user-not-found') {
+                              showErrorDialog(context, "    User not found");
+                              setState(() {});
+                            } else if (e.code == 'wrong-password') {
+                              showErrorDialog(context, "   Wrong Password");
+                              setState(() {});
+                            } else if (e.code == 'invalid-email') {
+                              showErrorDialog(context, "   Invalid Email");
+                              setState(() {});
+                            } else {
+                              showErrorDialog(context, e.toString());
+                              setState(() {
 
-                            await Auth()
-                                .sendPasswordResetEmail(email: _email.text);
-                          } else {
-                            showErrorDialog(context, "Please enter Email");
+                              });
+                            }
                           }
                         },
-                        child: Text("Forgot password?",
-                            style: TextStyle(
-                              color: rang.always,
-                            )),
+                        child: Container(
+                          
+                          height: 50,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              gradient: LinearGradient(colors: [
+                                // Colors.black,
+                                // Colors.black,
+                                rang.always,
+                                Color.fromRGBO(226, 53, 57, 5),
+                              ])
+                              
+                              ),
+                          child: Center(
+                            child: Text("Login",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                )),
+                          ),
+                        ),
                       ),
-                    ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Container(
+                        child: Center(
+                          child: InkWell(
+                            onTap: () async {
+                              if (_email.text.isNotEmpty) {
+                                await showErrorDialog(
+                                    context, "Password reset mail has sent ");
+          
+                                await Auth()
+                                    .sendPasswordResetEmail(email: _email.text);
+                              } else {
+                                showErrorDialog(context, "Please enter Email");
+                              }
+                            },
+                            child: Text("Forgot password?",
+                                style: TextStyle(
+                                  color: rang.always,
+                                )),
+                          ),
+                        ),
+                      ),
+
+                      100.heightBox,
+                    ],
                   ),
-                ],
-              ),
-            )
-          ]),
-        ),
-      ),
+                )
+              ]),
+            ),
+          ),
+      
+    
     );
   }
 }

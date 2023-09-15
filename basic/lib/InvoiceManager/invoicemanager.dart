@@ -1,25 +1,24 @@
 import 'package:basic/InvoiceManager/dataupdate.dart';
-import 'package:basic/Uitilities/circularpro.dart';
+
 import 'package:connectivity/connectivity.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:basic/Uitilities/auth.dart';
 import 'package:basic/Uitilities/col.dart';
 import 'package:basic/Uitilities/router.dart';
-import 'package:basic/pages/login.dart';
+
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
+
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+
 import 'package:flutter/services.dart';
 import 'package:velocity_x/velocity_x.dart';
-import 'package:basic/Uitilities/router.dart';
-import 'package:dio/dio.dart';
-import 'package:csv/csv.dart';
-import 'dart:convert';
+
+
+
+
 import 'package:input_quantity/input_quantity.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
 import '../Uitilities/nointernet.dart';
 
 class Invoice_front extends StatefulWidget {
@@ -58,7 +57,7 @@ class _Invoice_frontState extends State<Invoice_front> {
   Future<bool> getCustomer() async {
     _orderRef = FirebaseDatabase.instance
         .ref()
-        .child('AppData13jq8m1WyKQ9Dhykjw2-fxD78AFT7chLZcJj7NALPTtg');
+        .child('AppData1nG3AefClW3j4Y5ZqwX76Ba9x2VV5axcOWlRMFflh8Hg');
     await _orderRef.onValue.listen((event) {
       customer.clear();
       // customer.add('Select Customer');
@@ -66,15 +65,15 @@ class _Invoice_frontState extends State<Invoice_front> {
         Map<dynamic, dynamic>? data =
             event.snapshot.value as Map<dynamic, dynamic>?;
         data?.forEach((orderKey, orderData) {
-          // print(orderKey);
+          
           customer.add(orderKey.toString());
           List<String> will_add = [];
 
-          // print(orderData);
+      
 
           orderData?.forEach((value) {
             if (value != null) {
-              // print(value);
+        
 
               String a = value['Item No'].toString() +
                   "  " +
@@ -86,7 +85,7 @@ class _Invoice_frontState extends State<Invoice_front> {
           mp[orderKey.toString()] = will_add;
         });
       }
-      // print(mp);
+      
     });
 
     await Future.delayed(Duration(seconds: 2));
@@ -99,7 +98,7 @@ class _Invoice_frontState extends State<Invoice_front> {
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if (result == ConnectivityResult.none) {
         // Navigate to NoInternetPage if there is no internet connection
-        print("IN there");
+       
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: ((context) {
           return No_internet();
@@ -148,15 +147,15 @@ class _Invoice_frontState extends State<Invoice_front> {
                           children: <Widget>[
                             Container(
                               child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  50.widthBox,
                                   Image.asset(
                                     "assets/images/logo.png",
                                     height: 30,
                                   ),
                                   20.widthBox,
                                   Text(
-                                    "Welcome to High Tech Metals",
+                                    "Welcome to Hi-Tech Metal Formings(I)",
                                     style:
                                         TextStyle(fontWeight: FontWeight.w300),
                                   )
@@ -462,8 +461,7 @@ class _Invoice_frontState extends State<Invoice_front> {
                                           if (flag == false) {
                                             item.add(Item(
                                                 selected_item, quatity_count));
-                                                    displaytoast("Item added", context);
-
+                                            displaytoast("Item added", context);
                                           }
                                           if (item.length > 1 &&
                                               isremoved == false) {
@@ -681,19 +679,24 @@ class _Invoice_frontState extends State<Invoice_front> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             title: "Item already added".text.make(),
-            content: "This item is already been added \n Do you want to add it again?"
-                .text
-                .make(),
+            content:
+                "This item is already been added \n Do you want to add it again?"
+                    .text
+                    .make(),
             actions: [
               TextButton(
                 style: TextButton.styleFrom(
                   textStyle: Theme.of(context).textTheme.labelLarge,
                 ),
-                child: const Text('Cancle',style: TextStyle(
-                  color:  Color.fromARGB(255, 142, 10, 10),
-                ),),
+                child: const Text(
+                  'Cancle',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 142, 10, 10),
+                  ),
+                ),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -702,15 +705,17 @@ class _Invoice_frontState extends State<Invoice_front> {
                 style: TextButton.styleFrom(
                   textStyle: Theme.of(context).textTheme.labelLarge,
                 ),
-                child: const Text('Add',style: TextStyle(
-                  color:  Color.fromARGB(255, 142, 10, 10),
-                ),),
+                child: const Text(
+                  'Add',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 142, 10, 10),
+                  ),
+                ),
                 onPressed: () {
                   setState(() {
                     item[i].quantity += quatity_count;
                     displaytoast("Item added", context);
                     Navigator.of(context).pop();
-                    
                   });
                 },
               ),
