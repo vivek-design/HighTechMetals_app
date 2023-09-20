@@ -61,34 +61,60 @@ class _filteredispresState extends State<filteredispres> {
 
   Future<void> exportToCsv(List<List<dynamic>> rows) async {
     try {
+      rows.clear();
       rows.add(["Dispatch report", " ${formatTimestamp(DateTime.now())}"]);
       rows.add([" ", " "]);
       rows.add([" ", " "]);
+      rows.add([" ", " "]);
+      rows.add([
+        "S.NO.",
+        "Customer",
+        "Dispatch ID",
+        "Dispatch Time",
+        "Ordered Time",
+        "Item Name",
+        "Dispatched",
+        "Ordered",
+        "Remaining"
+      ]);
+      var count = 1;
       for (int i = 0; i < filterdorders.length; i++) {
         Orderfordispatch temp = filterdorders[i];
-      
-        rows.add(["Customer:", temp.orderId]);
-        rows.add(["Dispatch ID:", temp.dispatch_id]);
-        rows.add(["Dispatch Time:", formatTimestamp(temp.timestamp)]);
-        rows.add(["Ordered Time:", formatTimestamp(temp.order_timestamp)]);
-        rows.add(["Items:", ""]);
 
-        rows.add(["S.No.", "Item Name", "Dispatched", "Ordered", "Remaining"]);
+        var customer = temp.orderId;
+        var dispatch_id = temp.dispatch_id;
+        var dispatch_time = formatTimestamp(temp.timestamp);
+        var ordered_time = formatTimestamp(temp.order_timestamp);
+
+        // rows.add(["Customer:", temp.orderId]);
+        // rows.add(["Dispatch ID:", temp.dispatch_id]);
+        // rows.add(["Dispatch Time:", formatTimestamp(temp.timestamp)]);
+        // rows.add(["Ordered Time:", formatTimestamp(temp.order_timestamp)]);
+        // rows.add(["Items:", ""]);
+
+        // rows.add(["S.No.", "Item Name", "Dispatched", "Ordered", "Remaining"]);
 
         List<Itemfordispatchsummry> items = temp.items;
 
         for (int j = 0; j < items.length; j++) {
           rows.add([
-            j + 1,
+            count,
+            customer,
+            dispatch_id,
+            dispatch_time,
+            ordered_time,
             items[j].name,
             items[j].dispatchedquantity,
             items[j].orderedquantity,
             items[j].remainingquantity
           ]);
+          count++;
         }
-        rows.add([" ", " "]);
-        rows.add([" ", " "]);
+        // rows.add([" ", " "]);
+        // rows.add([" ", " "]);
       }
+      // List<List<dynamic>> csvData = List.from(rows);
+      // String csv = ListToCsvConverter().convert(csvData);
 
       final String dir = (await getExternalStorageDirectory())!.path;
       // final String path = '$dir/data2.csv';
@@ -104,6 +130,14 @@ class _filteredispresState extends State<filteredispres> {
         sheet.setColAutoFit(i);
       }
 
+      // File file = File(path);
+      // await file.writeAsString(csv);
+
+      // Optionally, you can open the file using a file explorer app
+      // on the device:
+      // await OpenFile.open(path);
+
+      // Set column width based on the maximum cell value length
       String timestamp = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
 
       final String excelPath = '$dir/dispatchreport{$timestamp}.xlsx';
@@ -116,7 +150,6 @@ class _filteredispresState extends State<filteredispres> {
       print(e);
     }
   }
-
   int mycomp(Orderfordispatch d1, Orderfordispatch d2) {
     if (d1.timestamp.isBefore(d2.timestamp)) {
       return 1;

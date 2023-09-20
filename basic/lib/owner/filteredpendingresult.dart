@@ -70,35 +70,41 @@ class _filteredresultState extends State<filteredresult> {
   List<List<dynamic>> data = [
     // Add more rows as needed
   ];
-
-  Future<void> exportToCsv(List<List<dynamic>> rows) async {
+Future<void> exportToCsv(List<List<dynamic>> rows) async {
     try {
-      rows.add(["Pending dispatch report", " ${formatTimestamp(DateTime.now())}"]);
+      rows.clear();
+      rows.add(
+          ["Pending dispatch report", " ${formatTimestamp(DateTime.now())}"]);
       rows.add([" ", " "]);
       rows.add([" ", " "]);
+      rows.add(["S.NO.", "Customer", "Ordered Time", "Item", "Quantity"]);
+      var count = 1;
       for (int i = 0; i < filterdorders.length; i++) {
         Order temp = filterdorders[i];
+        var customer = temp.orderId;
+        var ordered_time = formatTimestamp(temp.timestamp);
 
-        rows.add(["Customer:", temp.orderId]);
-        
-        
-        rows.add(["Ordered Time:", formatTimestamp(temp.timestamp)]);
-        rows.add(["Items:", ""]);
+        // rows.add(["Customer:", temp.orderId]);
 
-        rows.add(["S.No.", "Item Name", "Quantity"]);
+        // rows.add(["Ordered Time:", formatTimestamp(temp.timestamp)]);
+        // rows.add(["Items:", ""]);
+
+        // rows.add(["S.No.", "Item Name", "Quantity"]);
 
         List<Item> items = temp.items;
 
         for (int j = 0; j < items.length; j++) {
           rows.add([
-            j + 1,
+            count,
+            customer,
+            ordered_time,
             items[j].name,
             items[j].quantity,
-           
           ]);
+          count++;
         }
-        rows.add([" ", " "]);
-        rows.add([" ", " "]);
+        // rows.add([" ", " "]);
+        // rows.add([" ", " "]);
       }
 
       final String dir = (await getExternalStorageDirectory())!.path;
