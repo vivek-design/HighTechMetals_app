@@ -638,15 +638,7 @@ class _Invoice_frontState extends State<Invoice_front> {
                   if (index == 1) {
                     await Future.delayed(const Duration(seconds: 1));
                     index = 1;
-                    // Navigator.of(context).pushAndRemoveUntil(
-                    //     MaterialPageRoute(builder: (context) => dataUpdate()),
-                    //     (Route<dynamic> route) => false);
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //       builder: (context) => const dataUpdate()),
-                    // );
-
+                  
                     Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
                           builder: (context) => dataUpdate(Customer: customer)),

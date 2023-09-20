@@ -32,6 +32,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:open_file/open_file.dart';
 import 'package:velocity_x/velocity_x.dart';
 import '../Uitilities/col.dart';
 import 'Uitilities/auth.dart';
@@ -41,6 +42,7 @@ import 'owner/ownerfront.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -55,7 +57,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'High tech',
+      title: 'Hi-Tech',
       initialRoute: router.home,
       routes: {
         router.center: (context) => Center_page(),

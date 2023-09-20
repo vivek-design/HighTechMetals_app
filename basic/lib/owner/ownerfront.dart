@@ -1,19 +1,25 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:io';
+
 import 'package:basic/Uitilities/auth.dart';
 import 'package:basic/Uitilities/col.dart';
+
 import 'package:basic/Uitilities/router.dart';
 import 'package:basic/owner/Acceptaccount_perm.dart';
 
-import 'package:basic/owner/filterreddispatchedres.dart';
+import 'package:basic/owner/filtereddispreport.dart';
 import 'package:basic/owner/showpending.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:excel/excel.dart' show Excel;
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../Uitilities/nointernet.dart';
@@ -42,6 +48,98 @@ class _Owner_frontState extends State<Owner_front> {
     return -1;
   }
 
+  Future<void> exportToCsv(List<List<dynamic>> rows) async {
+    try {
+      rows.clear();
+      rows.add(["Dispatch report", " ${formatTimestamp(DateTime.now())}"]);
+      rows.add([" ", " "]);
+      rows.add([" ", " "]);
+      rows.add([" ", " "]);
+      rows.add([
+        "S.NO.",
+        "Customer",
+        "Dispatch ID",
+        "Dispatch Time",
+        "Ordered Time",
+        "Item Name",
+        "Dispatched",
+        "Ordered",
+        "Remaining"
+      ]);
+      var count = 1;
+      for (int i = 0; i < orders.length; i++) {
+        Orderfordispatch temp = orders[i];
+
+        var customer = temp.orderId;
+        var dispatch_id = temp.dispatch_id;
+        var dispatch_time = formatTimestamp(temp.timestamp);
+        var ordered_time = formatTimestamp(temp.order_timestamp);
+
+        // rows.add(["Customer:", temp.orderId]);
+        // rows.add(["Dispatch ID:", temp.dispatch_id]);
+        // rows.add(["Dispatch Time:", formatTimestamp(temp.timestamp)]);
+        // rows.add(["Ordered Time:", formatTimestamp(temp.order_timestamp)]);
+        // rows.add(["Items:", ""]);
+
+        // rows.add(["S.No.", "Item Name", "Dispatched", "Ordered", "Remaining"]);
+
+        List<Itemfordispatchsummry> items = temp.items;
+
+        for (int j = 0; j < items.length; j++) {
+          rows.add([
+            count,
+            customer,
+            dispatch_id,
+            dispatch_time,
+            ordered_time,
+            items[j].name,
+            items[j].dispatchedquantity,
+            items[j].orderedquantity,
+            items[j].remainingquantity
+          ]);
+          count++;
+        }
+        // rows.add([" ", " "]);
+        // rows.add([" ", " "]);
+      }
+      // List<List<dynamic>> csvData = List.from(rows);
+      // String csv = ListToCsvConverter().convert(csvData);
+
+      final String dir = (await getExternalStorageDirectory())!.path;
+      // final String path = '$dir/data2.csv';
+      var excel = Excel.createExcel();
+      var sheet = excel['Sheet1'];
+
+      // Insert CSV data into Excel
+      for (var row in rows) {
+        sheet.appendRow(row);
+      }
+
+      for (int i = 1; i <= sheet.maxCols; i++) {
+        sheet.setColAutoFit(i);
+      }
+
+      // File file = File(path);
+      // await file.writeAsString(csv);
+
+      // Optionally, you can open the file using a file explorer app
+      // on the device:
+      // await OpenFile.open(path);
+
+      // Set column width based on the maximum cell value length
+      String timestamp = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
+
+      final String excelPath = '$dir/dispatchreport{$timestamp}.xlsx';
+      var excelFile = File(excelPath);
+      print(excelPath);
+      await excelFile.writeAsBytes(excel.encode() as List<int>);
+
+      await OpenFile.open(excelPath);
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future<bool> getCustomer() async {
     _orderRef = FirebaseDatabase.instance
         .ref()
@@ -58,7 +156,7 @@ class _Owner_frontState extends State<Owner_front> {
       // print(mp);
     });
 
-    await Future.delayed(Duration(seconds: 2));
+    // await Future.delayed(Duration(seconds: 2));
 
     return true;
   }
@@ -99,6 +197,7 @@ class _Owner_frontState extends State<Owner_front> {
 
     orders.sort(mycomp);
     await Future.delayed(Duration(seconds: 1));
+
     return true;
   }
 
@@ -108,7 +207,7 @@ class _Owner_frontState extends State<Owner_front> {
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if (result == ConnectivityResult.none) {
         // Navigate to NoInternetPage if there is no internet connection
-    
+
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: ((context) {
           return No_internet();
@@ -117,6 +216,10 @@ class _Owner_frontState extends State<Owner_front> {
     });
     super.initState();
   }
+
+  List<List<dynamic>> data = [
+    // Add more rows as needed
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +230,13 @@ class _Owner_frontState extends State<Owner_front> {
           if (orders.length != 0) {
             return Scaffold(
               floatingActionButton: FloatingActionButton(
-                onPressed: () {},
+                onPressed: () {
+                  // Navigator.of(context)
+                  //     .push(MaterialPageRoute(builder: (BuildContext context) {
+                  //   return csvfiledownload(orders: orders);
+                  // }));
+                  exportToCsv(data);
+                },
                 backgroundColor: rang.always,
                 child: Icon(Icons.file_open),
               ),
@@ -629,7 +738,6 @@ class Orderfordispatch {
   );
 }
 
-
 class customerList2 {
   static List<String> customer = [
     "All",
@@ -795,7 +903,7 @@ class _customedialog2State extends State<customedialog2> {
             ),
             InkWell(
               onTap: () {
-               Navigator.of(context)
+                Navigator.of(context)
                     .push(MaterialPageRoute(builder: (BuildContext context) {
                   return filteredispres(
                       orders: widget.orders,

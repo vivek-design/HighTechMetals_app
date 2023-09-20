@@ -1,19 +1,24 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:io';
+
 import 'package:basic/DeliveryManagr/delivery_front.dart';
 import 'package:basic/Uitilities/auth.dart';
 import 'package:basic/Uitilities/col.dart';
 import 'package:basic/Uitilities/nointernet.dart';
 import 'package:basic/Uitilities/router.dart';
 import 'package:basic/owner/Acceptaccount_perm.dart';
-import 'package:basic/owner/filteredresult.dart';
+import 'package:basic/owner/filteredpendingresult.dart';
 import 'package:basic/owner/ownerfront.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:excel/excel.dart' show Excel;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class showpending extends StatefulWidget {
@@ -39,6 +44,65 @@ class _showpendingState extends State<showpending> {
   }
 
   String namecustomer = 'All';
+
+  List<List<dynamic>> data = [
+    // Add more rows as needed
+  ];
+
+  Future<void> exportToCsv(List<List<dynamic>> rows) async {
+    try {
+      rows.add(["Pending dispatch report", " ${formatTimestamp(DateTime.now())}"]);
+      rows.add([" ", " "]);
+      rows.add([" ", " "]);
+      for (int i = 0; i < filterdorders.length; i++) {
+        Order temp = filterdorders[i];
+
+        rows.add(["Customer:", temp.orderId]);
+
+        rows.add(["Ordered Time:", formatTimestamp(temp.timestamp)]);
+        rows.add(["Items:", ""]);
+
+        rows.add(["S.No.", "Item Name", "Quantity"]);
+
+        List<Item> items = temp.items;
+
+        for (int j = 0; j < items.length; j++) {
+          rows.add([
+            j + 1,
+            items[j].name,
+            items[j].quantity,
+          ]);
+        }
+        rows.add([" ", " "]);
+        rows.add([" ", " "]);
+      }
+
+      final String dir = (await getExternalStorageDirectory())!.path;
+      // final String path = '$dir/data2.csv';
+      var excel = Excel.createExcel();
+      var sheet = excel['Sheet1'];
+
+      // Insert CSV data into Excel
+      for (var row in rows) {
+        sheet.appendRow(row);
+      }
+
+      for (int i = 1; i <= sheet.maxCols; i++) {
+        sheet.setColAutoFit(i);
+      }
+
+      String timestamp = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
+
+      final String excelPath = '$dir/pendingorderreport{$timestamp}.xlsx';
+      var excelFile = File(excelPath);
+      print(excelPath);
+      await excelFile.writeAsBytes(excel.encode() as List<int>);
+
+      await OpenFile.open(excelPath);
+    } catch (e) {
+      print(e);
+    }
+  }
 
   Future<bool> getCustomer() async {
     _orderRef = FirebaseDatabase.instance
@@ -105,7 +169,7 @@ class _showpendingState extends State<showpending> {
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if (result == ConnectivityResult.none) {
         // Navigate to NoInternetPage if there is no internet connection
-      
+
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: ((context) {
           return No_internet();
@@ -125,7 +189,9 @@ class _showpendingState extends State<showpending> {
             if (orders.length != 0) {
               return Scaffold(
                 floatingActionButton: FloatingActionButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    exportToCsv(data);
+                  },
                   backgroundColor: rang.always,
                   child: Icon(Icons.file_open),
                 ),
@@ -330,7 +396,6 @@ class _showpendingState extends State<showpending> {
                 ),
                 body: RefreshIndicator(
                   onRefresh: () {
-                 
                     return Future.delayed(Duration(seconds: 1), () {
                       setState(() {});
                     });
