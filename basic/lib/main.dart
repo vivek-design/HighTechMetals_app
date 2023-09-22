@@ -353,7 +353,7 @@ class home extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: InkWell(
-                  child: InkWell(
+                  child: InkWell( 
                     onTap: () =>
                         {Navigator.pushNamed(context, router.loginroute)},
                     child: Ink(

@@ -3,14 +3,12 @@
 import 'package:basic/Uitilities/col.dart';
 import 'package:basic/Uitilities/router.dart';
 
-
 import 'package:connectivity/connectivity.dart';
 
 import 'package:firebase_database/firebase_database.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -40,7 +38,7 @@ class _manage_account_ownerState extends State<manage_account_owner> {
       if (event.snapshot.value != null) {
         Map<dynamic, dynamic> data =
             event.snapshot.value as Map<dynamic, dynamic>;
-       
+
         data.forEach((key, value) => {
               //  print(value),
               customers.add(new AppUserDummy(
@@ -53,7 +51,6 @@ class _manage_account_ownerState extends State<manage_account_owner> {
                 role: "Customer".toString(),
               )),
             });
-    
       }
     });
 
@@ -76,7 +73,6 @@ class _manage_account_ownerState extends State<manage_account_owner> {
                 role: "Delivery Manager",
               )),
             });
-       
       }
     });
 
@@ -99,7 +95,6 @@ class _manage_account_ownerState extends State<manage_account_owner> {
                 role: "Invoice Manager",
               )),
             });
-        
       }
     });
     await Future.delayed(Duration(seconds: 1));
@@ -114,7 +109,7 @@ class _manage_account_ownerState extends State<manage_account_owner> {
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if (result == ConnectivityResult.none) {
         // Navigate to NoInternetPage if there is no internet connection
-       
+
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: ((context) {
           return No_internet();
@@ -314,17 +309,33 @@ class _manage_account_ownerState extends State<manage_account_owner> {
                                           190.widthBox,
                                           ElevatedButton(
                                               onPressed: () {
-                                                DatabaseReference
-                                                    databaseReference =
-                                                    FirebaseDatabase.instance
-                                                        .ref()
-                                                        .child(Employee[index]
-                                                            .role)
-                                                        .child(Employee[index]
-                                                            .userid);
-                                                databaseReference.remove();
-                                                Employee.removeAt(index);
-                                                setState(() {});
+                                                print("in");
+
+                                                var role =
+                                                    Employee[index].role ==
+                                                            "Delivery Manager"
+                                                        ? "Delivery_manager"
+                                                        : "Inventory_manager";
+
+                                                try {
+                                                  DatabaseReference
+                                                      databaseReference =
+                                                      FirebaseDatabase.instance
+                                                          .ref()
+                                                          .child(role)
+                                                          .child(Employee[index]
+                                                              .userid);
+                                                  databaseReference.remove();
+                                                  Employee.removeAt(index);
+                                                } catch (e) {
+                                                  print(e.toString());
+                                                }
+                                                setState(() {
+                                                  Navigator.pushNamed(
+                                                      context,
+                                                      router
+                                                          .deltecompleteforowner);
+                                                });
                                               },
                                               child: "Delete ".text.make(),
                                               style: ButtonStyle(

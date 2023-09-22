@@ -217,6 +217,7 @@ class _Invoice_frontState extends State<Invoice_front> {
                                         child: TextFormField(
                                           style: TextStyle(fontSize: 12),
                                           decoration: InputDecoration(
+                                            border: InputBorder.none,
                                             labelText: 'Select customer',
                                             fillColor: rang.always,
                                             focusColor: rang.always,
@@ -310,14 +311,21 @@ class _Invoice_frontState extends State<Invoice_front> {
                                   offset: Offset(0, 10))
                             ]),
                         child: Padding(
-                          padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
                           child: Container(
                             width: 260,
                             child: Column(
                               children: [
+                                SizedBox(
+                                  height: 10,
+                                ),
                                 Container(
-                                  padding: EdgeInsets.all(5),
+                                  padding: EdgeInsets.only(left: 10),
                                   width: 300,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.black26),
+                                    borderRadius: BorderRadius.circular(20)
+                                  ),
                                   child: Autocomplete<String>(
                                     optionsBuilder:
                                         (TextEditingValue textEditingValue) {
@@ -349,6 +357,7 @@ class _Invoice_frontState extends State<Invoice_front> {
                                       return TextFormField(
                                         style: TextStyle(fontSize: 12),
                                         decoration: InputDecoration(
+                                          border: InputBorder.none,
                                           labelText: 'Select Items',
                                           fillColor: rang.always,
                                           focusColor: rang.always,

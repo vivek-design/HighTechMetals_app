@@ -91,11 +91,29 @@ class _Customer_forntState extends State<Customer_fornt> {
                       child: Column(
                         children: [
                           SizedBox(
-                            height: 20,
+                            height: 10,
                           ),
+                           Container(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    "assets/images/logo.png",
+                                    height: 30,
+                                  ),
+                                  20.widthBox,
+                                  Text(
+                                    "Welcome to Hi-Tech Metal Formings(I)",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w300),
+                                  )
+                                ],
+                              ),
+                            ),
+                            10.heightBox,
                           Container(
                             child: Center(
-                              child: "Welcome  ${Username}"
+                              child: "${Username}"
                                   .text
                                   .xl
                                   .semiBold
@@ -119,7 +137,7 @@ class _Customer_forntState extends State<Customer_fornt> {
                                 ]),
                             child: Center(
                               child:
-                                  "    As a customer you have authority to review previous  orders "
+                                  "    As a customer you have authority to review previous orders "
                                       .text
                                       .semiBold
                                       .xs

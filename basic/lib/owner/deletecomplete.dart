@@ -12,6 +12,7 @@ class _deletecompleteforownerState extends State<deletecompleteforowner> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: AlertDialog(
+        
         title: const Text('User deleted'),
         content: const Text(
           'Selected user have been deleted \n'
