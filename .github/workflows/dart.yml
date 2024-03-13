@@ -22,7 +22,7 @@ jobs:
           channel: 'stable'
       
       - name: Change directory to basic
-        run: cd ~/basic  
+        run: ls
         
       - name: Install Dependencies 
         run: flutter pub get 
