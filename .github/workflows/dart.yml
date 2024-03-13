@@ -23,6 +23,12 @@ jobs:
       
       - name: Change directory to basic
         run: ls
+
+      - name: changig 
+        run: cd /basic
+
+      - name: changig 
+        run: ls
         
       - name: Install Dependencies 
         run: flutter pub get 
