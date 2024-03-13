@@ -23,6 +23,9 @@ jobs:
           flutter-version: '2.8.0'
           channel: 'stable'
 
+      - name: Change directory to basic
+        run: cd basic  
+
       - name: Install Dependencies 
         run: flutter pub get 
 
