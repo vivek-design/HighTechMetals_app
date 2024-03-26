@@ -25,6 +25,7 @@ jobs:
       - name: Install Dependencies 
         run: |
           cd basic 
+          flutter upgrade
           flutter pub get 
 
       - name: Build APK
