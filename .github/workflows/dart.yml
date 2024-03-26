@@ -18,24 +18,29 @@ jobs:
       - name: Set up Flutter 
         uses: subosito/flutter-action@v2
         with: 
-          flutter-version: '3.0.0'
+          flutter-version: '3.19.4'
           channel: 'stable'
       
         
       - name: Install Dependencies 
         run: |
-          cd basic 
-          flutter upgrade
+          cd basic
           flutter pub get 
 
       - name: Build APK
-        run: flutter build apk --release
+        run: |
+          cd basic
+          flutter build apk --release
 
       - name: Build AppBundle
-        run: flutter build appbundle 
+        run: | 
+          cd basic 
+          flutter build appbundle 
 
       - name: Build IPA 
-        run: flutter build ipa
+        run: |
+           cd basic 
+           flutter build ipa
 
       - name: Compress Archives and IPAs
         run: |
