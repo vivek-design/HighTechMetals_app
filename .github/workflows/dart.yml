@@ -21,17 +21,11 @@ jobs:
           flutter-version: '2.8.0'
           channel: 'stable'
       
-      - name: Change directory to basic
-        run: ls
-
-      - name: changig 
-        run: cd /basic
-
-      - name: changig 
-        run: ls
         
       - name: Install Dependencies 
-        run: flutter pub get 
+        run: |
+          cd basic 
+          flutter pub get 
 
       - name: Build APK
         run: flutter build apk --release
