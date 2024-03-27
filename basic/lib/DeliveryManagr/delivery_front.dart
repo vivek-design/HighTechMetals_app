@@ -275,7 +275,9 @@ class _deliv_frontState extends State<deliv_front> {
                   });
                 },
                 child: Container(
-                  child: Center(child: CircularProgressIndicator()),
+                  child: Center(child: CircularProgressIndicator(
+                    color: rang.always,
+                  )),
                 ),
               ),
             );

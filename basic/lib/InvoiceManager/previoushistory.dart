@@ -1,6 +1,6 @@
 import 'package:connectivity/connectivity.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 
 import 'package:basic/Uitilities/auth.dart';
 import 'package:basic/Uitilities/col.dart';
@@ -24,7 +24,7 @@ class Previoushistory extends StatefulWidget {
 }
 
 class _PrevioushistoryState extends State<Previoushistory> {
- late DatabaseReference _orderRef;
+  late DatabaseReference _orderRef;
   List<Order> orders = [];
   int mycomp(Order o1, Order o2) {
     if (o1.timestamp.isAfter(o2.timestamp)) {
@@ -34,13 +34,46 @@ class _PrevioushistoryState extends State<Previoushistory> {
     return 1;
   }
 
+  Future<bool> cal() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    String? ema = user?.email;
+
+    await Future.delayed(Duration(seconds: 1));
+
+    _orderRef = await FirebaseDatabase.instance.ref().child('orders');
+    _orderRef.onValue.listen((event) {
+      orders.clear();
+      if (event.snapshot.value != null) {
+        Map<dynamic, dynamic>? data =
+            event.snapshot.value as Map<dynamic, dynamic>?;
+        data?.forEach((orderKey, orderData) async {
+          await orderData.forEach((key, value) async {
+            // if (helper2.contains(orderKey.toString().trim())) {
+            List<dynamic> itemsData = value['items'];
+            List<Item> items = itemsData
+                .map((itemData) => Item(itemData['name'], itemData['quantity']))
+                .toList();
+
+            Order order = Order(
+                orderKey, items, DateTime.parse(value['timestamp']), "gjhgh");
+            orders.add(order);
+          }
+              
+              );
+        });
+      }
+      orders.sort(mycomp);
+    });
+    await Future.delayed(Duration(seconds: 1));
+    return true;
+  }
+
   @override
   void initState() {
-
-     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if (result == ConnectivityResult.none) {
         // Navigate to NoInternetPage if there is no internet connection
-       
+
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: ((context) {
           return No_internet();
@@ -48,121 +81,163 @@ class _PrevioushistoryState extends State<Previoushistory> {
       }
     });
     super.initState();
-    _orderRef = FirebaseDatabase.instance.ref().child('orders');
-    _orderRef.onValue.listen((event) {
-      orders.clear();
-      if (event.snapshot.value != null) {
-        Map<dynamic, dynamic>? data =
-            event.snapshot.value as Map<dynamic, dynamic>?;
-        data?.forEach((orderKey, orderData) {
-          orderData.forEach((key, value) {
-            List<dynamic> itemsData = value['items'];
-            List<Item> items = itemsData
-                .map((itemData) => Item(itemData['name'], itemData['quantity']))
-                .toList();
-            Order order = Order(
-                orderKey, items, DateTime.parse(value['timestamp']), "gjhgh");
-            orders.add(order);
-          });
-        });
-      }
+    // _orderRef = FirebaseDatabase.instance.ref().child('orders');
+    // _orderRef.onValue.listen((event) {
+    //   orders.clear();
+    //   if (event.snapshot.value != null) {
+    //     Map<dynamic, dynamic>? data =
+    //         event.snapshot.value as Map<dynamic, dynamic>?;
+    //     data?.forEach((orderKey, orderData) {
+    //       orderData.forEach((key, value) {
+    //         List<dynamic> itemsData = value['items'];
+    //         List<Item> items = itemsData
+    //             .map((itemData) => Item(itemData['name'], itemData['quantity']))
+    //             .toList();
+    //         Order order = Order(
+    //             orderKey, items, DateTime.parse(value['timestamp']), "gjhgh");
+    //         orders.add(order);
+    //       });
+    //     });
+    //   }
 
-      orders.sort(mycomp);
-      setState(() {});
-    });
+    //   orders.sort(mycomp);
+
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Order List'),
-        backgroundColor:Color.fromARGB(255, 142, 10, 10),
-      ),
-      body: ListView.builder(
-        shrinkWrap: true,
-        itemCount: orders.length,
-        itemBuilder: (BuildContext context, int index) {
-          Order order = orders[index];
+    return FutureBuilder(
+        future: cal(),
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            return Scaffold(
+              appBar: AppBar(
+                title: Text('Order List'),
+                backgroundColor: Color.fromARGB(255, 142, 10, 10),
+              ),
+              body: ListView.builder(
+                shrinkWrap: true,
+                itemCount: orders.length,
+                itemBuilder: (BuildContext context, int index) {
+                  Order order = orders[index];
 
-          return Container(
-              padding: EdgeInsets.all(15),
-              color: Colors.white,
-              child: Container(
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Color.fromRGBO(143, 148, 251, 1),
-                          blurRadius: 20.0,
-                          offset: Offset(0, 10))
-                    ]),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    'Order ID: ${order.orderId}'.text.bold.red600.make(),
-                    5.heightBox,
-                    Text(
-                      'Timestamp: ${formatTimestamp(order.timestamp)}',
-                      style: TextStyle(fontSize: 13),
-                    ),
-                    SizedBox(height: 4),
-                    Text('Items:', style: TextStyle(fontSize: 13)),
-                    FittedBox(
-                   
-
-                      child: DataTable(
-                        dataRowHeight: 70,
-                        columns: [
-                          DataColumn(label: Text('Item Name')),
-                          DataColumn(label: Text('Quantity')),
-                        
-                        ],
-                        rows: order.items
-                            .map(
-                              (iteme) => DataRow(
-                                cells: [
-                                  DataCell(Text(iteme.name,
-                                      style: TextStyle(fontSize: 10))),
-                                  DataCell(Text(iteme.quantity.toString())),
+                  return Container(
+                      padding: EdgeInsets.all(15),
+                      color: Colors.white,
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Color.fromRGBO(143, 148, 251, 1),
+                                  blurRadius: 20.0,
+                                  offset: Offset(0, 10))
+                            ]),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            'Order ID: ${order.orderId}'
+                                .text
+                                .bold
+                                .red600
+                                .make(),
+                            5.heightBox,
+                            Text(
+                              'Timestamp: ${formatTimestamp(order.timestamp)}',
+                              style: TextStyle(fontSize: 13),
+                            ),
+                            SizedBox(height: 4),
+                            Text('Items:', style: TextStyle(fontSize: 13)),
+                            FittedBox(
+                              child: DataTable(
+                                dataRowHeight: 70,
+                                columns: [
+                                  DataColumn(label: Text('Item Name')),
+                                  DataColumn(label: Text('Quantity')),
                                 ],
+                                rows: order.items
+                                    .map(
+                                      (iteme) => DataRow(
+                                        cells: [
+                                          DataCell(Text(iteme.name,
+                                              style: TextStyle(fontSize: 10))),
+                                          DataCell(
+                                              Text(iteme.quantity.toString())),
+                                        ],
+                                      ),
+                                    )
+                                    .toList(),
                               ),
-                            )
-                            .toList(),
+                            ),
+                            20.heightBox,
+                          ],
+                        ),
+                      ));
+                },
+              ),
+              drawer: Drawer(
+                width: 200,
+                child: Container(
+                  child: Column(children: [
+                    SizedBox(
+                      height: 125,
+                      child: Container(
+                        color: rang.always,
                       ),
                     ),
-                    20.heightBox,
-                 
-                  ],
+                    ListTile(
+                      leading: Icon(Icons.logout),
+                      title: "Logout".text.make(),
+                      onTap: () => {
+                        Auth().signOut(),
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            router.loginroute, (route) => false),
+                      },
+                    )
+                  ]),
                 ),
-              ));
-        },
-      ),
-      drawer: Drawer(
-        width: 200,
-        child: Container(
-          child: Column(children: [
-            SizedBox(
-              height: 125,
-              child: Container(
-                color: rang.always,
               ),
-            ),
-            ListTile(
-              leading: Icon(Icons.logout),
-              title: "Logout".text.make(),
-              onTap: () => {
-                Auth().signOut(),
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    router.loginroute, (route) => false),
-              },
-            )
-          ]),
-        ),
-      ),
-    );
+            );
+          } else {
+            return Scaffold(
+              appBar: AppBar(
+                title: Text('Order List'),
+                backgroundColor: Color.fromARGB(255, 142, 10, 10),
+              ),
+              body: Container(
+                  child: Center(
+                child: CircularProgressIndicator(
+                  color: rang.always,
+                ),
+              )),
+              drawer: Drawer(
+                width: 200,
+                child: Container(
+                  child: Column(children: [
+                    SizedBox(
+                      height: 125,
+                      child: Container(
+                        color: rang.always,
+                      ),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.logout),
+                      title: "Logout".text.make(),
+                      onTap: () => {
+                        Auth().signOut(),
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            router.loginroute, (route) => false),
+                      },
+                    )
+                  ]),
+                ),
+              ),
+            );
+          }
+        });
   }
 
   String formatTimestamp(DateTime timestamp) {

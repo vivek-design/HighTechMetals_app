@@ -57,6 +57,9 @@ class _update_orderdetailState extends State<update_orderdetail> {
     for (int i = 0; i < ordred_item.length; i++) {
       items.add(ordred_item[i].name);
     }
+    setState(() {
+      
+    });
   }
 
   void initializeSliderValues() {

@@ -1,22 +1,17 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:async';
 import 'dart:io';
-
 import 'package:basic/Uitilities/auth.dart';
 import 'package:basic/Uitilities/col.dart';
-
 import 'package:basic/Uitilities/router.dart';
 import 'package:basic/owner/Acceptaccount_perm.dart';
-
 import 'package:basic/owner/filtereddispreport.dart';
 import 'package:basic/owner/showpending.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:excel/excel.dart' show Excel;
 import 'package:firebase_database/firebase_database.dart';
-
 import 'package:flutter/material.dart';
-
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
@@ -149,57 +144,111 @@ class _Owner_frontState extends State<Owner_front> {
         Map<dynamic, dynamic>? data =
             event.snapshot.value as Map<dynamic, dynamic>?;
         data?.forEach((orderKey, orderData) {
-          // print(orderKey);
           customerList2.customer.add(orderKey.toString());
         });
       }
-      // print(mp);
     });
-
-    // await Future.delayed(Duration(seconds: 2));
 
     return true;
   }
 
-  Future<bool> getData() async {
-    _orderRef = await FirebaseDatabase.instance.ref().child('Dispatched');
-    _orderRef.onValue.listen((event) async {
-      orders.clear();
-      if (event.snapshot.value != null) {
-        Map<dynamic, dynamic>? data =
-            await event.snapshot.value as Map<dynamic, dynamic>?;
-        data?.forEach((orderKey, orderData) async {
-          // var temp = orderKey;
-          await orderData.forEach((key, value) async {
-            List<dynamic> itemsData = value['items'];
-            List<Itemfordispatchsummry> items = await itemsData
-                .map((itemData) => Itemfordispatchsummry(
-                    itemData['name'].toString(),
-                    itemData['Remaining quantity'].toString(),
-                    itemData['Dispatched_quantity'].toString(),
-                    itemData['Ordered_quantity'].toString()))
-                .toList();
+Future<bool> getData() async {
+  _orderRef = FirebaseDatabase.instance.ref().child('Dispatched');
 
-            var dispatch_id = value['dipatch_id'];
-            Orderfordispatch order = await Orderfordispatch(
-                orderKey,
+  try {
+    DatabaseEvent event = await _orderRef.once(); // Wait for the initial data load
+    DataSnapshot snapshot = event.snapshot;
+    orders.clear();
+
+    Map<dynamic, dynamic>? data = snapshot.value as Map<dynamic, dynamic>?;
+
+    if (data != null) {
+      for (var entry in data.entries) {
+        var orderKey = entry.key;
+        var orderData = entry.value;
+
+        if (orderData != null) {
+          for (var valueEntry in orderData.entries) {
+            var key = valueEntry.key;
+            var value = valueEntry.value;
+
+            if (value != null) {
+              List<dynamic> itemsData = value['items'] ?? [];
+              List<Itemfordispatchsummry> items = [];
+
+              for (var itemData in itemsData) {
+                var name = itemData['name']?.toString() ?? '';
+                var remainingQuantity = itemData['Remaining quantity']?.toString() ?? '';
+                var dispatchedQuantity = itemData['Dispatched_quantity']?.toString() ?? '';
+                var orderedQuantity = itemData['Ordered_quantity']?.toString() ?? '';
+
+                var item = Itemfordispatchsummry(name, remainingQuantity, dispatchedQuantity, orderedQuantity);
+                items.add(item);
+              }
+
+              var dispatch_id = value['dispatch_id']?.toString() ?? '';
+              Orderfordispatch order = Orderfordispatch(
+                orderKey.toString(),
                 items,
-                DateTime.parse(value['timestamp']),
+                DateTime.parse(value['timestamp'].toString()),
                 dispatch_id,
-                DateTime.parse(value['order_timestamp']));
-            orders.add(order);
-          });
-        });
+                DateTime.parse(value['order_timestamp'].toString()),
+              );
+              orders.add(order);
+            }
+          }
+        }
       }
-    });
-
-    await Future.delayed(Duration(seconds: 1));
-
-    orders.sort(mycomp);
-    await Future.delayed(Duration(seconds: 1));
+    }
 
     return true;
+  } catch (e) {
+    print("Error: $e");
+    return false;
   }
+}
+
+
+
+
+
+  //  Future<bool> getData() async {
+  //   _orderRef = await FirebaseDatabase.instance.ref().child('Dispatched');
+  //   _orderRef.onValue.listen((event) async {
+  //     orders.clear();
+  //     if (event.snapshot.value != null) {
+  //       Map<dynamic, dynamic>? data =
+  //           await event.snapshot.value as Map<dynamic, dynamic>?;
+            
+  //     data?.forEach((orderKey, orderData) async {
+  //         // var temp = orderKey;
+  //         await orderData.forEach((key, value) async {
+  //           List<dynamic> itemsData = value['items'];
+  //           List<Itemfordispatchsummry> items = await itemsData
+  //               .map((itemData) => Itemfordispatchsummry(
+  //                   itemData['name'].toString(),
+  //                   itemData['Remaining quantity'].toString(),
+  //                   itemData['Dispatched_quantity'].toString(),
+  //                   itemData['Ordered_quantity'].toString()))
+  //               .toList();
+
+  //           var dispatch_id = value['dipatch_id'];
+  //           Orderfordispatch order = await Orderfordispatch(
+  //               orderKey,
+  //               items,
+  //               DateTime.parse(value['timestamp']),
+  //               dispatch_id,
+  //               DateTime.parse(value['order_timestamp']));
+  //           orders.add(order);
+  //         });
+  //       });
+  //     }
+  //   });
+
+  //   await Future.delayed(Duration(seconds: 2));
+
+  //   return true;
+  // }
 
   @override
   void initState() {
@@ -224,17 +273,13 @@ class _Owner_frontState extends State<Owner_front> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: getData(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          if (orders.length != 0) {
+        future: getData(),
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            orders.sort(mycomp);
             return Scaffold(
               floatingActionButton: FloatingActionButton(
                 onPressed: () {
-                  // Navigator.of(context)
-                  //     .push(MaterialPageRoute(builder: (BuildContext context) {
-                  //   return csvfiledownload(orders: orders);
-                  // }));
                   exportToCsv(data);
                 },
                 backgroundColor: rang.always,
@@ -504,11 +549,9 @@ class _Owner_frontState extends State<Owner_front> {
               body: Container(
                 child: Center(
                   child: Center(
-                    child: Text(
-                      "No dispatches to show",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
+                      child: CircularProgressIndicator(
+                    color: rang.always,
+                  )),
                 ),
               ),
               drawer: Drawer(
@@ -586,96 +629,189 @@ class _Owner_frontState extends State<Owner_front> {
                 },
               ),
             );
+
+            // return Scaffold(
+            //   appBar: AppBar(
+            //     title: Text('All dispatched Orders'),
+            //     backgroundColor: rang.always,
+            //   ),
+            //   body: Container(
+            //     child: Center(
+            //       child: Center(
+            //         child: Text(
+            //           "No dispatches to show",
+            //           style: TextStyle(fontWeight: FontWeight.bold),
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            //   drawer: Drawer(
+            //     width: 200,
+            //     child: Container(
+            //       child: Column(children: [
+            //         SizedBox(
+            //           height: 125,
+            //           child: Container(
+            //             color: rang.always,
+            //           ),
+            //         ),
+            //         ListTile(
+            //           leading: Icon(Icons.logout),
+            //           title: "Logout".text.make(),
+            //           onTap: () => {
+            //             Auth().signOut(),
+            //             Navigator.of(context).pushNamedAndRemoveUntil(
+            //                 router.loginroute, (route) => false),
+            //           },
+            //         ),
+            //         ListTile(
+            //           leading: Icon(Icons.account_tree_sharp),
+            //           title: "Manage account".text.make(),
+            //           onTap: () => {
+            //             Navigator.pushNamed(
+            //                 context, router.manage_account_owner),
+            //           },
+            //         )
+            //       ]),
+            //     ),
+            //   ),
+            //   bottomNavigationBar: CurvedNavigationBar(
+            //     color: rang.always,
+            //     backgroundColor: Colors.white,
+            //     index: 0,
+            //     items: [
+            //       Icon(Icons.home),
+            //       Icon(Icons.pending_actions),
+            //       Icon(Icons.manage_accounts),
+            //     ],
+            //     onTap: (index) async {
+            //       if (index == 0) {
+            //         await Future.delayed(const Duration(seconds: 1));
+            //         index = 0;
+            //         // Navigator.pushNamed(context, router.History);
+            //         setState(() {
+            //           index = 0;
+            //         });
+            //       }
+
+            //       if (index == 1) {
+            //         await Future.delayed(const Duration(seconds: 1));
+            //         // index = 1;
+            //         Navigator.of(context).pushAndRemoveUntil(
+            //             MaterialPageRoute(builder: (context) => showpending()),
+            //             (Route<dynamic> route) => false);
+            //         setState(() {
+            //           index = 0;
+            //         });
+            //       }
+
+            //       if (index == 2) {
+            //         await Future.delayed(const Duration(seconds: 1));
+            //         // index = 1;
+            //         Navigator.of(context).pushAndRemoveUntil(
+            //             MaterialPageRoute(
+            //                 builder: (context) => Accept_account_request()),
+            //             (Route<dynamic> route) => false);
+            //         setState(() {
+            //           index = 0;
+            //         });
+            //       }
+            //     },
+            //   ),
+            // );
           }
-        } else {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text('All dispatched Orders'),
-              backgroundColor: rang.always,
-            ),
-            body: Container(
-              child: Center(
-                child: CircularProgressIndicator(
-                  color: rang.always,
-                ),
-              ),
-            ),
-            drawer: Drawer(
-              width: 200,
-              child: Container(
-                child: Column(children: [
-                  SizedBox(
-                    height: 125,
-                    child: Container(
-                      color: rang.always,
-                    ),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.logout),
-                    title: "Logout".text.make(),
-                    onTap: () => {
-                      Auth().signOut(),
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          router.loginroute, (route) => false),
-                    },
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.account_tree_sharp),
-                    title: "Manage account".text.make(),
-                    onTap: () => {
-                      Navigator.pushNamed(context, router.manage_account_owner),
-                    },
-                  )
-                ]),
-              ),
-            ),
-            bottomNavigationBar: CurvedNavigationBar(
-              color: rang.always,
-              backgroundColor: Colors.white,
-              index: 0,
-              items: [
-                Icon(Icons.home),
-                Icon(Icons.pending_actions),
-                Icon(Icons.manage_accounts),
-              ],
-              onTap: (index) async {
-                if (index == 0) {
-                  await Future.delayed(const Duration(seconds: 1));
-                  index = 0;
-                  // Navigator.pushNamed(context, router.History);
-                  setState(() {
-                    index = 0;
-                  });
-                }
+          //   } else {
+          //     return Scaffold(
+          //       appBar: AppBar(
+          //         title: Text('All dispatched Orders'),
+          //         backgroundColor: rang.always,
+          //       ),
+          //       body: Container(
+          //         child: Center(
+          //           child: Center(
+          //               child: CircularProgressIndicator(
+          //             color: rang.always,
+          //           )),
+          //         ),
+          //       ),
+          //       drawer: Drawer(
+          //         width: 200,
+          //         child: Container(
+          //           child: Column(children: [
+          //             SizedBox(
+          //               height: 125,
+          //               child: Container(
+          //                 color: rang.always,
+          //               ),
+          //             ),
+          //             ListTile(
+          //               leading: Icon(Icons.logout),
+          //               title: "Logout".text.make(),
+          //               onTap: () => {
+          //                 Auth().signOut(),
+          //                 Navigator.of(context).pushNamedAndRemoveUntil(
+          //                     router.loginroute, (route) => false),
+          //               },
+          //             ),
+          //             ListTile(
+          //               leading: Icon(Icons.account_tree_sharp),
+          //               title: "Manage account".text.make(),
+          //               onTap: () => {
+          //                 Navigator.pushNamed(context, router.manage_account_owner),
+          //               },
+          //             )
+          //           ]),
+          //         ),
+          //       ),
+          //       bottomNavigationBar: CurvedNavigationBar(
+          //         color: rang.always,
+          //         backgroundColor: Colors.white,
+          //         index: 0,
+          //         items: [
+          //           Icon(Icons.home),
+          //           Icon(Icons.pending_actions_rounded),
+          //           Icon(Icons.manage_accounts),
+          //         ],
+          //         onTap: (index) async {
+          //           if (index == 0) {
+          //             await Future.delayed(const Duration(seconds: 1));
+          //             index = 0;
+          //             // Navigator.pushNamed(context, router.History);
+          //             setState(() {
+          //               index = 0;
+          //             });
 
-                if (index == 1) {
-                  await Future.delayed(const Duration(seconds: 1));
-                  // index = 1;
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => showpending()),
-                      (Route<dynamic> route) => false);
-                  setState(() {
-                    index = 0;
-                  });
-                }
+          //             if (index == 1) {
+          //               await Future.delayed(const Duration(seconds: 1));
+          //               // index = 1;
+          //               Navigator.of(context).pushAndRemoveUntil(
+          //                   MaterialPageRoute(
+          //                       builder: (context) => Accept_account_request()),
+          //                   (Route<dynamic> route) => false);
+          //               setState(() {
+          //                 index = 0;
+          //               });
+          //             }
+          //           }
 
-                if (index == 2) {
-                  await Future.delayed(const Duration(seconds: 1));
-                  // index = 1;
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                          builder: (context) => Accept_account_request()),
-                      (Route<dynamic> route) => false);
-                  setState(() {
-                    index = 0;
-                  });
-                }
-              },
-            ),
-          );
-        }
-      },
-    );
+          //           if (index == 2) {
+          //             await Future.delayed(const Duration(seconds: 1));
+          //             // index = 1;
+          //             Navigator.of(context).pushAndRemoveUntil(
+          //                 MaterialPageRoute(
+          //                     builder: (context) => Accept_account_request()),
+          //                 (Route<dynamic> route) => false);
+          //             setState(() {
+          //               index = 0;
+          //             });
+          //           }
+          //         },
+          //       ),
+          //     );
+
+          //   }
+          // },
+        });
   }
 
   String formatTimestamp(DateTime timestamp) {

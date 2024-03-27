@@ -149,6 +149,7 @@ class _showpendingState extends State<showpending> {
         data?.forEach((orderKey, orderData) async {
           await orderData.forEach((key, value) async {
             // if (helper2.contains(orderKey.toString().trim())) {
+              if(value['items']!=null){
             List<dynamic> itemsData = value['items'];
             List<Item> items = itemsData
                 .map((itemData) => Item(itemData['name'], itemData['quantity']))
@@ -158,7 +159,7 @@ class _showpendingState extends State<showpending> {
                 orderKey, items, DateTime.parse(value['timestamp']), "gjhgh");
             orders.add(order);
           }
-              // }
+              }
               );
         });
       }
