@@ -25,6 +25,9 @@ jobs:
         with: 
           flutter-version: '3.19.4'
           channel: 'stable'
+          
+      - name: Upgrade 
+        run: flutter upgrade
       
         
       - name: Install Dependencies 
@@ -45,15 +48,6 @@ jobs:
       - name: Build IPA 
         run: |
            cd basic 
-           cd ios
-           pod cache clean --all
-           Pod clean
-           pod deintegrate
-           sudo gem install cocoapods-deintegrate cocoapods-clean
-           sudo arch -x86_64 gem install ffi
-           arch -x86_64 pod repo update
-           arch -x86_64 pod install
-           cd ..
            flutter build ipa --no-codesign
 
       - name: Compress Archives and IPAs
