@@ -45,15 +45,8 @@ jobs:
           cd basic 
           flutter build appbundle 
 
-      - name: Build IPA 
-        run: |
-           cd basic 
-           flutter build ipa --no-codesign
+      
 
-      - name: Compress Archives and IPAs
-        run: |
-          cd ..
-          tar -czf ios_build.tar.gz basic/build/ios
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
@@ -62,11 +55,11 @@ jobs:
           path: |
             basic/build/app/outputs/flutter-apk/app-release.apk
             basic/build/app/outputs/bundle/release/app-release.aab
-            ios_build.tar.gz
+            
 
       - name: Create Release
         uses: ncipollo/release-action@v1
         with: 
-          artifacts: "basic/build/app/outputs/flutter-apk/app-release.apk, basic/build/app/outputs/bundle/release/app-release.aab, ios_build.tar.gz"
+          artifacts: "basic/build/app/outputs/flutter-apk/app-release.apk, basic/build/app/outputs/bundle/release/app-release.aab, "
           tag: v1.0.${{github.run_number}}
           token: ${{secrets.TOKEN}}
